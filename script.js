@@ -181,14 +181,25 @@ document.addEventListener("DOMContentLoaded", async () => {
         const baseViews = currentProfile.views || "0";
         renderProfile(currentProfile);
 
-        // Auto-Increment Real Views on Visit with Animation
-        if (currentProfile.autoIncrementViews !== false && !isPreview) {
+        // Real Unique Visitor View Counting (Prevent spamming on page refresh)
+        const viewKey = "urclub_viewed_" + userSlug;
+        const lastView = localStorage.getItem(viewKey);
+        const now = Date.now();
+        const TWELVE_HOURS = 12 * 60 * 60 * 1000;
+        const isUniqueVisit = !lastView || (now - parseInt(lastView, 10)) > TWELVE_HOURS;
+
+        if (currentProfile.autoIncrementViews !== false && !isPreview && isUniqueVisit) {
+          localStorage.setItem(viewKey, now.toString());
           setTimeout(async () => {
-            if (typeof ProfileStore !== "undefined") {
-              const updatedViews = await ProfileStore.incrementViewsAsync(userSlug);
-              renderViews(updatedViews, baseViews);
+            try {
+              if (typeof ProfileStore !== "undefined") {
+                const updatedViews = await ProfileStore.incrementViewsAsync(userSlug);
+                renderViews(updatedViews, baseViews);
+              }
+            } catch (e) {
+              console.warn("View increment failed:", e);
             }
-          }, 900);
+          }, 1200);
         }
       }
     } catch (err) {
