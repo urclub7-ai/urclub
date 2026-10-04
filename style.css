@@ -48,6 +48,13 @@ a, button, input, select, label, .social-icon-btn, .views-pill, .enter-overlay {
   height: 100%;
   object-fit: cover;
   filter: brightness(0.92) contrast(1.05);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+#bg-video.playing {
+  opacity: 1;
 }
 
 /* Guns.lol Halftone Dot Matrix Pattern */

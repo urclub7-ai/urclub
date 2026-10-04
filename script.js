@@ -85,56 +85,86 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // 4. Background Video (Smart Device Selection: PC vs Mobile)
-    const isMobile = (window.innerWidth <= 768);
-    const videoUrl = isMobile
-      ? (profile.mobileBackgroundVideo && profile.mobileBackgroundVideo.trim() ? profile.mobileBackgroundVideo.trim() : (profile.backgroundVideo ? profile.backgroundVideo.trim() : ""))
-      : (profile.backgroundVideo && profile.backgroundVideo.trim() ? profile.backgroundVideo.trim() : (profile.mobileBackgroundVideo ? profile.mobileBackgroundVideo.trim() : ""));
+    const isMobileDevice = (window.innerWidth <= 768) || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const rawMobileVideo = (profile.mobileBackgroundVideo && profile.mobileBackgroundVideo.trim()) || "";
+    const rawDesktopVideo = (profile.backgroundVideo && profile.backgroundVideo.trim()) || "";
+
+    const primaryVideoUrl = isMobileDevice
+      ? (rawMobileVideo || rawDesktopVideo)
+      : (rawDesktopVideo || rawMobileVideo);
+
+    const fallbackVideoUrl = isMobileDevice ? rawDesktopVideo : rawMobileVideo;
+
+    function toPlayableUrl(url) {
+      if (!url) return "";
+      if (url.startsWith("data:video")) {
+        try {
+          const parts = url.split(",");
+          const mime = parts[0].match(/:(.*?);/)?.[1] || "video/mp4";
+          const byteCharacters = atob(parts[1]);
+          const byteNumbers = new Array(byteCharacters.length);
+          for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+          }
+          const byteArray = new Uint8Array(byteNumbers);
+          const blob = new Blob([byteArray], { type: mime });
+          return URL.createObjectURL(blob);
+        } catch (e) {
+          console.warn("Blob conversion error:", e);
+        }
+      }
+      return url;
+    }
 
     if (bgVideo) {
-      if (videoUrl) {
-        bgVideo.style.display = "block";
-        let playableUrl = videoUrl;
-        
-        // Convert base64 data:video to Blob URL for instant HTML5 browser playback
-        if (videoUrl.startsWith("data:video")) {
-          try {
-            const parts = videoUrl.split(",");
-            const mime = parts[0].match(/:(.*?);/)[1] || "video/mp4";
-            const byteCharacters = atob(parts[1]);
-            const byteNumbers = new Array(byteCharacters.length);
-            for (let i = 0; i < byteCharacters.length; i++) {
-              byteNumbers[i] = byteCharacters.charCodeAt(i);
-            }
-            const byteArray = new Uint8Array(byteNumbers);
-            const blob = new Blob([byteArray], { type: mime });
-            playableUrl = URL.createObjectURL(blob);
-          } catch (e) {
-            console.warn("Blob conversion error:", e);
-          }
-        }
+      if (primaryVideoUrl) {
+        let currentTargetUrl = primaryVideoUrl;
+        let triedFallback = false;
 
-        if (bgVideo.dataset.rawSrc !== videoUrl) {
-          bgVideo.dataset.rawSrc = videoUrl;
-          bgVideo.src = playableUrl;
+        const applySource = (srcUrl) => {
+          currentTargetUrl = srcUrl;
+          bgVideo.dataset.rawSrc = srcUrl;
+          bgVideo.muted = true;
+          bgVideo.defaultMuted = true;
           bgVideo.playsInline = true;
           bgVideo.setAttribute('playsinline', '');
           bgVideo.setAttribute('webkit-playsinline', '');
           bgVideo.setAttribute('x5-playsinline', '');
           bgVideo.autoplay = true;
           bgVideo.loop = true;
-          bgVideo.muted = true;
+          bgVideo.src = toPlayableUrl(srcUrl);
           bgVideo.load();
-          
-          const initialPlay = bgVideo.play();
-          if (initialPlay !== undefined) {
-            initialPlay.catch((err) => {
-              console.log("Initial autoplay waiting for tap:", err);
+
+          const initPlay = bgVideo.play();
+          if (initPlay !== undefined) {
+            initPlay.then(() => {
+              bgVideo.classList.add("playing");
+            }).catch((err) => {
+              console.log("Waiting for user tap to unmute/play:", err);
             });
           }
+        };
+
+        bgVideo.onplaying = () => {
+          bgVideo.classList.add("playing");
+        };
+
+        bgVideo.onerror = () => {
+          console.warn("Video failed:", currentTargetUrl);
+          if (!triedFallback && fallbackVideoUrl && fallbackVideoUrl !== currentTargetUrl) {
+            console.log("Switching to fallback video:", fallbackVideoUrl);
+            triedFallback = true;
+            applySource(fallbackVideoUrl);
+          }
+        };
+
+        if (bgVideo.dataset.rawSrc !== primaryVideoUrl) {
+          applySource(primaryVideoUrl);
         }
       } else {
-        bgVideo.style.display = "none";
-        bgVideo.pause();
+        bgVideo.classList.remove("playing");
+        bgVideo.removeAttribute("src");
+        bgVideo.load();
       }
     }
 
@@ -168,20 +198,29 @@ document.addEventListener("DOMContentLoaded", async () => {
     enterText.textContent = "[ tap anywhere to enter ]";
   }
 
-  // Handle Preview Mode (for Admin Panel Iframe) vs Full Page Click to Enter
+  // Handle Preview Mode vs Full Page Click/Tap to Enter
+  let isUnlocked = false;
   function unlockBio() {
+    if (isUnlocked) return;
+    isUnlocked = true;
+
     if (enterOverlay) {
       enterOverlay.classList.add("hidden");
     }
-    if (bgVideo && bgVideo.style.display !== "none") {
+
+    if (bgVideo && bgVideo.src) {
       bgVideo.muted = false;
       bgVideo.volume = 0.8;
       const playPromise = bgVideo.play();
       if (playPromise !== undefined) {
-        playPromise.catch((err) => {
-          console.warn("Audio autoplay blocked on mobile, playing muted fallback:", err);
+        playPromise.then(() => {
+          bgVideo.classList.add("playing");
+        }).catch((err) => {
+          console.warn("Unmuted autoplay restricted on mobile, keeping muted playback:", err);
           bgVideo.muted = true;
-          bgVideo.play().catch(() => {});
+          bgVideo.play().then(() => {
+            bgVideo.classList.add("playing");
+          }).catch(() => {});
         });
       }
     }
@@ -189,17 +228,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   if (isPreview) {
     if (enterOverlay) enterOverlay.classList.add("hidden");
-    if (bgVideo && bgVideo.style.display !== "none") {
+    if (bgVideo && bgVideo.src) {
       bgVideo.muted = true;
-      bgVideo.play().catch(() => {});
+      bgVideo.play().then(() => bgVideo.classList.add("playing")).catch(() => {});
     }
   } else {
     if (enterOverlay) {
       enterOverlay.addEventListener("click", unlockBio);
-      enterOverlay.addEventListener("touchstart", unlockBio, { passive: true });
+      enterOverlay.addEventListener("touchend", unlockBio);
     }
     document.addEventListener("click", unlockBio, { once: true });
-    document.addEventListener("touchstart", unlockBio, { once: true, passive: true });
+    document.addEventListener("touchend", unlockBio, { once: true });
   }
 
   // Initial Load from Supabase Cloud Database
@@ -265,12 +304,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // Handle responsive resize between PC and Mobile
+  // Handle responsive resize between PC and Mobile (avoid triggering on mobile URL bar scroll)
   let resizeTimer = null;
+  let lastDeviceModeIsMobile = (window.innerWidth <= 768) || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
   window.addEventListener("resize", () => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
-      if (currentActiveProfile) {
+      const currentModeIsMobile = (window.innerWidth <= 768) || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      if (currentModeIsMobile !== lastDeviceModeIsMobile && currentActiveProfile) {
+        lastDeviceModeIsMobile = currentModeIsMobile;
         renderProfile(currentActiveProfile);
       }
     }, 250);
