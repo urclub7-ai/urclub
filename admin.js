@@ -373,11 +373,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       // 1. Try uploading to Supabase Storage Bucket 'media'
       if (sb) {
         try {
-          const fileExt = file.name.split('.').pop() || "mp4";
+          const fileExt = (file.name.split('.').pop() || "mp4").toLowerCase();
           const fileName = `video_${typeLabel.toLowerCase()}_${currentProfileId}_${Date.now()}.${fileExt}`;
           
           const { data, error } = await sb.storage.from('media').upload(fileName, file, {
-            cacheControl: '360000',
+            contentType: file.type || 'video/mp4',
+            cacheControl: '31536000',
             upsert: true
           });
 
