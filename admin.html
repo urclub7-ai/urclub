@@ -154,25 +154,43 @@
         </div>
       </section>
 
-      <!-- Media: Background Video -->
+      <!-- Media: Background Videos (PC & Mobile) -->
       <section class="admin-card">
         <div class="card-header">
           <i class="fa-solid fa-film"></i>
-          <h3>Background Video (Video + Audio)</h3>
-          <span class="header-hint">Audio is automatically played from the video!</span>
+          <h3>Background Videos (PC & Mobile)</h3>
+          <span class="header-hint">پخش خودکار ویدیو و صدا متناسب با دستگاه کاربر</span>
         </div>
         <div class="form-grid">
-          <!-- Background Video -->
+          <!-- 1. PC / Desktop Video -->
           <div class="form-group full-width">
-            <label for="input-bg-video">Background Video URL / Upload (.mp4)</label>
+            <label for="input-bg-video">
+              <i class="fa-solid fa-desktop" style="color: #38bdf8;"></i> 
+              ۱. ویدیوی پس‌زمینه کامپیوتر (PC / Desktop Video - 16:9)
+            </label>
             <div class="media-input-row">
-              <input type="text" id="input-bg-video" placeholder="Direct MP4 link (https://...), assets/video.mp4, or Upload button" />
+              <input type="text" id="input-bg-video" placeholder="لینک مستقیم MP4 یا دکمه آپلود" />
               <label class="file-upload-btn">
-                <i class="fa-solid fa-cloud-arrow-up"></i> Upload MP4 Video
+                <i class="fa-solid fa-cloud-arrow-up"></i> آپلود ویدیوی PC
                 <input type="file" id="file-bg-video" accept="video/mp4,video/*" />
               </label>
             </div>
-            <span class="views-mode-hint" style="margin-top: 4px;">💡 نکته: می‌توانید لینک مستقیم فایل MP4 را قرار دهید، فایل ویدیویی را آپلود کنید، یا ویدیوی خود را داخل پوشه assets/ پروژه بگذارید.</span>
+          </div>
+
+          <!-- 2. Mobile Video -->
+          <div class="form-group full-width">
+            <label for="input-mobile-bg-video">
+              <i class="fa-solid fa-mobile-screen-button" style="color: #a855f7;"></i> 
+              ۲. ویدیوی پس‌زمینه گوشی (Mobile Video - 9:16 عمودی)
+            </label>
+            <div class="media-input-row">
+              <input type="text" id="input-mobile-bg-video" placeholder="لینک مستقیم MP4 عمودی یا دکمه آپلود" />
+              <label class="file-upload-btn" style="background: linear-gradient(135deg, #a855f7, #7c3aed);">
+                <i class="fa-solid fa-cloud-arrow-up"></i> آپلود ویدیوی موبایل
+                <input type="file" id="file-mobile-bg-video" accept="video/mp4,video/*" />
+              </label>
+            </div>
+            <span class="views-mode-hint" style="margin-top: 6px;">💡 نکته: در کامپیوتر ویدیوی اول و در گوشی‌های موبایل ویدیوی دوم با نهایت رزولوشن و صدا پخش می‌شود. (می‌توانید هم لینک مستقیم قرار دهید و هم فایل آپلود کنید).</span>
           </div>
         </div>
       </section>

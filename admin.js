@@ -30,9 +30,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   const filePresenceAvatar = document.getElementById("file-presence-avatar");
   const previewPresenceAvatar = document.getElementById("preview-presence-avatar");
 
-  // Media
+  // Media (PC & Mobile)
   const inputBgVideo = document.getElementById("input-bg-video");
   const fileBgVideo = document.getElementById("file-bg-video");
+  const inputMobileBgVideo = document.getElementById("input-mobile-bg-video");
+  const fileMobileBgVideo = document.getElementById("file-mobile-bg-video");
 
   // Presence
   const inputPresenceHandle = document.getElementById("input-presence-handle");
@@ -130,8 +132,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     inputPresenceAvatar.value = profile.presenceAvatar || "";
     previewPresenceAvatar.src = profile.presenceAvatar || DEFAULT_AVATAR;
 
-    // Media
+    // Media (PC & Mobile)
     inputBgVideo.value = profile.backgroundVideo || "";
+    inputMobileBgVideo.value = profile.mobileBackgroundVideo || "";
 
     // Presence
     if (profile.presence) {
@@ -201,6 +204,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       mainAvatar: inputMainAvatar.value.trim(),
       presenceAvatar: inputPresenceAvatar.value.trim(),
       backgroundVideo: inputBgVideo.value.trim(),
+      mobileBackgroundVideo: inputMobileBgVideo.value.trim(),
       presence: {
         handle: inputPresenceHandle.value.trim() || slug,
         status: inputPresenceStatus.value.trim() || "online",
@@ -354,59 +358,65 @@ document.addEventListener("DOMContentLoaded", async () => {
   setupAvatarUpload(fileMainAvatar, inputMainAvatar, previewMainAvatar);
   setupAvatarUpload(filePresenceAvatar, inputPresenceAvatar, previewPresenceAvatar);
 
-  // Video Upload Handler (Cloud Storage with Automatic Base64 Fallback)
-  fileBgVideo.addEventListener("change", async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+  // Reusable Video Upload Handler (Cloud Storage with Automatic Fallback)
+  function setupVideoUpload(fileInput, textInput, typeLabel) {
+    if (!fileInput || !textInput) return;
+    fileInput.addEventListener("change", async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
 
-    showToast("Processing video... ⏳");
+      showToast(`Uploading ${typeLabel} video... ⏳`);
 
-    const sb = ProfileStore.getSupabase();
-    let uploadedUrl = null;
+      const sb = ProfileStore.getSupabase();
+      let uploadedUrl = null;
 
-    // 1. Try uploading to Supabase Storage Bucket 'media' if available
-    if (sb) {
-      try {
-        const fileExt = file.name.split('.').pop() || "mp4";
-        const fileName = `video_${currentProfileId}_${Date.now()}.${fileExt}`;
-        
-        const { data, error } = await sb.storage.from('media').upload(fileName, file, {
-          cacheControl: '360000',
-          upsert: true
-        });
+      // 1. Try uploading to Supabase Storage Bucket 'media'
+      if (sb) {
+        try {
+          const fileExt = file.name.split('.').pop() || "mp4";
+          const fileName = `video_${typeLabel.toLowerCase()}_${currentProfileId}_${Date.now()}.${fileExt}`;
+          
+          const { data, error } = await sb.storage.from('media').upload(fileName, file, {
+            cacheControl: '360000',
+            upsert: true
+          });
 
-        if (!error && data) {
-          const { data: publicUrlData } = sb.storage.from('media').getPublicUrl(fileName);
-          if (publicUrlData && publicUrlData.publicUrl) {
-            uploadedUrl = publicUrlData.publicUrl;
+          if (!error && data) {
+            const { data: publicUrlData } = sb.storage.from('media').getPublicUrl(fileName);
+            if (publicUrlData && publicUrlData.publicUrl) {
+              uploadedUrl = publicUrlData.publicUrl;
+            }
           }
+        } catch (err) {
+          console.warn("Storage upload fallback:", err);
         }
-      } catch (err) {
-        console.warn("Storage upload fallback:", err);
       }
-    }
 
-    // 2. If Storage Bucket is not configured or fails, use Base64 Data URL (up to 4.5MB)
-    if (!uploadedUrl) {
-      if (file.size <= 4.5 * 1024 * 1024) {
-        const reader = new FileReader();
-        reader.onload = (re) => {
-          inputBgVideo.value = re.target.result;
-          updatePreviewFrame();
-          showToast("Video loaded! Click 'Save Changes' to publish to all devices. ☁️");
-        };
-        reader.readAsDataURL(file);
-        return;
-      } else {
-        showToast("Video is over 4.5MB. Please paste a direct MP4 link or run the SQL bucket setup! ⚠️");
-        return;
+      // 2. If Storage Bucket is not configured, use Base64 Data URL (up to 4.5MB)
+      if (!uploadedUrl) {
+        if (file.size <= 4.5 * 1024 * 1024) {
+          const reader = new FileReader();
+          reader.onload = (re) => {
+            textInput.value = re.target.result;
+            updatePreviewFrame();
+            showToast(`${typeLabel} video loaded! Click 'Save Changes' to publish. ☁️`);
+          };
+          reader.readAsDataURL(file);
+          return;
+        } else {
+          showToast("Video is over 4.5MB. Please paste a direct MP4 link! ⚠️");
+          return;
+        }
       }
-    }
 
-    inputBgVideo.value = uploadedUrl;
-    updatePreviewFrame();
-    showToast("Video uploaded to Cloud CDN! Click 'Save Changes' to publish. ☁️");
-  });
+      textInput.value = uploadedUrl;
+      updatePreviewFrame();
+      showToast(`${typeLabel} video uploaded to Cloud CDN! Click 'Save Changes' to publish. ☁️`);
+    });
+  }
+
+  setupVideoUpload(fileBgVideo, inputBgVideo, "PC");
+  setupVideoUpload(fileMobileBgVideo, inputMobileBgVideo, "Mobile");
 
   // Avatar text change listeners
   inputMainAvatar.addEventListener("input", (e) => {

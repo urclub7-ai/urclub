@@ -38,9 +38,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  let currentActiveProfile = null;
+
   // Reactive Profile Renderer
   function renderProfile(profile) {
     if (!profile) return;
+    currentActiveProfile = profile;
     document.title = (userSlug === "main") ? "urclub" : (profile.name ? `${profile.name} • urclub` : "urclub");
 
     // 1. Text & Titles
@@ -81,8 +84,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (presenceStatus) presenceStatus.textContent = "online";
     }
 
-    // 4. Background Video
-    const videoUrl = profile.backgroundVideo ? profile.backgroundVideo.trim() : "";
+    // 4. Background Video (Smart Device Selection: PC vs Mobile)
+    const isMobile = (window.innerWidth <= 768);
+    const videoUrl = isMobile
+      ? (profile.mobileBackgroundVideo && profile.mobileBackgroundVideo.trim() ? profile.mobileBackgroundVideo.trim() : (profile.backgroundVideo ? profile.backgroundVideo.trim() : ""))
+      : (profile.backgroundVideo && profile.backgroundVideo.trim() ? profile.backgroundVideo.trim() : (profile.mobileBackgroundVideo ? profile.mobileBackgroundVideo.trim() : ""));
 
     if (bgVideo) {
       if (videoUrl) {
@@ -247,4 +253,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         .subscribe();
     }
   }
+
+  // Handle responsive resize between PC and Mobile
+  let resizeTimer = null;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      if (currentActiveProfile) {
+        renderProfile(currentActiveProfile);
+      }
+    }, 250);
+  });
 });
