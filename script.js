@@ -153,24 +153,31 @@ document.addEventListener("DOMContentLoaded", async () => {
           bgVideo.classList.add("playing");
         };
 
-        // Seamless zero-gap looping engine
+        // Real-time Ambient Background Canvas & Seamless Looping Engine
         if (!bgVideo.dataset.loopSetup) {
           bgVideo.dataset.loopSetup = "true";
           let isLoopSeeking = false;
 
-          bgVideo.addEventListener("timeupdate", () => {
-            // 1. Constantly capture video frames to the background canvas so screen NEVER flashes black or blue
-            if (bgCanvasCtx && bgVideo.videoWidth > 0 && bgVideo.currentTime > 0.2) {
-              if (bgCanvas.width !== bgVideo.videoWidth || bgCanvas.height !== bgVideo.videoHeight) {
-                bgCanvas.width = bgVideo.videoWidth;
-                bgCanvas.height = bgVideo.videoHeight;
+          const drawAmbientFrame = () => {
+            if (bgCanvasCtx && bgVideo && bgVideo.videoWidth > 0) {
+              if (bgCanvas.width !== 360) {
+                bgCanvas.width = 360;
+                bgCanvas.height = Math.round(360 * (bgVideo.videoHeight / bgVideo.videoWidth)) || 360;
               }
               try {
                 bgCanvasCtx.drawImage(bgVideo, 0, 0, bgCanvas.width, bgCanvas.height);
               } catch (e) {}
             }
+          };
 
-            // 2. Pre-roll loop ~0.15s before EOF to prevent mobile Safari decoder pipeline flush and pause
+          bgVideo.addEventListener("loadeddata", drawAmbientFrame);
+          bgVideo.addEventListener("play", drawAmbientFrame);
+
+          bgVideo.addEventListener("timeupdate", () => {
+            // Draw ambient frame to keep top & bottom continuously glowing with matching video colors
+            drawAmbientFrame();
+
+            // Pre-roll loop ~0.15s before EOF to prevent mobile Safari decoder pipeline flush and pause
             if (bgVideo.duration && bgVideo.currentTime >= (bgVideo.duration - 0.2)) {
               if (!isLoopSeeking) {
                 isLoopSeeking = true;
