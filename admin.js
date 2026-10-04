@@ -38,6 +38,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Switches
   const toggleSparkles = document.getElementById("toggle-sparkles");
   const toggleDotmatrix = document.getElementById("toggle-dotmatrix");
+  const toggleRealViews = document.getElementById("toggle-real-views");
 
   // Socials Container
   const socialsInputsList = document.getElementById("socials-inputs-list");
@@ -135,6 +136,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Switches
     toggleSparkles.checked = profile.showSparkles !== false;
     toggleDotmatrix.checked = profile.showDotMatrix !== false;
+    if (toggleRealViews) toggleRealViews.checked = profile.autoIncrementViews !== false;
 
     // Socials
     SOCIAL_CATALOG.forEach((item) => {
@@ -170,7 +172,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       name: inputName.value.trim() || "Profile Name",
       username: inputPresenceHandle.value.trim() || profileSlug,
       subtitle: inputSubtitle.value.trim(),
-      views: inputViews.value.trim() || "1,337",
+      views: inputViews.value.trim() || "90",
+      autoIncrementViews: toggleRealViews ? toggleRealViews.checked : true,
       showSparkles: toggleSparkles.checked,
       showDotMatrix: toggleDotmatrix.checked,
       mainAvatar: inputMainAvatar.value.trim() || "assets/avatar.jpg",

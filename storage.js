@@ -12,7 +12,8 @@ const DEFAULT_PROFILES = {
     name: "LEVI",
     username: "levi85150",
     subtitle: "Humanity's Strongest Soldier & Content Creator",
-    views: "7,841",
+    views: "90",
+    autoIncrementViews: true,
     showSparkles: true,
     showDotMatrix: true,
     mainAvatar: "assets/avatar.jpg",
@@ -128,6 +129,24 @@ class ProfileStore {
       });
     } catch (e) {
       console.error("Save error:", e);
+    }
+  }
+
+  static async incrementViewsAsync(id) {
+    try {
+      const profile = await this.getProfileAsync(id);
+      if (!profile) return "90";
+      
+      let baseCount = parseInt(String(profile.views).replace(/,/g, ""), 10);
+      if (isNaN(baseCount)) baseCount = 90;
+      
+      const newCount = baseCount + 1;
+      profile.views = newCount.toLocaleString();
+      await this.saveProfileAsync(id || profile.id, profile);
+      return profile.views;
+    } catch (e) {
+      console.warn("View increment error:", e);
+      return "91";
     }
   }
 

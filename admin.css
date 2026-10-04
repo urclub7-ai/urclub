@@ -406,6 +406,22 @@ input[type="text"]:focus, input[type="url"]:focus, select:focus {
   box-shadow: none !important;
 }
 
+.views-mode-box {
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.views-mode-hint {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
 /* Switches */
 .switches-grid {
   display: flex;

@@ -75,8 +75,19 @@
             <input type="text" id="input-subtitle" placeholder="e.g. PC Optimizer & Content Creator" />
           </div>
           <div class="form-group">
-            <label for="input-views">Views Counter Number</label>
-            <input type="text" id="input-views" placeholder="e.g. 7,841" />
+            <label for="input-views">Views Counter (Base Number)</label>
+            <input type="text" id="input-views" placeholder="e.g. 90 or 7,841" />
+          </div>
+          <div class="form-group">
+            <label>Real Visitors Live Increment</label>
+            <div class="views-mode-box">
+              <label class="toggle-switch-wrap">
+                <input type="checkbox" id="toggle-real-views" checked />
+                <span class="switch-slider"></span>
+                <span class="switch-label">Live Visitor Counter (+1)</span>
+              </label>
+              <span class="views-mode-hint">When ON: Each visit adds +1 with live rolling animation (90 ➔ 91). When OFF: Shows fixed custom number.</span>
+            </div>
           </div>
         </div>
       </section>

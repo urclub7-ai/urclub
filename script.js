@@ -17,11 +17,27 @@ document.addEventListener("DOMContentLoaded", async () => {
   const presenceMiniAvatar = document.getElementById("presence-mini-avatar");
   const presenceStatusRing = document.getElementById("presence-status-ring");
   const viewsCount = document.getElementById("views-count");
+  const viewsPill = document.querySelector(".views-pill");
 
   // Read Profile from URL Query or Store
   const urlParams = new URLSearchParams(window.location.search);
   let userSlug = urlParams.get("u");
   const isPreview = urlParams.get("preview") === "1";
+
+  // Render Views Number with Animated Rolling Effect
+  function renderViews(countStr, animateFrom) {
+    if (!viewsCount) return;
+    if (animateFrom && animateFrom !== countStr) {
+      viewsCount.innerHTML = `<span class="views-digit-box rolling">${countStr}</span>`;
+      if (viewsPill) {
+        viewsPill.classList.remove("pulse");
+        void viewsPill.offsetWidth;
+        viewsPill.classList.add("pulse");
+      }
+    } else {
+      viewsCount.innerHTML = `<span class="views-digit-box">${countStr}</span>`;
+    }
+  }
 
   // Reactive Profile Renderer
   function renderProfile(profile) {
@@ -31,7 +47,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 1. Text & Titles
     if (nameText) nameText.textContent = profile.name || "LEVI";
     if (profileSubtitle) profileSubtitle.textContent = profile.subtitle || "";
-    if (viewsCount) viewsCount.textContent = profile.views || "1,337";
+    renderViews(profile.views || "90");
 
     // Sparkles Toggle
     const sparkles = document.querySelectorAll(".sparkle");
@@ -107,7 +123,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     const currentProfile = (typeof ProfileStore !== "undefined")
       ? await ProfileStore.getProfileAsync(userSlug)
       : (typeof CONFIG !== "undefined" ? CONFIG : null);
-    renderProfile(currentProfile);
+
+    if (currentProfile) {
+      const baseViews = currentProfile.views || "90";
+      renderProfile(currentProfile);
+
+      // Auto-Increment Real Views on Visit with Animation
+      if (currentProfile.autoIncrementViews !== false && !isPreview) {
+        setTimeout(async () => {
+          if (typeof ProfileStore !== "undefined") {
+            const updatedViews = await ProfileStore.incrementViewsAsync(userSlug || currentProfile.id);
+            renderViews(updatedViews, baseViews);
+          }
+        }, 900);
+      }
+    }
   }
 
   await loadAndRender();
@@ -127,7 +157,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (isPreview) {
     if (enterOverlay) enterOverlay.classList.add("hidden");
     if (bgVideo) {
-      bgVideo.muted = true; // Mute inside admin preview frame
+      bgVideo.muted = true;
       bgVideo.play().catch(() => {});
     }
   } else {
