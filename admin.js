@@ -354,14 +354,17 @@ document.addEventListener("DOMContentLoaded", async () => {
   setupAvatarUpload(fileMainAvatar, inputMainAvatar, previewMainAvatar);
   setupAvatarUpload(filePresenceAvatar, inputPresenceAvatar, previewPresenceAvatar);
 
-  // Video Upload Handler (Uploads directly to Supabase Cloud Storage)
+  // Video Upload Handler (Cloud Storage with Automatic Base64 Fallback)
   fileBgVideo.addEventListener("change", async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    showToast("Uploading video to Cloud Storage... ⏳");
+    showToast("Processing video... ⏳");
 
     const sb = ProfileStore.getSupabase();
+    let uploadedUrl = null;
+
+    // 1. Try uploading to Supabase Storage Bucket 'media' if available
     if (sb) {
       try {
         const fileExt = file.name.split('.').pop() || "mp4";
@@ -375,20 +378,34 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!error && data) {
           const { data: publicUrlData } = sb.storage.from('media').getPublicUrl(fileName);
           if (publicUrlData && publicUrlData.publicUrl) {
-            inputBgVideo.value = publicUrlData.publicUrl;
-            updatePreviewFrame();
-            showToast("Video uploaded to Cloud CDN! Click 'Save Changes' to publish. ☁️");
-            return;
+            uploadedUrl = publicUrlData.publicUrl;
           }
-        } else {
-          console.warn("Supabase Storage error:", error);
-          showToast("Please run the SQL script in Supabase or paste a direct MP4 link! ⚠️");
         }
       } catch (err) {
-        console.warn("Storage upload exception:", err);
-        showToast("Storage error: Please paste a direct MP4 URL or run the SQL script.");
+        console.warn("Storage upload fallback:", err);
       }
     }
+
+    // 2. If Storage Bucket is not configured or fails, use Base64 Data URL (up to 4.5MB)
+    if (!uploadedUrl) {
+      if (file.size <= 4.5 * 1024 * 1024) {
+        const reader = new FileReader();
+        reader.onload = (re) => {
+          inputBgVideo.value = re.target.result;
+          updatePreviewFrame();
+          showToast("Video loaded! Click 'Save Changes' to publish to all devices. ☁️");
+        };
+        reader.readAsDataURL(file);
+        return;
+      } else {
+        showToast("Video is over 4.5MB. Please paste a direct MP4 link or run the SQL bucket setup! ⚠️");
+        return;
+      }
+    }
+
+    inputBgVideo.value = uploadedUrl;
+    updatePreviewFrame();
+    showToast("Video uploaded to Cloud CDN! Click 'Save Changes' to publish. ☁️");
   });
 
   // Avatar text change listeners
