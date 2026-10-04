@@ -79,7 +79,10 @@ class ProfileStore {
     const sb = this.getSupabase();
     if (sb) {
       try {
-        const { data, error } = await sb.from("bio_profiles").select("*");
+        const { data, error } = await sb
+          .from("bio_profiles")
+          .select("*")
+          .setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
         if (!error && data && data.length > 0) {
           const map = {};
           data.forEach((row) => {
@@ -118,7 +121,12 @@ class ProfileStore {
     const sb = this.getSupabase();
     if (sb) {
       try {
-        const { data, error } = await sb.from("bio_profiles").select("data").eq("id", targetId).single();
+        const { data, error } = await sb
+          .from("bio_profiles")
+          .select("data")
+          .setHeader("Cache-Control", "no-cache, no-store, must-revalidate")
+          .eq("id", targetId)
+          .single();
         if (!error && data && data.data) {
           return data.data;
         }
