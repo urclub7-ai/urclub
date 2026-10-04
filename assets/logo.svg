@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- URCLUB Official Shield Logo Vector -->
+  <g>
+    <!-- Left Navy Shield Body -->
+    <path d="M120 150 C120 120 190 105 240 90 L240 160 C210 170 165 185 165 210 L165 260 C165 315 215 350 256 365 C220 355 180 330 150 295 C125 265 120 220 120 150 Z" fill="#0b1754"/>
+    
+    <!-- Top Aqua / Mint Green Highlight Block -->
+    <path d="M240 90 L280 125 L255 175 L240 160 Z" fill="#2dd4bf"/>
+    
+    <!-- Right Vibrant Blue Shield & Upward Arrow -->
+    <path d="M280 125 L340 180 L305 180 L305 270 C305 320 275 355 240 375 C270 345 285 305 285 265 L285 180 L250 180 Z" fill="#1d4ed8"/>
+    
+    <!-- Big Arrowhead on Right -->
+    <path d="M305 90 L380 200 L340 200 L340 300 C340 365 295 410 240 430 C200 415 155 375 135 325 C155 350 195 380 240 390 C290 375 315 330 315 285 L315 200 L275 200 Z" fill="#1e40af"/>
+    
+    <!-- Main Outer Shield Curve & Smooth Arrow Path -->
+    <path d="M130 135 C130 135 210 110 256 85 L285 120 L270 160 L240 140 C200 155 175 185 175 230 L175 270 C175 335 225 375 256 385 C190 360 145 310 145 230 L145 150 Z" fill="#081448"/>
+    
+    <!-- Smooth Dynamic Right Arrow Vector -->
+    <path d="M320 85 L395 195 L350 195 L350 290 C350 370 295 415 245 435 C295 405 325 355 325 290 L325 195 L280 195 Z" fill="#1d4ed8"/>
+    
+    <!-- Inner Cyan Flowing Wave / Ribbon -->
+    <path d="M145 260 C155 320 205 365 260 380 C220 370 175 335 160 280 Z" fill="#2dd4bf"/>
+    
+    <!-- Center Smile Arc -->
+    <path d="M195 240 C195 270 220 290 256 290 C292 290 317 270 317 240 C317 248 292 305 256 305 C220 305 195 248 195 240 Z" fill="#0b1754"/>
+    <path d="M200 242 C210 282 235 295 256 295 C277 295 302 282 312 242 C302 272 277 282 256 282 C235 282 210 272 200 242 Z" fill="#0b1754"/>
+  </g>
+</svg>

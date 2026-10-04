@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Rounded Shield Outline -->
+  <path d="M14 18 C14 18 24 14 30 11 L35 15 L32 20 L27 18 C22 20 19 23 19 28 L19 33 C19 41 25 46 29 47 C21 44 16 38 16 28 L16 18 Z" fill="#081448"/>
+  <path d="M30 11 L35 15 L32 20 L27 18 Z" fill="#2dd4bf"/>
+  <path d="M38 11 L48 24 L42 24 L42 35 C42 45 35 50 29 53 C35 49 39 43 39 35 L39 24 L33 24 Z" fill="#2563eb"/>
+  <path d="M16 32 C17 39 23 45 30 47 C25 45 20 41 18 34 Z" fill="#2dd4bf"/>
+  <!-- Smile Arc -->
+  <path d="M24 30 C25 35 28 36.5 30.5 36.5 C33 36.5 36 35 37 30 C36 33.5 33 35 30.5 35 C28 35 25 33.5 24 30 Z" fill="#081448"/>
+</svg>

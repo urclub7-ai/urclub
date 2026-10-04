@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Reactive Profile Renderer
   function renderProfile(profile) {
     if (!profile) return;
-    document.title = profile.name || "LEVI";
+    document.title = (userSlug === "main") ? "urclub" : (profile.name ? `${profile.name} • urclub` : "urclub");
 
     // 1. Text & Titles
     if (nameText) nameText.textContent = profile.name || "LEVI";
