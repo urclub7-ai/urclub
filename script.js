@@ -83,10 +83,30 @@ document.addEventListener("DOMContentLoaded", async () => {
     const videoUrl = profile.backgroundVideo || "assets/levi_background.mp4";
 
     if (bgVideo && videoUrl) {
-      const currentSrc = bgVideo.currentSrc || bgVideo.src || (videoSource ? videoSource.src : "");
-      if (!currentSrc.includes(videoUrl) && bgVideo.src !== videoUrl) {
-        bgVideo.src = videoUrl;
-        if (videoSource) videoSource.src = videoUrl;
+      let playableUrl = videoUrl;
+      
+      // Convert base64 data:video to Blob URL for instant HTML5 browser playback
+      if (videoUrl.startsWith("data:video")) {
+        try {
+          const parts = videoUrl.split(",");
+          const mime = parts[0].match(/:(.*?);/)[1] || "video/mp4";
+          const byteCharacters = atob(parts[1]);
+          const byteNumbers = new Array(byteCharacters.length);
+          for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+          }
+          const byteArray = new Uint8Array(byteNumbers);
+          const blob = new Blob([byteArray], { type: mime });
+          playableUrl = URL.createObjectURL(blob);
+        } catch (e) {
+          console.warn("Blob conversion error:", e);
+        }
+      }
+
+      if (bgVideo.dataset.rawSrc !== videoUrl) {
+        bgVideo.dataset.rawSrc = videoUrl;
+        bgVideo.src = playableUrl;
+        if (videoSource) videoSource.src = playableUrl;
         bgVideo.load();
         if (isPreview || enterOverlay.classList.contains("hidden")) {
           bgVideo.play().catch(() => {});
