@@ -354,19 +354,43 @@ document.addEventListener("DOMContentLoaded", async () => {
   setupAvatarUpload(fileMainAvatar, inputMainAvatar, previewMainAvatar);
   setupAvatarUpload(filePresenceAvatar, inputPresenceAvatar, previewPresenceAvatar);
 
-  // Video Upload Handler
-  fileBgVideo.addEventListener("change", (e) => {
+  // Video Upload Handler (Direct Cloud Streaming - Never freezes browser)
+  fileBgVideo.addEventListener("change", async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    showToast("Loading video into preview...");
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      inputBgVideo.value = event.target.result;
-      updatePreviewFrame();
-      showToast("Video loaded in preview! Click 'Save Changes' to publish.");
-    };
-    reader.readAsDataURL(file);
+    // Fast local preview immediately
+    const blobUrl = URL.createObjectURL(file);
+    inputBgVideo.value = blobUrl;
+    updatePreviewFrame();
+    showToast("Streaming video to Cloud Storage... ⏳");
+
+    const sb = ProfileStore.getSupabase();
+    if (sb) {
+      try {
+        const fileExt = file.name.split('.').pop() || "mp4";
+        const fileName = `video_${currentProfileId}_${Date.now()}.${fileExt}`;
+        
+        const { data, error } = await sb.storage.from('media').upload(fileName, file, {
+          cacheControl: '360000',
+          upsert: true
+        });
+
+        if (!error && data) {
+          const { data: publicUrlData } = sb.storage.from('media').getPublicUrl(fileName);
+          if (publicUrlData && publicUrlData.publicUrl) {
+            inputBgVideo.value = publicUrlData.publicUrl;
+            updatePreviewFrame();
+            showToast("Video uploaded & Cloud URL generated! Click 'Save Changes' to publish. ☁️");
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn("Storage upload fallback to local stream:", err);
+      }
+    }
+
+    showToast("Video loaded! Click 'Save Changes' to publish.");
   });
 
   // Avatar text change listeners
