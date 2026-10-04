@@ -398,44 +398,28 @@ a, button, input, select, label, .social-icon-btn, .views-pill, .enter-overlay {
     overflow: hidden;
   }
 
-  #bg-video, #bg-canvas {
+  #bg-video {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
-    height: 100%;
-    max-width: 100vw;
-    max-height: 100dvh;
-    min-width: unset;
-    min-height: unset;
-    object-fit: contain;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100dvh;
+    min-width: 100vw;
+    min-height: 100dvh;
+    object-fit: cover;
     object-position: center center;
     filter: brightness(0.96) contrast(1.02);
+    -webkit-transform: translate3d(0, 0, 0);
   }
 
   /* Cleaner and sharper overlay on mobile */
   .bg-dot-matrix {
-    opacity: 0.35;
+    opacity: 0.45;
     background-size: 3px 3px;
-    z-index: 2;
   }
 
-  /* Balanced 4-sided shadow: Top, Bottom, Left, Right + Inset Vignette */
   .bg-vignette {
-    z-index: 3;
-    background: 
-      /* Top edge shadow */
-      linear-gradient(to bottom, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.35) 7%, transparent 16%),
-      /* Bottom edge shadow */
-      linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.35) 9%, transparent 18%),
-      /* Left edge shadow */
-      linear-gradient(to right, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0.25) 6%, transparent 14%),
-      /* Right edge shadow */
-      linear-gradient(to left, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0.25) 6%, transparent 14%),
-      /* Soft radial edge vignette */
-      radial-gradient(circle at center, transparent 50%, rgba(0, 0, 0, 0.45) 100%);
-    box-shadow: inset 0 0 35px 12px rgba(0, 0, 0, 0.65);
+    background: radial-gradient(circle at center, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.5) 100%);
   }
 
   .profile-container {
