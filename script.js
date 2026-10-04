@@ -142,29 +142,57 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
       }
     }
+  }
 
-    setupHoverEffects();
+  // Handle Preview Mode (for Admin Panel Iframe) vs Full Page Click to Enter
+  function unlockBio() {
+    if (enterOverlay) {
+      enterOverlay.classList.add("hidden");
+    }
+    if (bgVideo && bgVideo.style.display !== "none") {
+      bgVideo.muted = false;
+      bgVideo.volume = 0.8;
+      bgVideo.play().catch(() => {});
+    }
+  }
+
+  if (isPreview) {
+    if (enterOverlay) enterOverlay.classList.add("hidden");
+    if (bgVideo && bgVideo.style.display !== "none") {
+      bgVideo.muted = true;
+      bgVideo.play().catch(() => {});
+    }
+  } else {
+    if (enterOverlay) {
+      enterOverlay.addEventListener("click", unlockBio);
+      enterOverlay.addEventListener("touchstart", unlockBio, { passive: true });
+    }
+    document.addEventListener("click", unlockBio, { once: true });
   }
 
   // Initial Load from Supabase Cloud Database
   async function loadAndRender() {
-    const currentProfile = (typeof ProfileStore !== "undefined")
-      ? await ProfileStore.getProfileAsync(userSlug)
-      : null;
+    try {
+      const currentProfile = (typeof ProfileStore !== "undefined")
+        ? await ProfileStore.getProfileAsync(userSlug)
+        : null;
 
-    if (currentProfile) {
-      const baseViews = currentProfile.views || "0";
-      renderProfile(currentProfile);
+      if (currentProfile) {
+        const baseViews = currentProfile.views || "0";
+        renderProfile(currentProfile);
 
-      // Auto-Increment Real Views on Visit with Animation
-      if (currentProfile.autoIncrementViews !== false && !isPreview) {
-        setTimeout(async () => {
-          if (typeof ProfileStore !== "undefined") {
-            const updatedViews = await ProfileStore.incrementViewsAsync(userSlug);
-            renderViews(updatedViews, baseViews);
-          }
-        }, 900);
+        // Auto-Increment Real Views on Visit with Animation
+        if (currentProfile.autoIncrementViews !== false && !isPreview) {
+          setTimeout(async () => {
+            if (typeof ProfileStore !== "undefined") {
+              const updatedViews = await ProfileStore.incrementViewsAsync(userSlug);
+              renderViews(updatedViews, baseViews);
+            }
+          }, 900);
+        }
       }
+    } catch (err) {
+      console.error("Error loading profile:", err);
     }
   }
 
@@ -192,31 +220,5 @@ document.addEventListener("DOMContentLoaded", async () => {
         })
         .subscribe();
     }
-  }
-
-  // Handle Preview Mode (for Admin Panel Iframe) vs Full Page
-  if (isPreview) {
-    if (enterOverlay) enterOverlay.classList.add("hidden");
-    if (bgVideo && bgVideo.style.display !== "none") {
-      bgVideo.muted = true;
-      bgVideo.play().catch(() => {});
-    }
-  } else {
-    // Click to Enter Handler: Unmutes and plays video audio directly!
-    function unlockBio() {
-      if (enterOverlay) {
-        enterOverlay.classList.add("hidden");
-      }
-      if (bgVideo && bgVideo.style.display !== "none") {
-        bgVideo.muted = false;
-        bgVideo.volume = 0.8;
-        bgVideo.play().catch(() => {});
-      }
-    }
-    if (enterOverlay) {
-      enterOverlay.addEventListener("click", unlockBio);
-      enterOverlay.addEventListener("touchstart", unlockBio, { passive: true });
-    }
-    document.addEventListener("click", unlockBio, { once: true });
   }
 });
