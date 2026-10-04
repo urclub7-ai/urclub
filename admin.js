@@ -204,11 +204,37 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
   }
 
-  // Update Public Links
+  const modeText = document.getElementById("mode-text");
+  const currentLiveUrl = document.getElementById("current-live-url");
+  const btnCopyUrl = document.getElementById("btn-copy-url");
+
+  // Update Public Links & Mode Card
   function updatePublicLinks(slug) {
-    const publicUrl = (slug === "main") ? "index.html" : `index.html?u=${slug}`;
-    btnViewPublic.href = publicUrl;
-    previewOpenBtn.href = publicUrl;
+    const isMain = (slug === "main");
+    const relativeUrl = isMain ? "index.html" : `index.html?u=${slug}`;
+    const fullPublicUrl = isMain ? "https://urclub.vercel.app/" : `https://urclub.vercel.app/?u=${slug}`;
+
+    if (modeText) {
+      modeText.innerHTML = isMain
+        ? `صفحه اصلی سایت شما (Root Page)`
+        : `صفحه اختصاصی: <strong>${slug}</strong>`;
+    }
+    if (currentLiveUrl) {
+      currentLiveUrl.href = relativeUrl;
+      currentLiveUrl.textContent = fullPublicUrl;
+    }
+    if (btnViewPublic) btnViewPublic.href = relativeUrl;
+    if (previewOpenBtn) previewOpenBtn.href = relativeUrl;
+  }
+
+  // Copy Link Handler
+  if (btnCopyUrl) {
+    btnCopyUrl.addEventListener("click", () => {
+      const urlToCopy = currentLiveUrl ? currentLiveUrl.textContent : "https://urclub.vercel.app/";
+      navigator.clipboard.writeText(urlToCopy).then(() => {
+        showToast("آدرس لینک با موفقیت کپی شد! 📋");
+      });
+    });
   }
 
   // Update Preview Frame (Sends data directly to iframe without saving to cloud)

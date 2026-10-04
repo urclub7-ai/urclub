@@ -170,6 +170,79 @@ body {
   gap: 22px;
 }
 
+/* Active Profile Mode Card */
+.profile-mode-card {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(59, 130, 246, 0.1));
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  border-radius: 16px;
+  padding: 16px 20px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+}
+
+.mode-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mode-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #c084fc;
+}
+
+.mode-badge i {
+  color: #fbbf24;
+}
+
+.live-url-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 8px 14px;
+  border-radius: 10px;
+  flex-wrap: wrap;
+}
+
+.url-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.live-url-link {
+  color: #38bdf8;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.live-url-link:hover {
+  text-decoration: underline;
+}
+
+.btn-copy-sm {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: auto;
+  transition: background 0.2s;
+}
+
+.btn-copy-sm:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
 .admin-card {
   background: var(--bg-card);
   border: 1px solid var(--border-color);

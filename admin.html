@@ -54,6 +54,23 @@
     
     <!-- Left: Settings Panel -->
     <div class="settings-container">
+
+      <!-- Active Page URL & Mode Indicator -->
+      <div class="profile-mode-card" id="profile-mode-card">
+        <div class="mode-info">
+          <div class="mode-badge" id="mode-badge">
+            <i class="fa-solid fa-crown"></i>
+            <span id="mode-text">صفحه اصلی شما (Root Page)</span>
+          </div>
+          <div class="live-url-wrap">
+            <span class="url-label">آدرس عمومی این صفحه:</span>
+            <a id="current-live-url" href="https://urclub.vercel.app/" target="_blank" class="live-url-link">https://urclub.vercel.app/</a>
+            <button type="button" id="btn-copy-url" class="btn-copy-sm" title="کپی آدرس لینک">
+              <i class="fa-regular fa-copy"></i> کپی لینک
+            </button>
+          </div>
+        </div>
+      </div>
       
       <!-- General Info Card -->
       <section class="admin-card">

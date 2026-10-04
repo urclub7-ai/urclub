@@ -61,6 +61,7 @@ body {
   height: 100vh;
   z-index: 0;
   overflow: hidden;
+  background: radial-gradient(circle at 50% 30%, #161824 0%, #07070a 100%);
 }
 
 #bg-video {
