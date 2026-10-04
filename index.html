@@ -33,16 +33,16 @@
 </head>
 <body>
 
-  <!-- Click to Enter Screen -->
+  <!-- Click/Tap to Enter Screen -->
   <div id="enter-overlay" class="enter-overlay">
     <div class="enter-content">
-      <p class="enter-text">[ click anywhere to enter ]</p>
+      <p class="enter-text" id="enter-text">[ click anywhere to enter ]</p>
     </div>
   </div>
 
   <!-- Background Video (Video + Audio) & Dot-Matrix Grid Overlay -->
   <div class="bg-wrapper">
-    <video id="bg-video" loop playsinline style="display: none;">
+    <video id="bg-video" loop playsinline webkit-playsinline x5-playsinline preload="auto" style="display: none;">
       <source src="" type="video/mp4" id="video-source" />
     </video>
     <!-- Dot Matrix Pattern -->

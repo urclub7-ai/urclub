@@ -144,6 +144,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  const enterText = document.getElementById("enter-text");
+
+  // Customize prompt for mobile/touch screens: "tap" instead of "click"
+  const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (window.innerWidth <= 768);
+  if (isTouchDevice && enterText) {
+    enterText.textContent = "[ tap anywhere to enter ]";
+  }
+
   // Handle Preview Mode (for Admin Panel Iframe) vs Full Page Click to Enter
   function unlockBio() {
     if (enterOverlay) {
@@ -152,7 +160,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (bgVideo && bgVideo.style.display !== "none") {
       bgVideo.muted = false;
       bgVideo.volume = 0.8;
-      bgVideo.play().catch(() => {});
+      const playPromise = bgVideo.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((err) => {
+          console.warn("Audio autoplay blocked on mobile, playing muted:", err);
+          bgVideo.muted = true;
+          bgVideo.play().catch(() => {});
+        });
+      }
     }
   }
 

@@ -31,16 +31,23 @@ a, button, input, select, label, .social-icon-btn, .views-pill, .enter-overlay {
   left: 0;
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
   z-index: 0;
   overflow: hidden;
   background: radial-gradient(circle at 50% 30%, #161824 0%, #07070a 100%);
 }
 
 #bg-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 100%;
+  min-height: 100%;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: brightness(0.9) contrast(1.05);
+  filter: brightness(0.92) contrast(1.05);
 }
 
 /* Guns.lol Halftone Dot Matrix Pattern */
