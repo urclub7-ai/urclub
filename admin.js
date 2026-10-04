@@ -354,16 +354,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   setupAvatarUpload(fileMainAvatar, inputMainAvatar, previewMainAvatar);
   setupAvatarUpload(filePresenceAvatar, inputPresenceAvatar, previewPresenceAvatar);
 
-  // Video Upload Handler (Direct Cloud Streaming - Never freezes browser)
+  // Video Upload Handler (Uploads directly to Supabase Cloud Storage)
   fileBgVideo.addEventListener("change", async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Fast local preview immediately
-    const blobUrl = URL.createObjectURL(file);
-    inputBgVideo.value = blobUrl;
-    updatePreviewFrame();
-    showToast("Streaming video to Cloud Storage... ⏳");
+    showToast("Uploading video to Cloud Storage... ⏳");
 
     const sb = ProfileStore.getSupabase();
     if (sb) {
@@ -381,16 +377,18 @@ document.addEventListener("DOMContentLoaded", async () => {
           if (publicUrlData && publicUrlData.publicUrl) {
             inputBgVideo.value = publicUrlData.publicUrl;
             updatePreviewFrame();
-            showToast("Video uploaded & Cloud URL generated! Click 'Save Changes' to publish. ☁️");
+            showToast("Video uploaded to Cloud CDN! Click 'Save Changes' to publish. ☁️");
             return;
           }
+        } else {
+          console.warn("Supabase Storage error:", error);
+          showToast("Please run the SQL script in Supabase or paste a direct MP4 link! ⚠️");
         }
       } catch (err) {
-        console.warn("Storage upload fallback to local stream:", err);
+        console.warn("Storage upload exception:", err);
+        showToast("Storage error: Please paste a direct MP4 URL or run the SQL script.");
       }
     }
-
-    showToast("Video loaded! Click 'Save Changes' to publish.");
   });
 
   // Avatar text change listeners
