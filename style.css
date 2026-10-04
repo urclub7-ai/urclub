@@ -4,7 +4,7 @@
   box-sizing: border-box;
 }
 
-body {
+html, body {
   background-color: #000000;
   color: #ffffff;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -16,8 +16,8 @@ body {
   overflow: hidden;
   position: relative;
   user-select: none;
-  /* Clean Native Gamer Crosshair Cursor */
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='3.5' fill='%23ffffff' stroke='%23000000' stroke-width='1'/%3E%3Cpath d='M12 2v4M12 18v4M2 12h4M18 12h4' stroke='%23ffffff' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") 12 12, crosshair;
+  /* Clean Native Circle + Center Dot Cursor (Zero Lag) */
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='8' stroke='%23ffffff' stroke-width='1.5' stroke-opacity='0.9'/%3E%3Ccircle cx='12' cy='12' r='2' fill='%23ffffff'/%3E%3C/svg%3E") 12 12, auto;
 }
 
 a, button, input, select, label, .social-icon-btn, .views-pill, .enter-overlay {
