@@ -116,15 +116,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (bgVideo.dataset.rawSrc !== videoUrl) {
           bgVideo.dataset.rawSrc = videoUrl;
           bgVideo.src = playableUrl;
+          bgVideo.playsInline = true;
+          bgVideo.setAttribute('playsinline', '');
+          bgVideo.setAttribute('webkit-playsinline', '');
+          bgVideo.setAttribute('x5-playsinline', '');
+          bgVideo.autoplay = true;
+          bgVideo.loop = true;
+          bgVideo.muted = true;
           bgVideo.load();
           
-          // Pre-buffer video in background (muted on page load for Safari compatibility)
-          bgVideo.muted = (isPreview || !enterOverlay || !enterOverlay.classList.contains("hidden"));
           const initialPlay = bgVideo.play();
           if (initialPlay !== undefined) {
-            initialPlay.catch(() => {
-              bgVideo.muted = true;
-              bgVideo.play().catch(() => {});
+            initialPlay.catch((err) => {
+              console.log("Initial autoplay waiting for tap:", err);
             });
           }
         }
