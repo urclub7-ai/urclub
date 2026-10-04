@@ -4,9 +4,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   const bgVideo = document.getElementById("bg-video");
   const videoSource = document.getElementById("video-source");
   const bgDotMatrix = document.getElementById("bg-dot-matrix");
-  
-  const customCursor = document.getElementById("custom-cursor");
-  const cursorDot = document.getElementById("cursor-dot");
   const socialsRow = document.getElementById("socials-row");
 
   const profileAvatar = document.getElementById("profile-avatar");
@@ -209,7 +206,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (enterOverlay) {
       enterOverlay.addEventListener("click", () => {
         enterOverlay.classList.add("hidden");
-        
         if (bgVideo && bgVideo.style.display !== "none") {
           bgVideo.muted = false;
           bgVideo.volume = 0.8;
@@ -217,103 +213,5 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
       });
     }
-  }
-
-  // Custom Cursor Movement
-  let mouseX = window.innerWidth / 2;
-  let mouseY = window.innerHeight / 2;
-  let cursorX = mouseX;
-  let cursorY = mouseY;
-
-  document.addEventListener("mousemove", (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-    
-    if (cursorDot) {
-      cursorDot.style.left = `${mouseX}px`;
-      cursorDot.style.top = `${mouseY}px`;
-    }
-
-    addTrailParticle(mouseX, mouseY);
-  });
-
-  function renderCursor() {
-    cursorX += (mouseX - cursorX) * 0.2;
-    cursorY += (mouseY - cursorY) * 0.2;
-
-    if (customCursor) {
-      customCursor.style.left = `${cursorX}px`;
-      customCursor.style.top = `${cursorY}px`;
-    }
-
-    requestAnimationFrame(renderCursor);
-  }
-  renderCursor();
-
-  // Hover Effect for Cursor
-  function setupHoverEffects() {
-    const interactiveEls = document.querySelectorAll("a, button, .profile-avatar, .presence-widget, .views-pill");
-    interactiveEls.forEach((el) => {
-      el.addEventListener("mouseenter", () => customCursor && customCursor.classList.add("hovering"));
-      el.addEventListener("mouseleave", () => customCursor && customCursor.classList.remove("hovering"));
-    });
-  }
-
-  // Canvas Sparkle / Dot Trail Particle System
-  const canvas = document.getElementById("trail-canvas");
-  if (canvas) {
-    const ctx = canvas.getContext("2d");
-    let particles = [];
-
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    window.addEventListener("resize", resizeCanvas);
-    resizeCanvas();
-
-    function addTrailParticle(x, y) {
-      if (Math.random() > 0.3) {
-        particles.push({
-          x: x + (Math.random() - 0.5) * 10,
-          y: y + (Math.random() - 0.5) * 10,
-          size: Math.random() * 2.5 + 1,
-          speedX: (Math.random() - 0.5) * 1.2,
-          speedY: (Math.random() - 0.5) * 1.2 - 0.5,
-          opacity: 1,
-          decay: Math.random() * 0.02 + 0.015,
-          color: Math.random() > 0.5 ? "#ffffff" : "#d4d4d8"
-        });
-      }
-    }
-
-    function animateParticles() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      for (let i = particles.length - 1; i >= 0; i--) {
-        const p = particles[i];
-        p.x += p.speedX;
-        p.y += p.speedY;
-        p.opacity -= p.decay;
-
-        if (p.opacity <= 0) {
-          particles.splice(i, 1);
-          continue;
-        }
-
-        ctx.save();
-        ctx.globalAlpha = p.opacity;
-        ctx.fillStyle = p.color;
-        ctx.shadowBlur = 6;
-        ctx.shadowColor = "#ffffff";
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-      }
-
-      requestAnimationFrame(animateParticles);
-    }
-    animateParticles();
   }
 });
