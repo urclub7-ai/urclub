@@ -398,25 +398,7 @@ a, button, input, select, label, .social-icon-btn, .views-pill, .enter-overlay {
     overflow: hidden;
   }
 
-  /* Ambient Background Canvas (Fills entire top & bottom with matching video colors/glow) */
-  #bg-canvas {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(1.25);
-    width: 100vw;
-    height: 100dvh;
-    min-width: 100vw;
-    min-height: 100dvh;
-    object-fit: cover;
-    filter: blur(36px) brightness(0.8) contrast(1.15);
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.95;
-  }
-
-  /* Sharp Centered Video: 100% visible, no cropped sides */
-  #bg-video {
+  #bg-video, #bg-canvas {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -429,36 +411,31 @@ a, button, input, select, label, .social-icon-btn, .views-pill, .enter-overlay {
     min-height: unset;
     object-fit: contain;
     object-position: center center;
-    filter: brightness(0.98) contrast(1.04);
-    pointer-events: none;
-    z-index: 1;
-    opacity: 0;
-    transition: opacity 0.4s ease;
-  }
-
-  #bg-video.playing {
-    opacity: 1;
+    filter: brightness(0.96) contrast(1.02);
   }
 
   /* Cleaner and sharper overlay on mobile */
   .bg-dot-matrix {
-    opacity: 0.28;
+    opacity: 0.35;
     background-size: 3px 3px;
     z-index: 2;
   }
 
-  /* Left and right side shadows as requested, with soft edge blend */
+  /* Balanced 4-sided shadow: Top, Bottom, Left, Right + Inset Vignette */
   .bg-vignette {
     z-index: 3;
     background: 
+      /* Top edge shadow */
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.35) 7%, transparent 16%),
+      /* Bottom edge shadow */
+      linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.35) 9%, transparent 18%),
       /* Left edge shadow */
-      linear-gradient(to right, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.3) 7%, transparent 16%),
+      linear-gradient(to right, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0.25) 6%, transparent 14%),
       /* Right edge shadow */
-      linear-gradient(to left, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.3) 7%, transparent 16%),
-      /* Subtle top/bottom shadow for UI readability */
-      linear-gradient(to bottom, rgba(0, 0, 0, 0.45) 0%, transparent 12%),
-      linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, transparent 14%);
-    box-shadow: inset 0 0 25px 8px rgba(0, 0, 0, 0.5);
+      linear-gradient(to left, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0.25) 6%, transparent 14%),
+      /* Soft radial edge vignette */
+      radial-gradient(circle at center, transparent 50%, rgba(0, 0, 0, 0.45) 100%);
+    box-shadow: inset 0 0 35px 12px rgba(0, 0, 0, 0.65);
   }
 
   .profile-container {
