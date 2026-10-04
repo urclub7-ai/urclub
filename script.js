@@ -295,15 +295,26 @@ document.addEventListener("DOMContentLoaded", async () => {
         const baseViews = currentProfile.views || "0";
         renderProfile(currentProfile);
 
-        // Real Unique Visitor View Counting (Prevent spamming on page refresh)
-        const viewKey = "urclub_viewed_" + userSlug;
-        const lastView = localStorage.getItem(viewKey);
-        const now = Date.now();
-        const TWELVE_HOURS = 12 * 60 * 60 * 1000;
-        const isUniqueVisit = !lastView || (now - parseInt(lastView, 10)) > TWELVE_HOURS;
+        // Real Unique Visitor View Counting (Guarantees refresh NEVER increments!)
+        const sessionKey = "urclub_session_" + userSlug;
+        const deviceKey = "urclub_device_" + userSlug;
 
-        if (currentProfile.autoIncrementViews !== false && !isPreview && isUniqueVisit) {
-          localStorage.setItem(viewKey, now.toString());
+        // 1. Session check: Refreshing the tab/browser never increments
+        const isSessionViewed = sessionStorage.getItem(sessionKey);
+
+        // 2. Device check: Same device within 24 hours does not spam
+        const lastDeviceView = localStorage.getItem(deviceKey);
+        const now = Date.now();
+        const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
+        const isDeviceFresh = !lastDeviceView || (now - parseInt(lastDeviceView, 10)) > TWENTY_FOUR_HOURS;
+
+        const isRealUniqueVisit = !isSessionViewed && isDeviceFresh;
+
+        // Mark session immediately so refresh never increments
+        sessionStorage.setItem(sessionKey, "1");
+
+        if (currentProfile.autoIncrementViews !== false && !isPreview && isRealUniqueVisit) {
+          localStorage.setItem(deviceKey, now.toString());
           setTimeout(async () => {
             try {
               if (typeof ProfileStore !== "undefined") {
@@ -313,7 +324,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             } catch (e) {
               console.warn("View increment failed:", e);
             }
-          }, 1200);
+          }, 1000);
         }
       }
     } catch (err) {
