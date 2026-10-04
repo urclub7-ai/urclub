@@ -1,31 +1,59 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
   <defs>
-    <linearGradient id="c_blade_l" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#bae6fd"/>
-      <stop offset="100%" stop-color="#38bdf8"/>
+    <!-- Dark High-Tech Shell Gradient -->
+    <linearGradient id="body_grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#18181b"/>
+      <stop offset="60%" stop-color="#09090b"/>
+      <stop offset="100%" stop-color="#030712"/>
     </linearGradient>
-    <linearGradient id="c_blade_r" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#60a5fa"/>
-      <stop offset="100%" stop-color="#2563eb"/>
+
+    <!-- Glowing Cyber Blue Gradient -->
+    <linearGradient id="cyber_neon" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="50%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#0369a1"/>
     </linearGradient>
-    <linearGradient id="c_stem" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#818cf8"/>
-      <stop offset="100%" stop-color="#4338ca"/>
+
+    <!-- Bevel Glint -->
+    <linearGradient id="glint" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#7dd3fc"/>
     </linearGradient>
-    <filter id="c_shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="1.5" stdDeviation="1.2" flood-color="#000000" flood-opacity="0.85"/>
+
+    <!-- Drop Shadow for crisp visibility -->
+    <filter id="gamer_shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="1" dy="2" stdDeviation="1.5" flood-color="#000000" flood-opacity="0.9"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="2" flood-color="#0284c7" flood-opacity="0.5"/>
     </filter>
   </defs>
-  <g filter="url(#c_shadow)">
-    <!-- Crystal Arrow Base Outline -->
-    <path d="M2 2 L12 25 L16 16 L25 12 Z" fill="url(#c_blade_l)" stroke="#0c4a6e" stroke-width="1" stroke-linejoin="round"/>
-    <!-- Facet Highlight Right -->
-    <path d="M2 2 L16 16 L25 12 Z" fill="url(#c_blade_r)"/>
-    <!-- Lower Stem / Hilt -->
-    <path d="M14 18 L18 26 L22 22 L18 14 Z" fill="url(#c_stem)" stroke="#1e1b4b" stroke-width="0.8"/>
-    <!-- Shiny White Glint -->
-    <path d="M3 4 L6 14 L9 6 Z" fill="#ffffff" opacity="0.75"/>
-    <!-- Dark Crystal Edge -->
-    <path d="M2 2 L12 25 L15 17 L18 26 L22 22 L17 15 L25 12 Z" fill="none" stroke="#082f49" stroke-width="1.2" stroke-linejoin="round"/>
+
+  <g filter="url(#gamer_shadow)">
+    <!-- Main Gaming Pointer Outer Body (Sharp Standard 45° Ergonomic Angle) -->
+    <path d="M2 2 L2 22 L7 17 L12 28 L15.5 26.5 L10.5 15.5 L17.5 15.5 Z" 
+          fill="url(#body_grad)" 
+          stroke="#38bdf8" 
+          stroke-width="1.2" 
+          stroke-linejoin="round"/>
+
+    <!-- Inner Core Cutout with Cyber Cyan Energy -->
+    <path d="M4 5 L4 17.5 L7.5 14 L11 22.5 L12.5 21.8 L9 13.2 L13.5 13.2 Z" 
+          fill="url(#cyber_neon)" 
+          stroke="#0284c7" 
+          stroke-width="0.5"/>
+
+    <!-- High-Detail Center Spine Line -->
+    <path d="M4 5 L11.5 12.5" 
+          stroke="url(#glint)" 
+          stroke-width="1" 
+          stroke-linecap="round"/>
+
+    <!-- Precision Laser Pointer Tip -->
+    <path d="M2 2 L6 6 L3.5 8 Z" 
+          fill="#ffffff" 
+          opacity="0.9"/>
+          
+    <!-- Cyberpunk Grip Notch Accents -->
+    <line x1="2" y1="10" x2="4" y2="10" stroke="#7dd3fc" stroke-width="1"/>
+    <line x1="2" y1="14" x2="4" y2="14" stroke="#7dd3fc" stroke-width="1"/>
   </g>
 </svg>

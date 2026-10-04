@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+  <defs>
+    <linearGradient id="p_body_grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+
+    <linearGradient id="p_neon_glow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#67e8f9"/>
+      <stop offset="50%" stop-color="#06b6d4"/>
+      <stop offset="100%" stop-color="#0891b2"/>
+    </linearGradient>
+
+    <filter id="p_glow_shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="1" dy="2" stdDeviation="1.5" flood-color="#000000" flood-opacity="0.95"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#06b6d4" flood-opacity="0.8"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#p_glow_shadow)">
+    <!-- Main Gaming Pointer Outer Body -->
+    <path d="M2 2 L2 22 L7 17 L12 28 L15.5 26.5 L10.5 15.5 L17.5 15.5 Z" 
+          fill="url(#p_body_grad)" 
+          stroke="#67e8f9" 
+          stroke-width="1.4" 
+          stroke-linejoin="round"/>
+
+    <!-- High-Glow Inner Energy Core -->
+    <path d="M4 5 L4 17.5 L7.5 14 L11 22.5 L12.5 21.8 L9 13.2 L13.5 13.2 Z" 
+          fill="url(#p_neon_glow)" 
+          stroke="#22d3ee" 
+          stroke-width="0.5"/>
+
+    <!-- Top Laser Highlight -->
+    <path d="M2 2 L6 6 L3.5 8 Z" fill="#ffffff"/>
+  </g>
+</svg>
