@@ -1,11 +1,10 @@
 /**
- * Guns.lol Cloud Engine with Supabase & IndexedDB Hybrid Sync
+ * Guns.lol Cloud Engine with Supabase (Multi-Profile & Main Owner Page)
  */
 
 const SUPABASE_URL = "https://thkaconmltqowxhjamfj.supabase.co";
 const SUPABASE_KEY = "sb_publishable_ZGZe4Tna3kz3VzKRQmPlRg_bWB7Hs4h";
 
-// Init Supabase Client
 let supabaseClient = null;
 if (typeof supabase !== "undefined" && supabase.createClient) {
   supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -14,42 +13,26 @@ if (typeof supabase !== "undefined" && supabase.createClient) {
 const DB_NAME = "GunsLolBioDB";
 const DB_VERSION = 1;
 const STORE_NAME = "profiles";
+const MAIN_PROFILE_ID = "main";
 
-const DEFAULT_PROFILES = {
-  "levi": {
-    id: "levi",
-    name: "LEVI",
-    username: "levi85150",
-    subtitle: "Humanity's Strongest Soldier & Content Creator",
-    views: "90",
-    autoIncrementViews: true,
-    showSparkles: true,
-    showDotMatrix: true,
-    mainAvatar: "assets/avatar.jpg",
-    presenceAvatar: "assets/avatar.jpg",
-    backgroundVideo: "assets/levi_background.mp4",
-    presence: {
-      handle: "levi85150",
-      status: "online",
-      statusColor: "#22c55e"
-    },
-    socials: {
-      discord: "https://discord.gg/rFq2ayYv",
-      tiktok: "https://www.tiktok.com/@n_othing1?_r=1&_t=ZG-9AH1lYp6ddJ",
-      whatsapp: "https://wa.me/491624212685",
-      instagram: "https://www.instagram.com/levi85150?stkn=aGJheWtjZXkxY3I1&utm_source=qr",
-      telegram: "https://t.me/LEVI_2213",
-      youtube: "",
-      twitch: "",
-      steam: "",
-      twitter: "",
-      github: "",
-      spotify: "",
-      kick: "",
-      snapchat: "",
-      reddit: ""
-    }
-  }
+const DEFAULT_MAIN_PROFILE = {
+  id: "main",
+  name: "LEVI",
+  username: "levi",
+  subtitle: "Humanity's Strongest Soldier & Content Creator",
+  views: "0",
+  autoIncrementViews: true,
+  showSparkles: true,
+  showDotMatrix: true,
+  mainAvatar: "",
+  presenceAvatar: "",
+  backgroundVideo: "",
+  presence: {
+    handle: "levi",
+    status: "online",
+    statusColor: "#22c55e"
+  },
+  socials: {}
 };
 
 const SOCIAL_CATALOG = [
@@ -69,7 +52,6 @@ const SOCIAL_CATALOG = [
   { id: "reddit", name: "Reddit", icon: "fa-brands fa-reddit", color: "#FF4500", placeholder: "https://reddit.com/user/..." }
 ];
 
-// Open IndexedDB (Local Fallback & Cache)
 function openDatabase() {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(DB_NAME, DB_VERSION);
@@ -92,7 +74,7 @@ class ProfileStore {
     return supabaseClient;
   }
 
-  // Fetch all profiles from Supabase Cloud (with IndexedDB fallback)
+  // Fetch all profiles from Supabase Cloud
   static async getProfilesAsync() {
     const sb = this.getSupabase();
     if (sb) {
@@ -106,7 +88,7 @@ class ProfileStore {
           return map;
         }
       } catch (e) {
-        console.warn("Supabase fetch failed, fallback to local:", e);
+        console.warn("Supabase getProfiles error:", e);
       }
     }
 
@@ -121,18 +103,18 @@ class ProfileStore {
           const list = req.result || [];
           const map = {};
           list.forEach((p) => { map[p.id] = p; });
-          resolve(Object.keys(map).length > 0 ? map : DEFAULT_PROFILES);
+          resolve(Object.keys(map).length > 0 ? map : { "main": DEFAULT_MAIN_PROFILE });
         };
-        req.onerror = () => resolve(DEFAULT_PROFILES);
+        req.onerror = () => resolve({ "main": DEFAULT_MAIN_PROFILE });
       });
     } catch (e) {
-      return DEFAULT_PROFILES;
+      return { "main": DEFAULT_MAIN_PROFILE };
     }
   }
 
-  // Fetch single profile
+  // Fetch single profile: Defaults to 'main' for the root site
   static async getProfileAsync(id) {
-    const targetId = id || this.getActiveId() || "levi";
+    const targetId = id || MAIN_PROFILE_ID;
     const sb = this.getSupabase();
     if (sb) {
       try {
@@ -141,33 +123,38 @@ class ProfileStore {
           return data.data;
         }
       } catch (e) {
-        console.warn("Supabase single fetch error:", e);
+        console.warn("Supabase fetch error for", targetId, e);
       }
     }
 
     const profiles = await this.getProfilesAsync();
-    return profiles[targetId] || profiles["levi"] || DEFAULT_PROFILES["levi"];
+    return profiles[targetId] || profiles[MAIN_PROFILE_ID] || DEFAULT_MAIN_PROFILE;
   }
 
-  // Save profile to Supabase Cloud + Local Cache
+  // Save profile to Supabase Cloud + Local Cache (Only called when Save Changes is clicked)
   static async saveProfileAsync(id, profileData) {
-    profileData.id = id;
+    const targetId = id || MAIN_PROFILE_ID;
+    profileData.id = targetId;
     const sb = this.getSupabase();
 
     if (sb) {
       try {
         const { error } = await sb.from("bio_profiles").upsert({
-          id: id,
+          id: targetId,
           data: profileData,
           updated_at: new Date().toISOString()
         });
-        if (error) console.error("Supabase upsert error:", error);
+        if (error) {
+          console.error("Supabase upsert error:", error);
+          throw error;
+        }
       } catch (e) {
         console.error("Supabase save exception:", e);
+        throw e;
       }
     }
 
-    // Also cache locally
+    // Cache locally
     try {
       const db = await openDatabase();
       const tx = db.transaction(STORE_NAME, "readwrite");
@@ -175,18 +162,17 @@ class ProfileStore {
       store.put(profileData);
     } catch (e) {}
 
-    this.setActiveId(id);
     return profileData;
   }
 
   // Increment view counter globally in Supabase
   static async incrementViewsAsync(id) {
-    const targetId = id || this.getActiveId() || "levi";
+    const targetId = id || MAIN_PROFILE_ID;
     const profile = await this.getProfileAsync(targetId);
-    if (!profile) return "90";
+    if (!profile) return "1";
 
     let baseCount = parseInt(String(profile.views).replace(/,/g, ""), 10);
-    if (isNaN(baseCount)) baseCount = 90;
+    if (isNaN(baseCount)) baseCount = 0;
 
     const newCount = baseCount + 1;
     profile.views = newCount.toLocaleString();
@@ -197,6 +183,8 @@ class ProfileStore {
 
   // Delete profile
   static async deleteProfileAsync(id) {
+    if (id === MAIN_PROFILE_ID) return; // Protect main profile
+
     const sb = this.getSupabase();
     if (sb) {
       try {
@@ -210,13 +198,5 @@ class ProfileStore {
       const store = tx.objectStore(STORE_NAME);
       store.delete(id);
     } catch (e) {}
-  }
-
-  static getActiveId() {
-    return localStorage.getItem("guns_lol_active_profile_id") || "levi";
-  }
-
-  static setActiveId(id) {
-    localStorage.setItem("guns_lol_active_profile_id", id);
   }
 }

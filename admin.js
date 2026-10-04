@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const inputSlug = document.getElementById("input-slug");
   const inputSubtitle = document.getElementById("input-subtitle");
   const inputViews = document.getElementById("input-views");
+  const toggleRealViews = document.getElementById("toggle-real-views");
 
   // Avatars
   const inputMainAvatar = document.getElementById("input-main-avatar");
@@ -38,7 +39,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Switches
   const toggleSparkles = document.getElementById("toggle-sparkles");
   const toggleDotmatrix = document.getElementById("toggle-dotmatrix");
-  const toggleRealViews = document.getElementById("toggle-real-views");
 
   // Socials Container
   const socialsInputsList = document.getElementById("socials-inputs-list");
@@ -51,12 +51,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const newProfileName = document.getElementById("new-profile-name");
   const newProfileSlug = document.getElementById("new-profile-slug");
 
-  // Sync Broadcast Channel for Instant Cross-Tab Updates
-  const syncChannel = (typeof BroadcastChannel !== "undefined")
-    ? new BroadcastChannel("guns_lol_profile_sync")
-    : null;
-
-  let currentProfileId = ProfileStore.getActiveId();
+  let currentProfileId = "main";
 
   // Render Social Inputs Catalog
   function renderSocialInputs() {
@@ -79,14 +74,23 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function populateProfileDropdown() {
     const profiles = await ProfileStore.getProfilesAsync();
     profileSelect.innerHTML = "";
+
+    // Main Owner Profile first
+    const mainOpt = document.createElement("option");
+    mainOpt.value = "main";
+    const mainName = (profiles["main"] && profiles["main"].name) ? profiles["main"].name : "LEVI";
+    mainOpt.textContent = `👑 ${mainName} (Main Root Page)`;
+    if (currentProfileId === "main") mainOpt.selected = true;
+    profileSelect.appendChild(mainOpt);
+
+    // Other User Profiles
     Object.keys(profiles).forEach((id) => {
+      if (id === "main") return;
       const p = profiles[id];
       const opt = document.createElement("option");
       opt.value = id;
-      opt.textContent = `${p.name} (@${id})`;
-      if (id === currentProfileId) {
-        opt.selected = true;
-      }
+      opt.textContent = `👤 ${p.name} (?u=${id})`;
+      if (id === currentProfileId) opt.selected = true;
       profileSelect.appendChild(opt);
     });
   }
@@ -94,23 +98,34 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Load Profile Into Form
   async function loadProfile(id) {
     const profile = await ProfileStore.getProfileAsync(id);
-    currentProfileId = id;
-    ProfileStore.setActiveId(id);
+    currentProfileId = id || "main";
 
     inputName.value = profile.name || "";
     inputSlug.value = profile.id || id;
     inputSubtitle.value = profile.subtitle || "";
-    inputViews.value = profile.views || "7,841";
+    inputViews.value = profile.views || "0";
+    if (toggleRealViews) toggleRealViews.checked = profile.autoIncrementViews !== false;
+
+    // Lock slug editing for main profile
+    if (currentProfileId === "main") {
+      inputSlug.disabled = true;
+      inputSlug.value = "main (Root Page)";
+      btnDeleteProfile.style.display = "none";
+    } else {
+      inputSlug.disabled = false;
+      inputSlug.value = currentProfileId;
+      btnDeleteProfile.style.display = "inline-flex";
+    }
 
     // Avatars
-    inputMainAvatar.value = profile.mainAvatar || "assets/avatar.jpg";
+    inputMainAvatar.value = profile.mainAvatar || "";
     previewMainAvatar.src = profile.mainAvatar || "assets/avatar.jpg";
 
-    inputPresenceAvatar.value = profile.presenceAvatar || "assets/avatar.jpg";
+    inputPresenceAvatar.value = profile.presenceAvatar || "";
     previewPresenceAvatar.src = profile.presenceAvatar || "assets/avatar.jpg";
 
     // Media
-    inputBgVideo.value = profile.backgroundVideo || "assets/levi_background.mp4";
+    inputBgVideo.value = profile.backgroundVideo || "";
 
     // Presence
     if (profile.presence) {
@@ -136,7 +151,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Switches
     toggleSparkles.checked = profile.showSparkles !== false;
     toggleDotmatrix.checked = profile.showDotMatrix !== false;
-    if (toggleRealViews) toggleRealViews.checked = profile.autoIncrementViews !== false;
 
     // Socials
     SOCIAL_CATALOG.forEach((item) => {
@@ -147,7 +161,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     updatePublicLinks(id);
-    previewIframe.src = `index.html?u=${id}&preview=1`;
+    updatePreviewFrame();
   }
 
   // Collect Current Form Data
@@ -165,22 +179,24 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     });
 
-    const profileSlug = (inputSlug.value.trim() || currentProfileId).toLowerCase().replace(/[^a-z0-9_-]/g, "");
+    let slug = (currentProfileId === "main")
+      ? "main"
+      : (inputSlug.value.trim() || currentProfileId).toLowerCase().replace(/[^a-z0-9_-]/g, "");
 
     return {
-      id: profileSlug,
+      id: slug,
       name: inputName.value.trim() || "Profile Name",
-      username: inputPresenceHandle.value.trim() || profileSlug,
+      username: inputPresenceHandle.value.trim() || slug,
       subtitle: inputSubtitle.value.trim(),
-      views: inputViews.value.trim() || "90",
+      views: inputViews.value.trim() || "0",
       autoIncrementViews: toggleRealViews ? toggleRealViews.checked : true,
       showSparkles: toggleSparkles.checked,
       showDotMatrix: toggleDotmatrix.checked,
-      mainAvatar: inputMainAvatar.value.trim() || "assets/avatar.jpg",
-      presenceAvatar: inputPresenceAvatar.value.trim() || "assets/avatar.jpg",
-      backgroundVideo: inputBgVideo.value.trim() || "assets/levi_background.mp4",
+      mainAvatar: inputMainAvatar.value.trim(),
+      presenceAvatar: inputPresenceAvatar.value.trim(),
+      backgroundVideo: inputBgVideo.value.trim(),
       presence: {
-        handle: inputPresenceHandle.value.trim() || profileSlug,
+        handle: inputPresenceHandle.value.trim() || slug,
         status: inputPresenceStatus.value.trim() || "online",
         statusColor: statusColor
       },
@@ -188,41 +204,65 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
   }
 
-  // Update Links for Public View
+  // Update Public Links
   function updatePublicLinks(slug) {
-    const publicUrl = `index.html?u=${slug}`;
+    const publicUrl = (slug === "main") ? "index.html" : `index.html?u=${slug}`;
     btnViewPublic.href = publicUrl;
     previewOpenBtn.href = publicUrl;
   }
 
-  // Auto-Save & Broadcast across all open pages/tabs in real-time
-  async function autoSaveAndBroadcast() {
+  // Update Preview Frame (Sends data directly to iframe without saving to cloud)
+  function updatePreviewFrame() {
     const data = getFormData();
-    await ProfileStore.saveProfileAsync(data.id, data);
-    updatePublicLinks(data.id);
-
-    if (syncChannel) {
-      syncChannel.postMessage(data);
+    const targetUrl = (currentProfileId === "main") ? "index.html?preview=1" : `index.html?u=${currentProfileId}&preview=1`;
+    
+    if (previewIframe.contentWindow) {
+      previewIframe.contentWindow.postMessage({ type: "PREVIEW_UPDATE", profile: data }, "*");
     }
   }
 
-  // Save All Changes Button
+  // Explicit Save Changes Button (Only saves to Supabase when clicked)
   async function saveChanges() {
-    const data = getFormData();
-    const oldId = currentProfileId;
-    const newId = data.id;
+    const originalBtnHtml = btnSaveAll.innerHTML;
+    btnSaveAll.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Saving to Cloud...`;
+    btnSaveAll.disabled = true;
 
-    if (oldId !== newId) {
-      await ProfileStore.deleteProfileAsync(oldId);
-      currentProfileId = newId;
-    }
+    try {
+      const data = getFormData();
+      const oldId = currentProfileId;
+      const newId = data.id;
 
-    await ProfileStore.saveProfileAsync(newId, data);
-    await populateProfileDropdown();
-    showToast(`Profile "${data.name}" saved & applied!`);
-    
-    if (syncChannel) {
-      syncChannel.postMessage(data);
+      if (oldId !== "main" && oldId !== newId) {
+        await ProfileStore.deleteProfileAsync(oldId);
+        currentProfileId = newId;
+      }
+
+      await ProfileStore.saveProfileAsync(newId, data);
+      await populateProfileDropdown();
+      updatePublicLinks(newId);
+
+      btnSaveAll.innerHTML = `<i class="fa-solid fa-circle-check"></i> Saved!`;
+      btnSaveAll.style.background = "#10b981";
+      showToast(`Profile "${data.name}" saved & applied to all devices worldwide!`);
+
+      setTimeout(() => {
+        btnSaveAll.innerHTML = originalBtnHtml;
+        btnSaveAll.style.background = "";
+        btnSaveAll.disabled = false;
+      }, 2000);
+
+      // Refresh preview iframe with fresh cloud data
+      previewIframe.src = (newId === "main") ? `index.html?preview=1&t=${Date.now()}` : `index.html?u=${newId}&preview=1&t=${Date.now()}`;
+    } catch (e) {
+      console.error("Save error:", e);
+      btnSaveAll.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Error`;
+      btnSaveAll.style.background = "#ef4444";
+      showToast("Save failed. Please check internet connection.");
+      setTimeout(() => {
+        btnSaveAll.innerHTML = originalBtnHtml;
+        btnSaveAll.style.background = "";
+        btnSaveAll.disabled = false;
+      }, 2500);
     }
   }
 
@@ -232,22 +272,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     toast.classList.add("show");
     setTimeout(() => {
       toast.classList.remove("show");
-    }, 3000);
+    }, 3500);
   }
 
-  // File Upload Handlers (supports large 4K videos via FileReader DataURL & IndexedDB)
+  // File Upload Handlers
   function setupFileUpload(fileInput, textInput, previewImg) {
     fileInput.addEventListener("change", (e) => {
       const file = e.target.files[0];
       if (!file) return;
 
-      showToast("Loading media file...");
+      showToast("Loading media...");
       const reader = new FileReader();
-      reader.onload = async (event) => {
+      reader.onload = (event) => {
         textInput.value = event.target.result;
         if (previewImg) previewImg.src = event.target.result;
-        await autoSaveAndBroadcast();
-        showToast("Media updated and applied!");
+        updatePreviewFrame();
+        showToast("Media loaded in preview! Click 'Save Changes' to publish.");
       };
       reader.readAsDataURL(file);
     });
@@ -258,25 +298,25 @@ document.addEventListener("DOMContentLoaded", async () => {
   setupFileUpload(fileBgVideo, inputBgVideo, null);
 
   // Avatar text change listeners
-  inputMainAvatar.addEventListener("input", async (e) => {
-    previewMainAvatar.src = e.target.value;
-    await autoSaveAndBroadcast();
+  inputMainAvatar.addEventListener("input", (e) => {
+    previewMainAvatar.src = e.target.value || "assets/avatar.jpg";
+    updatePreviewFrame();
   });
-  inputPresenceAvatar.addEventListener("input", async (e) => {
-    previewPresenceAvatar.src = e.target.value;
-    await autoSaveAndBroadcast();
+  inputPresenceAvatar.addEventListener("input", (e) => {
+    previewPresenceAvatar.src = e.target.value || "assets/avatar.jpg";
+    updatePreviewFrame();
   });
 
-  // Attach live auto-save to every input element
-  document.addEventListener("input", async (e) => {
+  // Attach live preview updates (WITHOUT saving to cloud)
+  document.addEventListener("input", (e) => {
     if (e.target.matches("input, textarea, select")) {
-      await autoSaveAndBroadcast();
+      updatePreviewFrame();
     }
   });
 
-  document.addEventListener("change", async (e) => {
+  document.addEventListener("change", (e) => {
     if (e.target.matches("input, textarea, select")) {
-      await autoSaveAndBroadcast();
+      updatePreviewFrame();
     }
   });
 
@@ -290,28 +330,23 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Delete Profile
   btnDeleteProfile.addEventListener("click", async () => {
-    const profiles = await ProfileStore.getProfilesAsync();
-    const keys = Object.keys(profiles);
-    if (keys.length <= 1) {
-      alert("You cannot delete the only existing profile.");
+    if (currentProfileId === "main") {
+      alert("You cannot delete the Main Owner profile.");
       return;
     }
     if (confirm(`Are you sure you want to delete profile "${currentProfileId}"?`)) {
       await ProfileStore.deleteProfileAsync(currentProfileId);
-      currentProfileId = ProfileStore.getActiveId();
+      currentProfileId = "main";
       await populateProfileDropdown();
-      await loadProfile(currentProfileId);
+      await loadProfile("main");
       showToast("Profile deleted.");
     }
   });
 
   // Color picker sync
-  inputCustomColor.addEventListener("input", async () => {
+  inputCustomColor.addEventListener("input", () => {
     colorRadios.forEach((r) => (r.checked = false));
-    await autoSaveAndBroadcast();
-  });
-  colorRadios.forEach((r) => {
-    r.addEventListener("change", autoSaveAndBroadcast);
+    updatePreviewFrame();
   });
 
   // New Profile Modal
@@ -334,9 +369,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
+    if (slug === "main" || slug === "admin") {
+      alert("This slug is reserved. Please pick another one (e.g. kayhan, alex).");
+      return;
+    }
+
     const profiles = await ProfileStore.getProfilesAsync();
     if (profiles[slug]) {
-      alert("A profile with this slug already exists. Please pick another one.");
+      alert("A profile with this slug already exists.");
       return;
     }
 
@@ -345,13 +385,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       id: slug,
       name: name,
       username: slug,
-      subtitle: "Content Creator",
-      views: "1,000",
+      subtitle: "",
+      views: "0",
+      autoIncrementViews: true,
       showSparkles: true,
       showDotMatrix: true,
-      mainAvatar: "assets/avatar.jpg",
-      presenceAvatar: "assets/avatar.jpg",
-      backgroundVideo: "assets/levi_background.mp4",
+      mainAvatar: "",
+      presenceAvatar: "",
+      backgroundVideo: "",
       presence: {
         handle: slug,
         status: "online",
@@ -365,12 +406,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     await populateProfileDropdown();
     await loadProfile(slug);
     modalNewProfile.classList.remove("active");
-    showToast(`New profile "${name}" created!`);
-    await autoSaveAndBroadcast();
+    showToast(`New profile "${name}" created! Link: ?u=${slug}`);
   });
 
   // Init
   renderSocialInputs();
   await populateProfileDropdown();
-  await loadProfile(currentProfileId);
+  await loadProfile("main");
 });

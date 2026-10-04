@@ -19,9 +19,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   const viewsCount = document.getElementById("views-count");
   const viewsPill = document.querySelector(".views-pill");
 
-  // Read Profile from URL Query or Store
+  // Read Profile Slug from URL Query (Default to "main" for the root website!)
   const urlParams = new URLSearchParams(window.location.search);
-  let userSlug = urlParams.get("u");
+  const userSlug = urlParams.get("u") || "main";
   const isPreview = urlParams.get("preview") === "1";
 
   // Render Views Number with Animated Rolling Effect
@@ -46,8 +46,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // 1. Text & Titles
     if (nameText) nameText.textContent = profile.name || "LEVI";
-    if (profileSubtitle) profileSubtitle.textContent = profile.subtitle || "";
-    renderViews(profile.views || "90");
+    if (profileSubtitle) {
+      profileSubtitle.textContent = profile.subtitle || "";
+      profileSubtitle.style.display = profile.subtitle ? "block" : "none";
+    }
+    renderViews(profile.views || "0");
 
     // Sparkles Toggle
     const sparkles = document.querySelectorAll(".sparkle");
@@ -61,11 +64,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // 2. Avatars (Main & Presence Mini)
-    const mainImg = profile.mainAvatar || profile.avatar || "assets/avatar.jpg";
-    const presenceImg = profile.presenceAvatar || profile.avatar || "assets/avatar.jpg";
+    const mainImg = profile.mainAvatar || "assets/avatar.jpg";
+    const presenceImg = profile.presenceAvatar || mainImg || "assets/avatar.jpg";
 
-    if (profileAvatar && profileAvatar.src !== mainImg) profileAvatar.src = mainImg;
-    if (presenceMiniAvatar && presenceMiniAvatar.src !== presenceImg) presenceMiniAvatar.src = presenceImg;
+    if (profileAvatar) profileAvatar.src = mainImg;
+    if (presenceMiniAvatar) presenceMiniAvatar.src = presenceImg;
 
     // 3. Presence Widget
     if (profile.presence) {
@@ -76,10 +79,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     } else {
       if (presenceHandle) presenceHandle.textContent = profile.username || "user";
-      if (presenceStatus) presenceStatus.textContent = profile.presenceStatus || "online";
+      if (presenceStatus) presenceStatus.textContent = "online";
     }
 
-    // 4. Background Video (Video + its own Audio)
+    // 4. Background Video
     const videoUrl = profile.backgroundVideo || "assets/levi_background.mp4";
 
     if (bgVideo && videoUrl) {
@@ -138,21 +141,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     setupHoverEffects();
   }
 
-  // Initial Load from IndexedDB
+  // Initial Load from Supabase Cloud Database
   async function loadAndRender() {
     const currentProfile = (typeof ProfileStore !== "undefined")
       ? await ProfileStore.getProfileAsync(userSlug)
-      : (typeof CONFIG !== "undefined" ? CONFIG : null);
+      : null;
 
     if (currentProfile) {
-      const baseViews = currentProfile.views || "90";
+      const baseViews = currentProfile.views || "0";
       renderProfile(currentProfile);
 
       // Auto-Increment Real Views on Visit with Animation
       if (currentProfile.autoIncrementViews !== false && !isPreview) {
         setTimeout(async () => {
           if (typeof ProfileStore !== "undefined") {
-            const updatedViews = await ProfileStore.incrementViewsAsync(userSlug || currentProfile.id);
+            const updatedViews = await ProfileStore.incrementViewsAsync(userSlug);
             renderViews(updatedViews, baseViews);
           }
         }, 900);
@@ -162,18 +165,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   await loadAndRender();
 
-  // Listen for Real-Time Sync from Admin Panel (Cross-tab and inside Iframe)
-  if (typeof BroadcastChannel !== "undefined") {
-    const syncChannel = new BroadcastChannel("guns_lol_profile_sync");
-    syncChannel.onmessage = (event) => {
-      const data = event.data;
-      if (data && (!userSlug || data.id === userSlug || data.id === ProfileStore.getActiveId())) {
-        renderProfile(data);
-      }
-    };
-  }
+  // Listen for Live PostMessage Preview updates from Admin Panel
+  window.addEventListener("message", (event) => {
+    if (event.data && event.data.type === "PREVIEW_UPDATE" && event.data.profile) {
+      renderProfile(event.data.profile);
+    }
+  });
 
-  // Supabase Realtime Cloud Sync (Cross-Device Global Live Updates)
+  // Supabase Realtime Cloud Sync (Pushes saved changes to all devices worldwide)
   if (typeof ProfileStore !== "undefined") {
     const sb = ProfileStore.getSupabase();
     if (sb) {
@@ -181,7 +180,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         .on("postgres_changes", { event: "*", schema: "public", table: "bio_profiles" }, (payload) => {
           if (payload && payload.new && payload.new.data) {
             const updatedProfile = payload.new.data;
-            if (!userSlug || updatedProfile.id === userSlug || updatedProfile.id === ProfileStore.getActiveId()) {
+            if (updatedProfile.id === userSlug) {
               renderProfile(updatedProfile);
             }
           }
