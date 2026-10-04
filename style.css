@@ -16,12 +16,12 @@ html, body {
   overflow: hidden;
   position: relative;
   user-select: none;
-  /* Clean Native Circle + Center Dot Cursor (Zero Lag) */
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='8' stroke='%23ffffff' stroke-width='1.5' stroke-opacity='0.9'/%3E%3Ccircle cx='12' cy='12' r='2' fill='%23ffffff'/%3E%3C/svg%3E") 12 12, auto;
+  /* Crystal Arrow Cursor (Native, 0 Lag) */
+  cursor: url("assets/cursor.svg") 2 2, default;
 }
 
 a, button, input, select, label, .social-icon-btn, .views-pill, .enter-overlay {
-  cursor: pointer !important;
+  cursor: url("assets/cursor.svg") 2 2, pointer !important;
 }
 
 /* Background Video & Overlays */

@@ -203,15 +203,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   } else {
     // Click to Enter Handler: Unmutes and plays video audio directly!
-    if (enterOverlay) {
-      enterOverlay.addEventListener("click", () => {
+    function unlockBio() {
+      if (enterOverlay) {
         enterOverlay.classList.add("hidden");
-        if (bgVideo && bgVideo.style.display !== "none") {
-          bgVideo.muted = false;
-          bgVideo.volume = 0.8;
-          bgVideo.play().catch(() => {});
-        }
-      });
+      }
+      if (bgVideo && bgVideo.style.display !== "none") {
+        bgVideo.muted = false;
+        bgVideo.volume = 0.8;
+        bgVideo.play().catch(() => {});
+      }
     }
+    if (enterOverlay) {
+      enterOverlay.addEventListener("click", unlockBio);
+      enterOverlay.addEventListener("touchstart", unlockBio, { passive: true });
+    }
+    document.addEventListener("click", unlockBio, { once: true });
   }
 });
