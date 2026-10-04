@@ -343,19 +343,112 @@ a, button, input, select, label, .social-icon-btn, .views-pill, .enter-overlay {
   }
 }
 
-/* Responsive */
-@media (max-width: 480px) {
+/* Touch Screen Cursor Reset (Keeps PC Gaming Cursor, sets normal touch on Mobile) */
+@media (hover: none) and (pointer: coarse) {
+  html, body, *, *::before, *::after {
+    cursor: auto !important;
+  }
+}
+
+/* Mobile & Tablet Responsiveness (Zero changes to PC) */
+@media (max-width: 768px) {
+  body {
+    min-height: 100dvh;
+    height: 100dvh;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .bg-wrapper {
+    height: 100dvh;
+    width: 100vw;
+  }
+
+  #bg-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .profile-container {
+    max-width: 90vw;
+    padding: 1.25rem 0.75rem;
+    width: 100%;
+  }
+
+  .avatar-container {
+    margin-bottom: 0.85rem;
+  }
+
   .profile-avatar {
-    width: 95px;
-    height: 95px;
+    width: 100px;
+    height: 100px;
+  }
+
+  .profile-name {
+    font-size: 1.85rem;
+    letter-spacing: 0.5px;
+  }
+
+  .presence-widget {
+    padding: 0.4rem 0.9rem;
+    margin-bottom: 1.3rem;
+  }
+
+  .presence-avatar-wrap {
+    width: 34px;
+    height: 34px;
+  }
+
+  .presence-handle {
+    font-size: 0.9rem;
+  }
+
+  .presence-status {
+    font-size: 0.75rem;
+  }
+
+  .socials-row {
+    gap: 16px;
+    margin-bottom: 1.75rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .social-icon-btn {
+    font-size: 1.55rem;
+    padding: 6px;
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .social-icon-btn:active {
+    transform: scale(0.88);
+  }
+
+  .views-pill {
+    font-size: 0.82rem;
+    padding: 5px 14px;
+  }
+
+  .enter-text {
+    font-size: 1.05rem;
+    letter-spacing: 1.5px;
+  }
+}
+
+@media (max-width: 380px) {
+  .profile-avatar {
+    width: 90px;
+    height: 90px;
   }
   .profile-name {
-    font-size: 1.75rem;
+    font-size: 1.65rem;
   }
   .socials-row {
-    gap: 14px;
+    gap: 12px;
   }
   .social-icon-btn {
-    font-size: 1.45rem;
+    font-size: 1.4rem;
   }
 }
