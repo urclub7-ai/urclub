@@ -34,7 +34,21 @@ a, button, input, select, label, .social-icon-btn, .views-pill, .enter-overlay {
   height: 100dvh;
   z-index: 0;
   overflow: hidden;
-  background: radial-gradient(circle at 50% 30%, #161824 0%, #07070a 100%);
+  background: #000000;
+}
+
+#bg-canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 100%;
+  min-height: 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  z-index: 0;
 }
 
 #bg-video {
@@ -49,8 +63,9 @@ a, button, input, select, label, .social-icon-btn, .views-pill, .enter-overlay {
   object-fit: cover;
   filter: brightness(0.92) contrast(1.05);
   pointer-events: none;
+  z-index: 1;
   opacity: 0;
-  transition: opacity 0.5s ease;
+  transition: opacity 0.4s ease;
 }
 
 #bg-video.playing {
