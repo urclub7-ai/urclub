@@ -153,6 +153,23 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
   }
 
+  // Supabase Realtime Cloud Sync (Cross-Device Global Live Updates)
+  if (typeof ProfileStore !== "undefined") {
+    const sb = ProfileStore.getSupabase();
+    if (sb) {
+      sb.channel("public:bio_profiles")
+        .on("postgres_changes", { event: "*", schema: "public", table: "bio_profiles" }, (payload) => {
+          if (payload && payload.new && payload.new.data) {
+            const updatedProfile = payload.new.data;
+            if (!userSlug || updatedProfile.id === userSlug || updatedProfile.id === ProfileStore.getActiveId()) {
+              renderProfile(updatedProfile);
+            }
+          }
+        })
+        .subscribe();
+    }
+  }
+
   // Handle Preview Mode (for Admin Panel Iframe) vs Full Page
   if (isPreview) {
     if (enterOverlay) enterOverlay.classList.add("hidden");

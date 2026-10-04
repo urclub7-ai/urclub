@@ -1,6 +1,15 @@
 /**
- * Guns.lol Robust Storage Engine with IndexedDB (Supports Unlimited Large Video & Audio Files)
+ * Guns.lol Cloud Engine with Supabase & IndexedDB Hybrid Sync
  */
+
+const SUPABASE_URL = "https://thkaconmltqowxhjamfj.supabase.co";
+const SUPABASE_KEY = "sb_publishable_ZGZe4Tna3kz3VzKRQmPlRg_bWB7Hs4h";
+
+// Init Supabase Client
+let supabaseClient = null;
+if (typeof supabase !== "undefined" && supabase.createClient) {
+  supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+}
 
 const DB_NAME = "GunsLolBioDB";
 const DB_VERSION = 1;
@@ -19,8 +28,6 @@ const DEFAULT_PROFILES = {
     mainAvatar: "assets/avatar.jpg",
     presenceAvatar: "assets/avatar.jpg",
     backgroundVideo: "assets/levi_background.mp4",
-    musicAudio: "assets/levi_audio.mp3",
-    musicTitle: "Levi Ackerman Edit Track",
     presence: {
       handle: "levi85150",
       status: "online",
@@ -62,7 +69,7 @@ const SOCIAL_CATALOG = [
   { id: "reddit", name: "Reddit", icon: "fa-brands fa-reddit", color: "#FF4500", placeholder: "https://reddit.com/user/..." }
 ];
 
-// Open IndexedDB
+// Open IndexedDB (Local Fallback & Cache)
 function openDatabase() {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(DB_NAME, DB_VERSION);
@@ -78,7 +85,32 @@ function openDatabase() {
 }
 
 class ProfileStore {
+  static getSupabase() {
+    if (!supabaseClient && typeof supabase !== "undefined" && supabase.createClient) {
+      supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    }
+    return supabaseClient;
+  }
+
+  // Fetch all profiles from Supabase Cloud (with IndexedDB fallback)
   static async getProfilesAsync() {
+    const sb = this.getSupabase();
+    if (sb) {
+      try {
+        const { data, error } = await sb.from("bio_profiles").select("*");
+        if (!error && data && data.length > 0) {
+          const map = {};
+          data.forEach((row) => {
+            map[row.id] = row.data;
+          });
+          return map;
+        }
+      } catch (e) {
+        console.warn("Supabase fetch failed, fallback to local:", e);
+      }
+    }
+
+    // Local IndexedDB Fallback
     try {
       const db = await openDatabase();
       return new Promise((resolve) => {
@@ -89,80 +121,95 @@ class ProfileStore {
           const list = req.result || [];
           const map = {};
           list.forEach((p) => { map[p.id] = p; });
-          if (Object.keys(map).length === 0) {
-            // Seed default
-            this.saveProfileAsync("levi", DEFAULT_PROFILES["levi"]);
-            resolve(DEFAULT_PROFILES);
-          } else {
-            resolve(map);
-          }
+          resolve(Object.keys(map).length > 0 ? map : DEFAULT_PROFILES);
         };
         req.onerror = () => resolve(DEFAULT_PROFILES);
       });
     } catch (e) {
-      console.warn("IndexedDB fallback to memory:", e);
       return DEFAULT_PROFILES;
     }
   }
 
+  // Fetch single profile
   static async getProfileAsync(id) {
+    const targetId = id || this.getActiveId() || "levi";
+    const sb = this.getSupabase();
+    if (sb) {
+      try {
+        const { data, error } = await sb.from("bio_profiles").select("data").eq("id", targetId).single();
+        if (!error && data && data.data) {
+          return data.data;
+        }
+      } catch (e) {
+        console.warn("Supabase single fetch error:", e);
+      }
+    }
+
     const profiles = await this.getProfilesAsync();
-    if (id && profiles[id]) return profiles[id];
-    const activeId = this.getActiveId();
-    if (activeId && profiles[activeId]) return profiles[activeId];
-    return profiles["levi"] || DEFAULT_PROFILES["levi"];
+    return profiles[targetId] || profiles["levi"] || DEFAULT_PROFILES["levi"];
   }
 
+  // Save profile to Supabase Cloud + Local Cache
   static async saveProfileAsync(id, profileData) {
+    profileData.id = id;
+    const sb = this.getSupabase();
+
+    if (sb) {
+      try {
+        const { error } = await sb.from("bio_profiles").upsert({
+          id: id,
+          data: profileData,
+          updated_at: new Date().toISOString()
+        });
+        if (error) console.error("Supabase upsert error:", error);
+      } catch (e) {
+        console.error("Supabase save exception:", e);
+      }
+    }
+
+    // Also cache locally
     try {
       const db = await openDatabase();
-      return new Promise((resolve, reject) => {
-        const tx = db.transaction(STORE_NAME, "readwrite");
-        const store = tx.objectStore(STORE_NAME);
-        profileData.id = id;
-        const req = store.put(profileData);
-        req.onsuccess = () => {
-          this.setActiveId(id);
-          resolve(profileData);
-        };
-        req.onerror = () => reject(req.error);
-      });
-    } catch (e) {
-      console.error("Save error:", e);
-    }
+      const tx = db.transaction(STORE_NAME, "readwrite");
+      const store = tx.objectStore(STORE_NAME);
+      store.put(profileData);
+    } catch (e) {}
+
+    this.setActiveId(id);
+    return profileData;
   }
 
+  // Increment view counter globally in Supabase
   static async incrementViewsAsync(id) {
-    try {
-      const profile = await this.getProfileAsync(id);
-      if (!profile) return "90";
-      
-      let baseCount = parseInt(String(profile.views).replace(/,/g, ""), 10);
-      if (isNaN(baseCount)) baseCount = 90;
-      
-      const newCount = baseCount + 1;
-      profile.views = newCount.toLocaleString();
-      await this.saveProfileAsync(id || profile.id, profile);
-      return profile.views;
-    } catch (e) {
-      console.warn("View increment error:", e);
-      return "91";
-    }
+    const targetId = id || this.getActiveId() || "levi";
+    const profile = await this.getProfileAsync(targetId);
+    if (!profile) return "90";
+
+    let baseCount = parseInt(String(profile.views).replace(/,/g, ""), 10);
+    if (isNaN(baseCount)) baseCount = 90;
+
+    const newCount = baseCount + 1;
+    profile.views = newCount.toLocaleString();
+
+    await this.saveProfileAsync(targetId, profile);
+    return profile.views;
   }
 
+  // Delete profile
   static async deleteProfileAsync(id) {
+    const sb = this.getSupabase();
+    if (sb) {
+      try {
+        await sb.from("bio_profiles").delete().eq("id", id);
+      } catch (e) {}
+    }
+
     try {
       const db = await openDatabase();
-      return new Promise((resolve, reject) => {
-        const tx = db.transaction(STORE_NAME, "readwrite");
-        const store = tx.objectStore(STORE_NAME);
-        const req = store.delete(id);
-        req.onsuccess = () => resolve();
-        req.onerror = () => reject(req.error);
-      });
-    } catch (e) {
-      console.error("Delete error:", e);
-    }
+      const tx = db.transaction(STORE_NAME, "readwrite");
+      const store = tx.objectStore(STORE_NAME);
+      store.delete(id);
+    } catch (e) {}
   }
 
   static getActiveId() {
