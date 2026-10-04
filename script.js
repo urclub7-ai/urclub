@@ -116,10 +116,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (bgVideo.dataset.rawSrc !== videoUrl) {
           bgVideo.dataset.rawSrc = videoUrl;
           bgVideo.src = playableUrl;
-          if (videoSource) videoSource.src = playableUrl;
           bgVideo.load();
-          if (isPreview || enterOverlay.classList.contains("hidden")) {
-            bgVideo.play().catch(() => {});
+          
+          // Pre-buffer video in background (muted on page load for Safari compatibility)
+          bgVideo.muted = (isPreview || !enterOverlay || !enterOverlay.classList.contains("hidden"));
+          const initialPlay = bgVideo.play();
+          if (initialPlay !== undefined) {
+            initialPlay.catch(() => {
+              bgVideo.muted = true;
+              bgVideo.play().catch(() => {});
+            });
           }
         }
       } else {
@@ -169,7 +175,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const playPromise = bgVideo.play();
       if (playPromise !== undefined) {
         playPromise.catch((err) => {
-          console.warn("Audio autoplay blocked on mobile, playing muted:", err);
+          console.warn("Audio autoplay blocked on mobile, playing muted fallback:", err);
           bgVideo.muted = true;
           bgVideo.play().catch(() => {});
         });
@@ -189,6 +195,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       enterOverlay.addEventListener("touchstart", unlockBio, { passive: true });
     }
     document.addEventListener("click", unlockBio, { once: true });
+    document.addEventListener("touchstart", unlockBio, { once: true, passive: true });
   }
 
   // Initial Load from Supabase Cloud Database
