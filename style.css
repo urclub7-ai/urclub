@@ -1,0 +1,351 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  cursor: none !important; /* Custom guns.lol cursor */
+}
+
+body {
+  background-color: #000000;
+  color: #ffffff;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  user-select: none;
+}
+
+/* Custom Cursor & Trail */
+.custom-cursor {
+  position: fixed;
+  width: 26px;
+  height: 26px;
+  border: 1.5px solid rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: transform 0.08s ease, width 0.2s ease, height 0.2s ease, border-color 0.2s ease;
+  z-index: 100000;
+  mix-blend-mode: difference;
+}
+
+.cursor-dot {
+  position: fixed;
+  width: 4px;
+  height: 4px;
+  background: #ffffff;
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 100001;
+  box-shadow: 0 0 6px #ffffff;
+}
+
+.custom-cursor.hovering {
+  width: 40px;
+  height: 40px;
+  border-color: rgba(255, 255, 255, 1);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Background Video & Overlays */
+.bg-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  overflow: hidden;
+}
+
+#bg-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.9) contrast(1.05);
+}
+
+/* Guns.lol Halftone Dot Matrix Pattern */
+.bg-dot-matrix {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(rgba(0, 0, 0, 0.45) 1px, transparent 0);
+  background-size: 3px 3px;
+  background-position: -19px -19px;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.bg-vignette {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.65) 100%);
+  pointer-events: none;
+}
+
+/* Mouse Sparkle Particles Canvas */
+#trail-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Click To Enter Overlay */
+.enter-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #000000;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s;
+}
+
+.enter-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.enter-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.15rem;
+  letter-spacing: 2px;
+  color: #a1a1aa;
+  animation: pulseOpacity 2s infinite ease-in-out;
+}
+
+/* Center Profile Container */
+.profile-container {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 480px;
+  padding: 1.5rem;
+}
+
+/* Circular Avatar */
+.avatar-container {
+  margin-bottom: 1.1rem;
+}
+
+.profile-avatar {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: #121212;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.profile-avatar:hover {
+  transform: scale(1.04);
+}
+
+/* Username with Floating Sparkles */
+.name-container {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 0.35rem;
+}
+
+.profile-name {
+  font-size: 2.1rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #ffffff;
+  text-transform: uppercase;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+  position: relative;
+}
+
+/* Animated Sparkles around Name */
+.sparkle {
+  position: absolute;
+  color: #ffffff;
+  pointer-events: none;
+  opacity: 0.8;
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.9));
+  animation: sparkleTwinkle 2.4s infinite ease-in-out;
+}
+
+.s1 { top: -10px; left: -14px; font-size: 0.9rem; animation-delay: 0s; }
+.s2 { top: 2px; right: -16px; font-size: 0.75rem; animation-delay: 0.4s; }
+.s3 { bottom: -6px; left: 18%; font-size: 0.8rem; animation-delay: 0.9s; }
+.s4 { top: -12px; right: 25%; font-size: 0.7rem; animation-delay: 1.3s; }
+.s5 { bottom: -4px; right: -12px; font-size: 0.85rem; animation-delay: 1.7s; }
+
+/* Subtitle */
+.profile-subtitle {
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 1.3rem;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* Presence Widget (Pill Card) */
+.presence-widget {
+  background: rgba(20, 20, 25, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.6rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s, background 0.2s, border-color 0.2s;
+}
+
+.presence-widget:hover {
+  background: rgba(30, 30, 38, 0.7);
+  border-color: rgba(255, 255, 255, 0.22);
+  transform: translateY(-2px);
+}
+
+.presence-avatar-wrap {
+  position: relative;
+  width: 44px;
+  height: 44px;
+}
+
+.presence-mini-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #111;
+}
+
+.presence-status-ring {
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 13px;
+  height: 13px;
+  background-color: #22c55e; /* Green for online */
+  border: 2.5px solid #16161e;
+  border-radius: 50%;
+}
+
+.presence-info {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.presence-handle {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.3px;
+}
+
+.presence-status {
+  font-size: 0.8rem;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 1px;
+}
+
+/* Horizontal Social Icons Bar */
+.socials-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-bottom: 2.2rem;
+}
+
+.social-icon-btn {
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  font-size: 1.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, color 0.2s ease, filter 0.2s ease;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.6));
+}
+
+.social-icon-btn:hover {
+  transform: translateY(-4px) scale(1.15);
+  color: #ffffff;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+}
+
+/* Views Pill */
+.views-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.views-pill i {
+  font-size: 0.85rem;
+}
+
+/* Keyframe Animations */
+@keyframes pulseOpacity {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+@keyframes sparkleTwinkle {
+  0%, 100% {
+    transform: scale(0.6) rotate(0deg);
+    opacity: 0.2;
+  }
+  50% {
+    transform: scale(1.25) rotate(45deg);
+    opacity: 1;
+  }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .profile-avatar {
+    width: 95px;
+    height: 95px;
+  }
+  .profile-name {
+    font-size: 1.75rem;
+  }
+  .socials-row {
+    gap: 14px;
+  }
+  .social-icon-btn {
+    font-size: 1.45rem;
+  }
+}

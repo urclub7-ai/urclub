@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LEVI • guns.lol</title>
+  <link rel="icon" type="image/x-icon" href="https://guns.lol/favicon.ico" />
+
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  
+  <!-- Inter & SF Pro Display Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Custom Cursor & Cursor Trail -->
+  <div id="custom-cursor" class="custom-cursor"></div>
+  <div id="cursor-dot" class="cursor-dot"></div>
+
+  <!-- Click to Enter Screen -->
+  <div id="enter-overlay" class="enter-overlay">
+    <div class="enter-content">
+      <p class="enter-text">[ click anywhere to enter ]</p>
+    </div>
+  </div>
+
+  <!-- Background Video (Video + Audio) & Dot-Matrix Grid Overlay -->
+  <div class="bg-wrapper">
+    <video id="bg-video" loop playsinline>
+      <source src="assets/levi_background.mp4" type="video/mp4" id="video-source" />
+    </video>
+    <!-- Exact Guns.lol Dot Matrix Pattern -->
+    <div class="bg-dot-matrix" id="bg-dot-matrix"></div>
+    <div class="bg-vignette"></div>
+  </div>
+
+  <!-- Canvas for Mouse Particle Trail & Sparkles -->
+  <canvas id="trail-canvas"></canvas>
+
+  <!-- Center Profile Container (Exact layout as screenshot) -->
+  <main class="profile-container">
+    
+    <!-- Profile Avatar (Main) -->
+    <div class="avatar-container">
+      <img src="assets/avatar.jpg" alt="Avatar" id="profile-avatar" class="profile-avatar" />
+    </div>
+
+    <!-- Sparkle Name Container -->
+    <div class="name-container">
+      <h1 id="profile-name" class="profile-name">
+        <span id="name-text">LEVI</span>
+        <span class="sparkle s1">✦</span>
+        <span class="sparkle s2">✧</span>
+        <span class="sparkle s3">✦</span>
+        <span class="sparkle s4">✧</span>
+        <span class="sparkle s5">✦</span>
+      </h1>
+    </div>
+
+    <!-- Subtitle / Role -->
+    <p id="profile-subtitle" class="profile-subtitle">Humanity's Strongest Soldier & Content Creator</p>
+
+    <!-- Presence / Activity Pill Widget -->
+    <div class="presence-widget" id="presence-widget">
+      <div class="presence-avatar-wrap">
+        <img src="assets/avatar.jpg" alt="Mini Avatar" id="presence-mini-avatar" class="presence-mini-avatar" />
+        <span class="presence-status-ring" id="presence-status-ring"></span>
+      </div>
+      <div class="presence-info">
+        <span id="presence-handle" class="presence-handle">levi85150</span>
+        <span id="presence-status" class="presence-status">online</span>
+      </div>
+    </div>
+
+    <!-- Horizontal Social Media Icons -->
+    <div class="socials-row" id="socials-row">
+      <!-- Generated dynamically -->
+    </div>
+
+    <!-- Views Counter (Bottom) -->
+    <div class="views-pill">
+      <i class="fa-solid fa-eye"></i>
+      <span id="views-count">7,841</span>
+    </div>
+
+  </main>
+
+  <!-- Storage & Dynamic Engine -->
+  <script src="storage.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

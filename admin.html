@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard • guns.lol Bio Manager</title>
+  
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="admin-header">
+    <div class="header-left">
+      <div class="logo">
+        <i class="fa-solid fa-crosshairs"></i>
+        <span>GUNS.LOL <strong>ADMIN</strong></span>
+      </div>
+      
+      <!-- Profile Switcher -->
+      <div class="profile-select-wrap">
+        <label for="profile-select">Current Profile:</label>
+        <select id="profile-select" class="profile-dropdown"></select>
+      </div>
+
+      <button id="btn-add-profile" class="btn btn-outline">
+        <i class="fa-solid fa-plus"></i> New Profile
+      </button>
+    </div>
+
+    <div class="header-right">
+      <button id="btn-delete-profile" class="btn btn-danger-outline" title="Delete current profile">
+        <i class="fa-solid fa-trash-can"></i> Delete
+      </button>
+      <a id="btn-view-public" href="index.html" target="_blank" class="btn btn-secondary">
+        <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Live Bio
+      </a>
+      <button id="btn-save-all" class="btn btn-primary">
+        <i class="fa-solid fa-floppy-disk"></i> Save Changes
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Admin Layout -->
+  <div class="admin-layout">
+    
+    <!-- Left: Settings Panel -->
+    <div class="settings-container">
+      
+      <!-- General Info Card -->
+      <section class="admin-card">
+        <div class="card-header">
+          <i class="fa-solid fa-id-card"></i>
+          <h3>General Information</h3>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="input-name">Display Name (Large Text)</label>
+            <input type="text" id="input-name" placeholder="e.g. LEVI ACKERMAN" />
+          </div>
+          <div class="form-group">
+            <label for="input-slug">Profile Slug / ID (URL identifier)</label>
+            <input type="text" id="input-slug" placeholder="e.g. levi, alex, streamer" />
+          </div>
+          <div class="form-group full-width">
+            <label for="input-subtitle">Subtitle / Role Description</label>
+            <input type="text" id="input-subtitle" placeholder="e.g. PC Optimizer & Content Creator" />
+          </div>
+          <div class="form-group">
+            <label for="input-views">Views Counter Number</label>
+            <input type="text" id="input-views" placeholder="e.g. 7,841" />
+          </div>
+        </div>
+      </section>
+
+      <!-- Profile Avatars (Two Profile Photos) -->
+      <section class="admin-card">
+        <div class="card-header">
+          <i class="fa-solid fa-user-circle"></i>
+          <h3>Avatars (Main & Mini Presence)</h3>
+        </div>
+        <div class="form-grid">
+          <!-- Main Center Avatar -->
+          <div class="form-group">
+            <label>1. Main Center Avatar</label>
+            <div class="avatar-input-box">
+              <div class="avatar-preview-wrap">
+                <img id="preview-main-avatar" src="assets/avatar.jpg" alt="Main Avatar" />
+              </div>
+              <div class="avatar-controls">
+                <input type="text" id="input-main-avatar" placeholder="Image URL or assets/avatar.jpg" />
+                <label class="file-upload-btn">
+                  <i class="fa-solid fa-upload"></i> Upload Image
+                  <input type="file" id="file-main-avatar" accept="image/*" />
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Presence Mini Avatar -->
+          <div class="form-group">
+            <label>2. Presence Widget Mini Avatar</label>
+            <div class="avatar-input-box">
+              <div class="avatar-preview-wrap mini">
+                <img id="preview-presence-avatar" src="assets/avatar.jpg" alt="Presence Avatar" />
+              </div>
+              <div class="avatar-controls">
+                <input type="text" id="input-presence-avatar" placeholder="Image URL or assets/avatar.jpg" />
+                <label class="file-upload-btn">
+                  <i class="fa-solid fa-upload"></i> Upload Image
+                  <input type="file" id="file-presence-avatar" accept="image/*" />
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Media: Background Video -->
+      <section class="admin-card">
+        <div class="card-header">
+          <i class="fa-solid fa-film"></i>
+          <h3>Background Video (Video + Audio)</h3>
+          <span class="header-hint">Audio is automatically played from the video!</span>
+        </div>
+        <div class="form-grid">
+          <!-- Background Video -->
+          <div class="form-group full-width">
+            <label for="input-bg-video">Background Video URL / Upload (.mp4)</label>
+            <div class="media-input-row">
+              <input type="text" id="input-bg-video" placeholder="assets/levi_background.mp4 or direct MP4 link" />
+              <label class="file-upload-btn">
+                <i class="fa-solid fa-video"></i> Upload MP4 Video
+                <input type="file" id="file-bg-video" accept="video/mp4,video/*" />
+              </label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Presence Status Widget -->
+      <section class="admin-card">
+        <div class="card-header">
+          <i class="fa-solid fa-signal"></i>
+          <h3>Presence / Status Widget</h3>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="input-presence-handle">Handle / Username</label>
+            <input type="text" id="input-presence-handle" placeholder="e.g. levi85150" />
+          </div>
+          <div class="form-group">
+            <label for="input-presence-status">Status Text</label>
+            <input type="text" id="input-presence-status" placeholder="e.g. online, last seen 3 days ago, playing Game" />
+          </div>
+          <div class="form-group full-width">
+            <label>Status Indicator Color</label>
+            <div class="color-options">
+              <label class="color-radio">
+                <input type="radio" name="presence-color" value="#22c55e" checked />
+                <span class="color-badge" style="background:#22c55e;"></span> Online (Green)
+              </label>
+              <label class="color-radio">
+                <input type="radio" name="presence-color" value="#eab308" />
+                <span class="color-badge" style="background:#eab308;"></span> Idle (Yellow)
+              </label>
+              <label class="color-radio">
+                <input type="radio" name="presence-color" value="#ef4444" />
+                <span class="color-badge" style="background:#ef4444;"></span> DND (Red)
+              </label>
+              <label class="color-radio">
+                <input type="radio" name="presence-color" value="#71717a" />
+                <span class="color-badge" style="background:#71717a;"></span> Offline (Grey)
+              </label>
+              <input type="color" id="input-custom-color" value="#22c55e" class="color-picker-input" title="Pick custom color" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Social Media Links (Full Library) -->
+      <section class="admin-card">
+        <div class="card-header">
+          <i class="fa-solid fa-share-nodes"></i>
+          <h3>Social Media Icons & Links</h3>
+          <span class="header-hint">Only platforms with a filled link will appear on the bio page!</span>
+        </div>
+        
+        <div class="socials-catalog-list" id="socials-inputs-list">
+          <!-- Dynamically loaded from SOCIAL_CATALOG -->
+        </div>
+      </section>
+
+      <!-- Visual Effects -->
+      <section class="admin-card">
+        <div class="card-header">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <h3>Visual Effects</h3>
+        </div>
+        <div class="switches-grid">
+          <label class="toggle-switch-wrap">
+            <input type="checkbox" id="toggle-sparkles" checked />
+            <span class="switch-slider"></span>
+            <span class="switch-label">Glowing Animated Name Sparkles (✦ ✧)</span>
+          </label>
+          <label class="toggle-switch-wrap">
+            <input type="checkbox" id="toggle-dotmatrix" checked />
+            <span class="switch-slider"></span>
+            <span class="switch-label">Halftone Dot-Matrix Background Overlay</span>
+          </label>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Right: Live Reactive Preview -->
+    <div class="preview-container">
+      <div class="preview-sticky">
+        <div class="preview-header">
+          <span><i class="fa-solid fa-mobile-screen"></i> Live Real-Time Preview</span>
+          <a id="preview-open-btn" href="index.html" target="_blank" class="preview-link">
+            Full Screen <i class="fa-solid fa-external-link"></i>
+          </a>
+        </div>
+        <div class="preview-frame-wrapper">
+          <iframe id="preview-iframe" src="index.html" class="preview-iframe"></iframe>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="admin-toast" class="admin-toast">
+    <i class="fa-solid fa-circle-check"></i>
+    <span id="toast-msg">Settings saved successfully!</span>
+  </div>
+
+  <!-- Modal for Creating New Profile -->
+  <div id="modal-new-profile" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-user-plus"></i> Create New Profile</h3>
+        <button id="modal-close" class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="new-profile-name">Profile Display Name</label>
+          <input type="text" id="new-profile-name" placeholder="e.g. John Wick, Alex, Streamer" />
+        </div>
+        <div class="form-group">
+          <label for="new-profile-slug">Unique Slug / Username (no spaces)</label>
+          <input type="text" id="new-profile-slug" placeholder="e.g. john, alex123" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="modal-cancel" class="btn btn-outline">Cancel</button>
+        <button id="modal-confirm" class="btn btn-primary">Create Profile</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="storage.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
