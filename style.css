@@ -367,18 +367,41 @@ a, button, input, select, label, .social-icon-btn, .views-pill, .enter-overlay {
   }
 
   .bg-wrapper {
-    height: 100dvh;
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100vw;
+    height: 100dvh;
+    min-height: 100vh;
+    overflow: hidden;
   }
 
   #bg-video {
-    width: 100%;
-    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100dvh;
+    min-width: 100vw;
+    min-height: 100dvh;
     object-fit: cover;
+    object-position: center center;
+    filter: brightness(0.96) contrast(1.02);
+    -webkit-transform: translate3d(0, 0, 0);
+  }
+
+  /* Cleaner and sharper overlay on mobile */
+  .bg-dot-matrix {
+    opacity: 0.45;
+    background-size: 3px 3px;
+  }
+
+  .bg-vignette {
+    background: radial-gradient(circle at center, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.5) 100%);
   }
 
   .profile-container {
-    max-width: 90vw;
+    max-width: 92vw;
     padding: 1.25rem 0.75rem;
     width: 100%;
   }
