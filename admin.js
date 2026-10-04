@@ -10,6 +10,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   const toast = document.getElementById("admin-toast");
   const toastMsg = document.getElementById("toast-msg");
 
+  const modeText = document.getElementById("mode-text");
+  const currentLiveUrl = document.getElementById("current-live-url");
+  const btnCopyUrl = document.getElementById("btn-copy-url");
+
   // Form Fields
   const inputName = document.getElementById("input-name");
   const inputSlug = document.getElementById("input-slug");
@@ -50,6 +54,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const modalConfirm = document.getElementById("modal-confirm");
   const newProfileName = document.getElementById("new-profile-name");
   const newProfileSlug = document.getElementById("new-profile-slug");
+
+  const DEFAULT_AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23a855f7'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E";
 
   let currentProfileId = "main";
 
@@ -119,10 +125,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Avatars
     inputMainAvatar.value = profile.mainAvatar || "";
-    previewMainAvatar.src = profile.mainAvatar || "assets/avatar.jpg";
+    previewMainAvatar.src = profile.mainAvatar || DEFAULT_AVATAR;
 
     inputPresenceAvatar.value = profile.presenceAvatar || "";
-    previewPresenceAvatar.src = profile.presenceAvatar || "assets/avatar.jpg";
+    previewPresenceAvatar.src = profile.presenceAvatar || DEFAULT_AVATAR;
 
     // Media
     inputBgVideo.value = profile.backgroundVideo || "";
@@ -185,7 +191,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     return {
       id: slug,
-      name: inputName.value.trim() || "Profile Name",
+      name: inputName.value.trim() || "LEVI",
       username: inputPresenceHandle.value.trim() || slug,
       subtitle: inputSubtitle.value.trim(),
       views: inputViews.value.trim() || "0",
@@ -203,10 +209,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       socials: socialsData
     };
   }
-
-  const modeText = document.getElementById("mode-text");
-  const currentLiveUrl = document.getElementById("current-live-url");
-  const btnCopyUrl = document.getElementById("btn-copy-url");
 
   // Update Public Links & Mode Card
   function updatePublicLinks(slug) {
@@ -240,9 +242,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Update Preview Frame (Sends data directly to iframe without saving to cloud)
   function updatePreviewFrame() {
     const data = getFormData();
-    const targetUrl = (currentProfileId === "main") ? "index.html?preview=1" : `index.html?u=${currentProfileId}&preview=1`;
-    
-    if (previewIframe.contentWindow) {
+    if (previewIframe && previewIframe.contentWindow) {
       previewIframe.contentWindow.postMessage({ type: "PREVIEW_UPDATE", profile: data }, "*");
     }
   }
@@ -269,7 +269,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       btnSaveAll.innerHTML = `<i class="fa-solid fa-circle-check"></i> Saved!`;
       btnSaveAll.style.background = "#10b981";
-      showToast(`Profile "${data.name}" saved & applied to all devices worldwide!`);
+      showToast(`Profile "${data.name}" saved & updated on all devices! ✅`);
 
       setTimeout(() => {
         btnSaveAll.innerHTML = originalBtnHtml;
@@ -301,39 +301,85 @@ document.addEventListener("DOMContentLoaded", async () => {
     }, 3500);
   }
 
-  // File Upload Handlers
-  function setupFileUpload(fileInput, textInput, previewImg) {
+  // Fast High-Quality Canvas Image Resizer (Compresses to ~25KB WebP/JPEG for instant cloud sync)
+  function compressImage(file, callback) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const MAX_SIZE = 256;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > MAX_SIZE) {
+            height *= MAX_SIZE / width;
+            width = MAX_SIZE;
+          }
+        } else {
+          if (height > MAX_SIZE) {
+            width *= MAX_SIZE / height;
+            height = MAX_SIZE;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, width, height);
+        const dataUrl = canvas.toDataURL("image/webp", 0.88);
+        callback(dataUrl);
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // Avatar Upload Handlers
+  function setupAvatarUpload(fileInput, textInput, previewImg) {
     fileInput.addEventListener("change", (e) => {
       const file = e.target.files[0];
       if (!file) return;
 
-      showToast("Loading media...");
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        textInput.value = event.target.result;
-        if (previewImg) previewImg.src = event.target.result;
+      compressImage(file, (compressedDataUrl) => {
+        textInput.value = compressedDataUrl;
+        if (previewImg) previewImg.src = compressedDataUrl;
         updatePreviewFrame();
-        showToast("Media loaded in preview! Click 'Save Changes' to publish.");
-      };
-      reader.readAsDataURL(file);
+        showToast("Avatar image loaded! Click 'Save Changes' to publish.");
+      });
     });
   }
 
-  setupFileUpload(fileMainAvatar, inputMainAvatar, previewMainAvatar);
-  setupFileUpload(filePresenceAvatar, inputPresenceAvatar, previewPresenceAvatar);
-  setupFileUpload(fileBgVideo, inputBgVideo, null);
+  setupAvatarUpload(fileMainAvatar, inputMainAvatar, previewMainAvatar);
+  setupAvatarUpload(filePresenceAvatar, inputPresenceAvatar, previewPresenceAvatar);
+
+  // Video Upload Handler
+  fileBgVideo.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    showToast("Loading video into preview...");
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      inputBgVideo.value = event.target.result;
+      updatePreviewFrame();
+      showToast("Video loaded in preview! Click 'Save Changes' to publish.");
+    };
+    reader.readAsDataURL(file);
+  });
 
   // Avatar text change listeners
   inputMainAvatar.addEventListener("input", (e) => {
-    previewMainAvatar.src = e.target.value || "assets/avatar.jpg";
+    previewMainAvatar.src = e.target.value || DEFAULT_AVATAR;
     updatePreviewFrame();
   });
   inputPresenceAvatar.addEventListener("input", (e) => {
-    previewPresenceAvatar.src = e.target.value || "assets/avatar.jpg";
+    previewPresenceAvatar.src = e.target.value || DEFAULT_AVATAR;
     updatePreviewFrame();
   });
 
-  // Attach live preview updates (WITHOUT saving to cloud)
+  // Attach live preview updates (WITHOUT saving to cloud until Save is clicked)
   document.addEventListener("input", (e) => {
     if (e.target.matches("input, textarea, select")) {
       updatePreviewFrame();

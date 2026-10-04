@@ -19,6 +19,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const viewsCount = document.getElementById("views-count");
   const viewsPill = document.querySelector(".views-pill");
 
+  const DEFAULT_AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23a855f7'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E";
+
   // Read Profile Slug from URL Query (Default to "main" for the root website!)
   const urlParams = new URLSearchParams(window.location.search);
   const userSlug = urlParams.get("u") || "main";
@@ -64,8 +66,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // 2. Avatars (Main & Presence Mini)
-    const mainImg = profile.mainAvatar || "assets/avatar.jpg";
-    const presenceImg = profile.presenceAvatar || mainImg || "assets/avatar.jpg";
+    const mainImg = profile.mainAvatar && profile.mainAvatar.trim() ? profile.mainAvatar : DEFAULT_AVATAR;
+    const presenceImg = profile.presenceAvatar && profile.presenceAvatar.trim() ? profile.presenceAvatar : mainImg;
 
     if (profileAvatar) profileAvatar.src = mainImg;
     if (presenceMiniAvatar) presenceMiniAvatar.src = presenceImg;
@@ -83,37 +85,43 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // 4. Background Video
-    const videoUrl = profile.backgroundVideo || "assets/levi_background.mp4";
+    const videoUrl = profile.backgroundVideo ? profile.backgroundVideo.trim() : "";
 
-    if (bgVideo && videoUrl) {
-      let playableUrl = videoUrl;
-      
-      // Convert base64 data:video to Blob URL for instant HTML5 browser playback
-      if (videoUrl.startsWith("data:video")) {
-        try {
-          const parts = videoUrl.split(",");
-          const mime = parts[0].match(/:(.*?);/)[1] || "video/mp4";
-          const byteCharacters = atob(parts[1]);
-          const byteNumbers = new Array(byteCharacters.length);
-          for (let i = 0; i < byteCharacters.length; i++) {
-            byteNumbers[i] = byteCharacters.charCodeAt(i);
+    if (bgVideo) {
+      if (videoUrl) {
+        bgVideo.style.display = "block";
+        let playableUrl = videoUrl;
+        
+        // Convert base64 data:video to Blob URL for instant HTML5 browser playback
+        if (videoUrl.startsWith("data:video")) {
+          try {
+            const parts = videoUrl.split(",");
+            const mime = parts[0].match(/:(.*?);/)[1] || "video/mp4";
+            const byteCharacters = atob(parts[1]);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+              byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], { type: mime });
+            playableUrl = URL.createObjectURL(blob);
+          } catch (e) {
+            console.warn("Blob conversion error:", e);
           }
-          const byteArray = new Uint8Array(byteNumbers);
-          const blob = new Blob([byteArray], { type: mime });
-          playableUrl = URL.createObjectURL(blob);
-        } catch (e) {
-          console.warn("Blob conversion error:", e);
         }
-      }
 
-      if (bgVideo.dataset.rawSrc !== videoUrl) {
-        bgVideo.dataset.rawSrc = videoUrl;
-        bgVideo.src = playableUrl;
-        if (videoSource) videoSource.src = playableUrl;
-        bgVideo.load();
-        if (isPreview || enterOverlay.classList.contains("hidden")) {
-          bgVideo.play().catch(() => {});
+        if (bgVideo.dataset.rawSrc !== videoUrl) {
+          bgVideo.dataset.rawSrc = videoUrl;
+          bgVideo.src = playableUrl;
+          if (videoSource) videoSource.src = playableUrl;
+          bgVideo.load();
+          if (isPreview || enterOverlay.classList.contains("hidden")) {
+            bgVideo.play().catch(() => {});
+          }
         }
+      } else {
+        bgVideo.style.display = "none";
+        bgVideo.pause();
       }
     }
 
@@ -192,7 +200,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Handle Preview Mode (for Admin Panel Iframe) vs Full Page
   if (isPreview) {
     if (enterOverlay) enterOverlay.classList.add("hidden");
-    if (bgVideo) {
+    if (bgVideo && bgVideo.style.display !== "none") {
       bgVideo.muted = true;
       bgVideo.play().catch(() => {});
     }
@@ -202,7 +210,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       enterOverlay.addEventListener("click", () => {
         enterOverlay.classList.add("hidden");
         
-        if (bgVideo) {
+        if (bgVideo && bgVideo.style.display !== "none") {
           bgVideo.muted = false;
           bgVideo.volume = 0.8;
           bgVideo.play().catch(() => {});
