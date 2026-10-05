@@ -286,13 +286,26 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Initial Load from Supabase Cloud Database
   async function loadAndRender() {
+    // Instant cache pre-render: Never flicker '0' while waiting for network
+    try {
+      const cached = localStorage.getItem("urclub_cached_profile_" + userSlug);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed) renderProfile(parsed);
+      }
+    } catch (e) {}
+
     try {
       const currentProfile = (typeof ProfileStore !== "undefined")
         ? await ProfileStore.getProfileAsync(userSlug)
         : null;
 
       if (currentProfile) {
-        const baseViews = currentProfile.views || "0";
+        try {
+          localStorage.setItem("urclub_cached_profile_" + userSlug, JSON.stringify(currentProfile));
+        } catch (e) {}
+
+        const baseViews = currentProfile.views || "10";
         renderProfile(currentProfile);
 
         // Real Unique Visitor View Counting (Guarantees refresh NEVER increments!)

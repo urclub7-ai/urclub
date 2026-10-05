@@ -173,20 +173,57 @@ class ProfileStore {
     return profileData;
   }
 
-  // Increment view counter globally in Supabase
+  // Increment view counter safely in Supabase (never resets to 0)
   static async incrementViewsAsync(id) {
     const targetId = id || MAIN_PROFILE_ID;
-    const profile = await this.getProfileAsync(targetId);
-    if (!profile) return "1";
+    const sb = this.getSupabase();
+    if (!sb) return null;
 
-    let baseCount = parseInt(String(profile.views).replace(/,/g, ""), 10);
-    if (isNaN(baseCount)) baseCount = 0;
+    try {
+      const { data: row, error } = await sb
+        .from("bio_profiles")
+        .select("data")
+        .eq("id", targetId)
+        .setHeader("Cache-Control", "no-cache, no-store, must-revalidate")
+        .single();
 
-    const newCount = baseCount + 1;
-    profile.views = newCount.toLocaleString();
+      if (error || !row || !row.data) {
+        console.warn("Could not fetch profile for view increment, aborting to prevent reset:", error);
+        return null;
+      }
 
-    await this.saveProfileAsync(targetId, profile);
-    return profile.views;
+      const profile = row.data;
+      let baseCount = parseInt(String(profile.views || "0").replace(/[^0-9]/g, ""), 10);
+      if (isNaN(baseCount)) baseCount = 0;
+
+      const newCount = baseCount + 1;
+      profile.views = String(newCount);
+
+      const { error: updateErr } = await sb
+        .from("bio_profiles")
+        .update({
+          data: profile,
+          updated_at: new Date().toISOString()
+        })
+        .eq("id", targetId);
+
+      if (updateErr) {
+        console.error("Supabase view update error:", updateErr);
+        return null;
+      }
+
+      try {
+        const db = await openDatabase();
+        const tx = db.transaction(STORE_NAME, "readwrite");
+        const store = tx.objectStore(STORE_NAME);
+        store.put(profile);
+      } catch (e) {}
+
+      return profile.views;
+    } catch (e) {
+      console.error("Increment exception:", e);
+      return null;
+    }
   }
 
   // Delete profile

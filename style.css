@@ -312,8 +312,9 @@ a, button, input, select, label, .social-icon-btn, .views-pill, .enter-overlay {
 
 .views-pill i {
   font-size: 0.85rem;
-  color: #38bdf8;
-  transition: transform 0.3s ease, color 0.3s ease;
+  color: #ffffff;
+  opacity: 0.9;
+  transition: transform 0.3s ease, color 0.3s ease, opacity 0.3s ease;
 }
 
 .views-pill.pulse i {
