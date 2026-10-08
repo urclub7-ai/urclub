@@ -312,8 +312,8 @@ a, button, input, select, label, .social-icon-btn, .views-pill, .enter-overlay {
 
 .views-pill i {
   font-size: 0.85rem;
-  color: #ffffff;
-  opacity: 0.9;
+  color: #ffffff !important;
+  opacity: 0.95;
   transition: transform 0.3s ease, color 0.3s ease, opacity 0.3s ease;
 }
 
@@ -351,9 +351,9 @@ a, button, input, select, label, .social-icon-btn, .views-pill, .enter-overlay {
 }
 
 @keyframes eyePulse {
-  0% { transform: scale(1); filter: drop-shadow(0 0 0px #38bdf8); }
-  50% { transform: scale(1.4); filter: drop-shadow(0 0 12px #38bdf8); color: #ffffff; }
-  100% { transform: scale(1); filter: drop-shadow(0 0 0px #38bdf8); }
+  0% { transform: scale(1); filter: drop-shadow(0 0 0px rgba(255, 255, 255, 0)); }
+  50% { transform: scale(1.3); filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.85)); color: #ffffff !important; }
+  100% { transform: scale(1); filter: drop-shadow(0 0 0px rgba(255, 255, 255, 0)); }
 }
 
 /* Keyframe Animations */

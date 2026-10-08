@@ -20,7 +20,8 @@ const DEFAULT_MAIN_PROFILE = {
   name: "LEVI",
   username: "levi",
   subtitle: "Humanity's Strongest Soldier & Content Creator",
-  views: "0",
+  views: "10",
+  baseViews: "10",
   autoIncrementViews: true,
   showSparkles: true,
   showDotMatrix: true,
@@ -128,15 +129,39 @@ class ProfileStore {
           .eq("id", targetId)
           .single();
         if (!error && data && data.data) {
-          return data.data;
+          const profile = data.data;
+          // Safeguard: Ensure views is at least 10
+          let v = parseInt(String(profile.views || "10").replace(/[^0-9]/g, ""), 10);
+          if (isNaN(v) || v < 10) v = 10;
+          profile.views = String(v);
+          if (!profile.baseViews) profile.baseViews = "10";
+          return profile;
         }
       } catch (e) {
         console.warn("Supabase fetch error for", targetId, e);
       }
     }
 
+    // Local Storage / IndexedDB Fallback
+    try {
+      const cached = localStorage.getItem("urclub_cached_profile_" + targetId);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed) {
+          let v = parseInt(String(parsed.views || "10").replace(/[^0-9]/g, ""), 10);
+          if (isNaN(v) || v < 10) v = 10;
+          parsed.views = String(v);
+          return parsed;
+        }
+      }
+    } catch (e) {}
+
     const profiles = await this.getProfilesAsync();
-    return profiles[targetId] || profiles[MAIN_PROFILE_ID] || DEFAULT_MAIN_PROFILE;
+    const fallbackProfile = profiles[targetId] || profiles[MAIN_PROFILE_ID] || { ...DEFAULT_MAIN_PROFILE };
+    let fallbackV = parseInt(String(fallbackProfile.views || "10").replace(/[^0-9]/g, ""), 10);
+    if (isNaN(fallbackV) || fallbackV < 10) fallbackV = 10;
+    fallbackProfile.views = String(fallbackV);
+    return fallbackProfile;
   }
 
   // Save profile to Supabase Cloud + Local Cache (Only called when Save Changes is clicked)
@@ -145,8 +170,36 @@ class ProfileStore {
     profileData.id = targetId;
     const sb = this.getSupabase();
 
+    // Prevent saving view count < 10
+    let savingViews = parseInt(String(profileData.views || "10").replace(/[^0-9]/g, ""), 10);
+    if (isNaN(savingViews) || savingViews < 10) savingViews = 10;
+
+    let baseViews = parseInt(String(profileData.baseViews || savingViews).replace(/[^0-9]/g, ""), 10);
+    if (isNaN(baseViews) || baseViews < 10) baseViews = 10;
+
+    profileData.views = String(savingViews);
+    profileData.baseViews = String(baseViews);
+
     if (sb) {
       try {
+        // If preserving live views (admin didn't manually change the views input), retain live cloud count
+        if (profileData._preserveLiveViews) {
+          try {
+            const { data: cloudRow } = await sb
+              .from("bio_profiles")
+              .select("data")
+              .eq("id", targetId)
+              .single();
+            if (cloudRow && cloudRow.data) {
+              const cloudViews = parseInt(String(cloudRow.data.views || "10").replace(/[^0-9]/g, ""), 10);
+              if (!isNaN(cloudViews) && cloudViews > savingViews) {
+                profileData.views = String(cloudViews);
+              }
+            }
+          } catch (e) {}
+        }
+        delete profileData._preserveLiveViews;
+
         const { error } = await sb.from("bio_profiles").upsert({
           id: targetId,
           data: profileData,
@@ -164,6 +217,10 @@ class ProfileStore {
 
     // Cache locally
     try {
+      localStorage.setItem("urclub_cached_profile_" + targetId, JSON.stringify(profileData));
+    } catch (e) {}
+
+    try {
       const db = await openDatabase();
       const tx = db.transaction(STORE_NAME, "readwrite");
       const store = tx.objectStore(STORE_NAME);
@@ -173,7 +230,7 @@ class ProfileStore {
     return profileData;
   }
 
-  // Increment view counter safely in Supabase (never resets to 0)
+  // Increment view counter safely in Supabase (Guaranteed: Floor >= 10, never resets to 0 or 1)
   static async incrementViewsAsync(id) {
     const targetId = id || MAIN_PROFILE_ID;
     const sb = this.getSupabase();
@@ -193,11 +250,18 @@ class ProfileStore {
       }
 
       const profile = row.data;
-      let baseCount = parseInt(String(profile.views || "0").replace(/[^0-9]/g, ""), 10);
-      if (isNaN(baseCount)) baseCount = 0;
+      let baseMin = parseInt(String(profile.baseViews || "10").replace(/[^0-9]/g, ""), 10);
+      if (isNaN(baseMin) || baseMin < 10) baseMin = 10;
 
-      const newCount = baseCount + 1;
+      let currentViews = parseInt(String(profile.views || baseMin).replace(/[^0-9]/g, ""), 10);
+      if (isNaN(currentViews) || currentViews < baseMin) {
+        currentViews = baseMin;
+      }
+
+      // Add strictly 1 to current cloud count
+      const newCount = currentViews + 1;
       profile.views = String(newCount);
+      profile.baseViews = String(baseMin);
 
       const { error: updateErr } = await sb
         .from("bio_profiles")
@@ -211,6 +275,10 @@ class ProfileStore {
         console.error("Supabase view update error:", updateErr);
         return null;
       }
+
+      try {
+        localStorage.setItem("urclub_cached_profile_" + targetId, JSON.stringify(profile));
+      } catch (e) {}
 
       try {
         const db = await openDatabase();

@@ -60,6 +60,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const DEFAULT_AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23a855f7'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E";
 
   let currentProfileId = "main";
+  let initialLoadedViews = "10";
 
   // Render Social Inputs Catalog
   function renderSocialInputs() {
@@ -111,7 +112,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     inputName.value = profile.name || "";
     inputSlug.value = profile.id || id;
     inputSubtitle.value = profile.subtitle || "";
-    inputViews.value = profile.views || "0";
+
+    let rawV = profile.views || profile.baseViews || "10";
+    let vNum = parseInt(String(rawV).replace(/[^0-9]/g, ""), 10);
+    if (isNaN(vNum) || vNum < 10) vNum = 10;
+    inputViews.value = String(vNum);
+    initialLoadedViews = String(vNum);
+
     if (toggleRealViews) toggleRealViews.checked = profile.autoIncrementViews !== false;
 
     // Lock slug editing for main profile
@@ -192,12 +199,19 @@ document.addEventListener("DOMContentLoaded", async () => {
       ? "main"
       : (inputSlug.value.trim() || currentProfileId).toLowerCase().replace(/[^a-z0-9_-]/g, "");
 
+    let enteredViews = inputViews.value.trim();
+    let vNum = parseInt(enteredViews.replace(/[^0-9]/g, ""), 10);
+    if (isNaN(vNum) || vNum < 10) vNum = 10;
+    const isExplicitlyModified = (enteredViews !== "" && String(vNum) !== initialLoadedViews);
+
     return {
       id: slug,
       name: inputName.value.trim() || "LEVI",
       username: inputPresenceHandle.value.trim() || slug,
       subtitle: inputSubtitle.value.trim(),
-      views: inputViews.value.trim() || "0",
+      views: String(vNum),
+      baseViews: String(vNum),
+      _preserveLiveViews: !isExplicitlyModified,
       autoIncrementViews: toggleRealViews ? toggleRealViews.checked : true,
       showSparkles: toggleSparkles.checked,
       showDotMatrix: toggleDotmatrix.checked,
@@ -508,7 +522,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       name: name,
       username: slug,
       subtitle: "",
-      views: "0",
+      views: "10",
+      baseViews: "10",
       autoIncrementViews: true,
       showSparkles: true,
       showDotMatrix: true,

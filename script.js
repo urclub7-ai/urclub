@@ -25,18 +25,28 @@ document.addEventListener("DOMContentLoaded", async () => {
   const userSlug = urlParams.get("u") || "main";
   const isPreview = urlParams.get("preview") === "1";
 
-  // Render Views Number with Animated Rolling Effect
+  // Render Views Number with Animated Rolling Effect (Guaranteed minimum of 10)
   function renderViews(countStr, animateFrom) {
     if (!viewsCount) return;
-    if (animateFrom && animateFrom !== countStr) {
-      viewsCount.innerHTML = `<span class="views-digit-box rolling">${countStr}</span>`;
+    let safeNum = parseInt(String(countStr || "10").replace(/[^0-9]/g, ""), 10);
+    if (isNaN(safeNum) || safeNum < 10) safeNum = 10;
+    const finalStr = safeNum.toLocaleString();
+
+    let fromStr = "";
+    if (animateFrom !== undefined && animateFrom !== null) {
+      let fromNum = parseInt(String(animateFrom).replace(/[^0-9]/g, ""), 10);
+      if (!isNaN(fromNum) && fromNum >= 10) fromStr = fromNum.toLocaleString();
+    }
+
+    if (fromStr && fromStr !== finalStr) {
+      viewsCount.innerHTML = `<span class="views-digit-box rolling">${finalStr}</span>`;
       if (viewsPill) {
         viewsPill.classList.remove("pulse");
         void viewsPill.offsetWidth;
         viewsPill.classList.add("pulse");
       }
     } else {
-      viewsCount.innerHTML = `<span class="views-digit-box">${countStr}</span>`;
+      viewsCount.innerHTML = `<span class="views-digit-box">${finalStr}</span>`;
     }
   }
 
@@ -54,7 +64,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       profileSubtitle.textContent = profile.subtitle || "";
       profileSubtitle.style.display = profile.subtitle ? "block" : "none";
     }
-    renderViews(profile.views || "0");
+    const profileViews = profile.views || profile.baseViews || "10";
+    renderViews(profileViews);
 
     // Sparkles Toggle
     const sparkles = document.querySelectorAll(".sparkle");
