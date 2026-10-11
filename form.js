@@ -468,7 +468,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // 1. HTML Direction & Font Class
     document.documentElement.lang = currentLang;
     document.documentElement.dir = (currentLang === "en") ? "ltr" : "rtl";
-    document.body.className = currentLang;
+    document.body.className = "lang-" + currentLang;
 
     // 2. Translate Elements with data-i18n
     document.querySelectorAll("[data-i18n]").forEach((el) => {
