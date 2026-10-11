@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>URCLUB | فرم تخصصی ثبت سفارش و پروپوزال پروژه</title>
+  <meta name="description" content="فرم آنلاین ثبت و شخصی‌سازی سفارش طراحی وب‌سایت، برنامه موبایل، نرم‌افزار کامپیوتر و طراحی پوستر" />
+
+  <!-- Fonts: Vazirmatn (Persian) + Inter & JetBrains Mono (English) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="form.css" />
+</head>
+<body>
+
+  <!-- Ambient Glowing Background Grid -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+  <div class="bg-grid-overlay"></div>
+
+  <!-- Header / Navigation Bar -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="brand-logo">
+        <span class="logo-badge">⚡ URCLUB</span>
+        <span class="logo-sub">STUDIO</span>
+      </a>
+      <div class="header-status">
+        <span class="status-dot"></span>
+        <span class="status-text">پذیرش سفارشات فعال است</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="page-container">
+    
+    <!-- Hero Intro -->
+    <section class="hero-section">
+      <div class="hero-pill">
+        <i class="fa-solid fa-sparkles"></i>
+        <span>پروپوزال و ثبت مشخصات دقیق پروژه</span>
+      </div>
+      <h1 class="hero-title">
+        پروژه اختصاصی خود را <span class="gradient-text">طراحی و سفارش دهید</span>
+      </h1>
+      <p class="hero-desc">
+        برای اینکه سفارش شما دقیقاً مطابق با سلیقه، رنگ‌بندی و نیازهای فنی شما بدون هیچ نقصی ساخته شود، نوع پروژه خود را انتخاب کرده و فرم تخصصی آن را پر کنید.
+      </p>
+    </section>
+
+    <!-- Step 1: Category Selection Cards -->
+    <section class="step-section" id="section-categories">
+      <div class="step-header">
+        <span class="step-num">۰۱</span>
+        <div class="step-title-wrap">
+          <h2 class="step-title">انتخاب نوع پروژه</h2>
+          <p class="step-subtitle">ابتدا دسته‌بندی خدمتی که مد نظر دارید را انتخاب کنید:</p>
+        </div>
+      </div>
+
+      <div class="category-grid">
+        
+        <!-- Card 1: Website -->
+        <div class="cat-card active" data-category="website">
+          <div class="cat-icon-box cat-icon-web">
+            <i class="fa-solid fa-globe"></i>
+          </div>
+          <div class="cat-content">
+            <h3 class="cat-title">طراحی وب‌سایت</h3>
+            <p class="cat-desc">فروشگاهی، شرکتی، خدماتی، پورتفولیو / بیو شخصی، لندینگ پیج و وبلاگ</p>
+            <span class="cat-tag">پراستفاده‌ترین</span>
+          </div>
+          <div class="cat-check">
+            <i class="fa-solid fa-check"></i>
+          </div>
+        </div>
+
+        <!-- Card 2: Mobile App -->
+        <div class="cat-card" data-category="mobile">
+          <div class="cat-icon-box cat-icon-app">
+            <i class="fa-solid fa-mobile-screen-button"></i>
+          </div>
+          <div class="cat-content">
+            <h3 class="cat-title">برنامه موبایل</h3>
+            <p class="cat-desc">اپلیکیشن‌های اندروید (Android) و آی‌او‌اس (iOS) مدرن و واکنش‌گرا</p>
+            <span class="cat-tag">Android / iOS</span>
+          </div>
+          <div class="cat-check">
+            <i class="fa-solid fa-check"></i>
+          </div>
+        </div>
+
+        <!-- Card 3: Desktop App -->
+        <div class="cat-card" data-category="desktop">
+          <div class="cat-icon-box cat-icon-desktop">
+            <i class="fa-solid fa-desktop"></i>
+          </div>
+          <div class="cat-content">
+            <h3 class="cat-title">نرم‌افزار کامپیوتر</h3>
+            <p class="cat-desc">برنامه‌های دسکتاپ ویندوز (Windows)، مک (macOS) و لینوکس</p>
+            <span class="cat-tag">Desktop OS</span>
+          </div>
+          <div class="cat-check">
+            <i class="fa-solid fa-check"></i>
+          </div>
+        </div>
+
+        <!-- Card 4: Poster & Graphics -->
+        <div class="cat-card" data-category="poster">
+          <div class="cat-icon-box cat-icon-poster">
+            <i class="fa-solid fa-palette"></i>
+          </div>
+          <div class="cat-content">
+            <h3 class="cat-title">طراحی پوستر و گرافیک</h3>
+            <p class="cat-desc">پوستر تبلیغاتی، کاور ریلز/یوتیوب، بنر چاپی، هویت بصری و لوگو</p>
+            <span class="cat-tag">Creative Design</span>
+          </div>
+          <div class="cat-check">
+            <i class="fa-solid fa-check"></i>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Master Form -->
+    <form id="project-order-form" novalidate>
+
+      <!-- ======================================================== -->
+      <!-- SECTION A: SPECIFIC FIELDS FOR WEBSITE -->
+      <!-- ======================================================== -->
+      <section class="step-section form-block" id="block-website">
+        <div class="step-header">
+          <span class="step-num">۰۲</span>
+          <div class="step-title-wrap">
+            <h2 class="step-title">مشخصات و جزییات فنی وب‌سایت</h2>
+            <p class="step-subtitle">تمام جزییات ظاهری، دامنه، دیتابیس و صفحات وب‌سایت خود را مشخص کنید:</p>
+          </div>
+        </div>
+
+        <!-- Row: Site Name & Target Audience -->
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label" for="web-name">نام وب‌سایت / برند شما <span class="required">*</span></label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-signature input-icon"></i>
+              <input type="text" id="web-name" class="form-input" placeholder="مثال: فروشگاه لِوی یا کلاب آنلاین" required />
+            </div>
+            <span class="field-hint">نامی که در بالای سایت و تب مرورگر درج می‌شود.</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="web-slogan">شعار یا توضیح کوتاه وب‌سایت</label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-quote-right input-icon"></i>
+              <input type="text" id="web-slogan" class="form-input" placeholder="مثال: مرجع تخصصی پوشاک و اکسسوری گیمینگ" />
+            </div>
+            <span class="field-hint">یک جمله یا شعار جذاب برای معرفی کارتان.</span>
+          </div>
+        </div>
+
+        <!-- Choice: Website Type / Category -->
+        <div class="form-group">
+          <label class="form-label">نوع و کاربرد اصلی وب‌سایت <span class="required">*</span></label>
+          <div class="chip-selector" data-group="web-type">
+            <button type="button" class="chip-btn active" data-value="فروشگاهی (E-Commerce)">🛒 فروشگاهی (فروش کالا یا فایل)</button>
+            <button type="button" class="chip-btn" data-value="شرکتی و معرفی خدمات">🏢 شرکتی و معرفی بیزینس</button>
+            <button type="button" class="chip-btn" data-value="لینک بیو و پورتفولیو شخصی">👑 لینک بیو و پورتفولیو شخصی</button>
+            <button type="button" class="chip-btn" data-value="تبلیغاتی و لندینگ پیج">🚀 تبلیغاتی و لندینگ تک‌صفحه</button>
+            <button type="button" class="chip-btn" data-value="آموزشی و آکادمی آنلاین">🎓 آموزشی و دوره آنلاین</button>
+            <button type="button" class="chip-btn" data-value="وبلاگ و خبری">📰 وبلاگ و انتشار مقاله</button>
+            <button type="button" class="chip-btn" data-value="سفارشی / کاربرد خاص">✨ ایده و کاربرد سفارشی</button>
+          </div>
+          <input type="hidden" id="web-type-val" value="فروشگاهی (E-Commerce)" />
+        </div>
+
+        <!-- Choice: Page Count -->
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">تعداد صفحات مد نظر <span class="required">*</span></label>
+            <div class="chip-selector compact" data-group="web-pages">
+              <button type="button" class="chip-btn active" data-value="تک‌صفحه‌ای (Single Page / Landing)">تک‌صفحه‌ای (Landing)</button>
+              <button type="button" class="chip-btn" data-value="۲ تا ۵ صفحه">۲ تا ۵ صفحه</button>
+              <button type="button" class="chip-btn" data-value="۵ تا ۱۰ صفحه">۵ تا ۱۰ صفحه</button>
+              <button type="button" class="chip-btn" data-value="فروشگاه جامع / نامحدود">جامع و نامحدود</button>
+            </div>
+            <input type="hidden" id="web-pages-val" value="تک‌صفحه‌ای (Single Page / Landing)" />
+          </div>
+
+          <!-- Languages -->
+          <div class="form-group">
+            <label class="form-label">زبان(های) وب‌سایت <span class="required">*</span></label>
+            <div class="chip-selector compact" data-group="web-lang">
+              <button type="button" class="chip-btn active" data-value="فارسی">فارسی</button>
+              <button type="button" class="chip-btn" data-value="انگلیسی">English</button>
+              <button type="button" class="chip-btn" data-value="دوزبانه (فارسی و انگلیسی)">دوزبانه (فارسی + انگلیسی)</button>
+              <button type="button" class="chip-btn" data-value="پشتو و فارسی">پشتو + فارسی</button>
+              <button type="button" class="chip-btn" data-value="چندزبانه بین‌المللی">چندزبانه کامل</button>
+            </div>
+            <input type="hidden" id="web-lang-val" value="فارسی" />
+          </div>
+        </div>
+
+        <!-- Color Palette & Theme Selection -->
+        <div class="form-group">
+          <label class="form-label">تم رنگی و استایل بصری وب‌سایت <span class="required">*</span></label>
+          <div class="theme-presets">
+            <div class="theme-card active" data-theme="dark-purple" data-c1="#0a0a0c" data-c2="#a855f7" data-c3="#38bdf8">
+              <div class="theme-preview">
+                <span style="background: #0a0a0c;"></span>
+                <span style="background: #a855f7;"></span>
+                <span style="background: #38bdf8;"></span>
+              </div>
+              <span class="theme-name">تیره و لوکس نئونی (استایل URCLUB)</span>
+            </div>
+
+            <div class="theme-card" data-theme="cyberpunk" data-c1="#0f172a" data-c2="#06b6d4" data-c3="#ec4899">
+              <div class="theme-preview">
+                <span style="background: #0f172a;"></span>
+                <span style="background: #06b6d4;"></span>
+                <span style="background: #ec4899;"></span>
+              </div>
+              <span class="theme-name">سایبرپانک و گیمینگ (آبی و صورتی)</span>
+            </div>
+
+            <div class="theme-card" data-theme="minimal-black" data-c1="#000000" data-c2="#ffffff" data-c3="#71717a">
+              <div class="theme-preview">
+                <span style="background: #000000;"></span>
+                <span style="background: #ffffff;"></span>
+                <span style="background: #71717a;"></span>
+              </div>
+              <span class="theme-name">مینیمال سیاه و سفید خالص</span>
+            </div>
+
+            <div class="theme-card" data-theme="emerald-gold" data-c1="#064e3b" data-c2="#10b981" data-c3="#f59e0b">
+              <div class="theme-preview">
+                <span style="background: #064e3b;"></span>
+                <span style="background: #10b981;"></span>
+                <span style="background: #f59e0b;"></span>
+              </div>
+              <span class="theme-name">زمردی و طلایی سلطنتی</span>
+            </div>
+          </div>
+
+          <!-- Custom Colors Picker -->
+          <div class="custom-colors-bar">
+            <span class="custom-colors-title"><i class="fa-solid fa-palette"></i> یا رنگ‌های دلخواه خود را دقیق انتخاب کنید:</span>
+            <div class="pickers-flex">
+              <div class="color-picker-item">
+                <label for="web-color-bg">رنگ زمینه (Background):</label>
+                <div class="color-picker-input-wrap">
+                  <input type="color" id="web-color-bg" value="#0a0a0c" />
+                  <span id="web-color-bg-val" class="color-hex-tag">#0a0a0c</span>
+                </div>
+              </div>
+
+              <div class="color-picker-item">
+                <label for="web-color-primary">رنگ اصلی (Primary):</label>
+                <div class="color-picker-input-wrap">
+                  <input type="color" id="web-color-primary" value="#a855f7" />
+                  <span id="web-color-primary-val" class="color-hex-tag">#a855f7</span>
+                </div>
+              </div>
+
+              <div class="color-picker-item">
+                <label for="web-color-accent">رنگ برجسته (Accent):</label>
+                <div class="color-picker-input-wrap">
+                  <input type="color" id="web-color-accent" value="#38bdf8" />
+                  <span id="web-color-accent-val" class="color-hex-tag">#38bdf8</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Domain Section -->
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">پسوند و نوع دامین مد نظر <span class="required">*</span></label>
+            <div class="chip-selector compact" data-group="web-domain-type">
+              <button type="button" class="chip-btn active" data-value=".com (بین‌المللی تجاری)">🌐 .com (پیشنهادی تجاری)</button>
+              <button type="button" class="chip-btn" data-value=".net یا .org">🌐 .net یا .org</button>
+              <button type="button" class="chip-btn" data-value="دامین رایگان ورسل .vercel.app">⚡ رایگان سریع (.vercel.app)</button>
+              <button type="button" class="chip-btn" data-value="خودم دامنه اختصاصی دارم">🔒 خودم دامنه دارم</button>
+              <button type="button" class="chip-btn" data-value="نیاز به مشاوره دامین دارم">💡 نیاز به راهنمایی دامین</button>
+            </div>
+            <input type="hidden" id="web-domain-type-val" value=".com (بین‌المللی تجاری)" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="web-domain-name">آدرس یا نام دامین پیشنهادی</label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-link input-icon"></i>
+              <input type="text" id="web-domain-name" class="form-input ltr-input" placeholder="e.g. mysite.com or yourbrand" />
+            </div>
+            <span class="field-hint">آدرسی که می‌خواهید کاربر با سرچ آن وارد سایت شود.</span>
+          </div>
+        </div>
+
+        <!-- Database & Hosting -->
+        <div class="form-group">
+          <label class="form-label">پایگاه داده (دیتابیس) و هاستینگ <span class="required">*</span></label>
+          <div class="chip-selector" data-group="web-db">
+            <button type="button" class="chip-btn active" data-value="استفاده از دیتابیس ابری رایگان سوپابیس (Supabase Cloud)">
+              <i class="fa-solid fa-cloud"></i> استفاده از دیتابیس رایگان و پرسرعت سوپابیس (Supabase)
+            </button>
+            <button type="button" class="chip-btn" data-value="هاست و دیتابیس اختصاصی خودم را دارم (cPanel / DirectAdmin / VPS)">
+              <i class="fa-solid fa-server"></i> هاست و دیتابیس اختصاصی خودم را دارم
+            </button>
+            <button type="button" class="chip-btn" data-value="وبسایت استاتیک بدون نیاز به دیتابیس (سریع و سبک)">
+              <i class="fa-solid fa-bolt"></i> وب‌سایت تک‌منظوره بدون نیاز به دیتابیس
+            </button>
+            <button type="button" class="chip-btn" data-value="نیاز به تهیه هاست و سرور توسط شما دارم">
+              <i class="fa-solid fa-hand-holding-heart"></i> صفر تا صد هاست را شما تهیه و ست کنید
+            </button>
+          </div>
+          <input type="hidden" id="web-db-val" value="استفاده از دیتابیس ابری رایگان سوپابیس (Supabase Cloud)" />
+        </div>
+
+        <!-- Features Checkboxes -->
+        <div class="form-group">
+          <label class="form-label">امکانات و قابلیت‌های ویژه مورد نیاز (چند مورد را انتخاب کنید)</label>
+          <div class="feature-checkbox-grid">
+            <label class="custom-check-item">
+              <input type="checkbox" name="web_features" value="درگاه پرداخت آنلاین شتابی یا بین‌المللی" checked />
+              <span class="check-box"><i class="fa-solid fa-check"></i></span>
+              <span class="check-label"><i class="fa-solid fa-credit-card"></i> درگاه پرداخت آنلاین</span>
+            </label>
+
+            <label class="custom-check-item">
+              <input type="checkbox" name="web_features" value="سیستم ثبت‌نام و ورود کاربران" checked />
+              <span class="check-box"><i class="fa-solid fa-check"></i></span>
+              <span class="check-label"><i class="fa-solid fa-user-lock"></i> ثبت‌نام و پروفایل کاربران</span>
+            </label>
+
+            <label class="custom-check-item">
+              <input type="checkbox" name="web_features" value="پنل مدیریت ادمین پیشرفته و ساده" checked />
+              <span class="check-box"><i class="fa-solid fa-check"></i></span>
+              <span class="check-label"><i class="fa-solid fa-sliders"></i> پنل ادمین اختصاصی</span>
+            </label>
+
+            <label class="custom-check-item">
+              <input type="checkbox" name="web_features" value="پخش ویدیو و موزیک پس‌زمینه (استایل Guns.lol/urclub)" checked />
+              <span class="check-box"><i class="fa-solid fa-check"></i></span>
+              <span class="check-label"><i class="fa-solid fa-play"></i> پس‌زمینه ویدیو/صدا</span>
+            </label>
+
+            <label class="custom-check-item">
+              <input type="checkbox" name="web_features" value="سیستم چت آنلاین و پشتیبانی" />
+              <span class="check-box"><i class="fa-solid fa-check"></i></span>
+              <span class="check-label"><i class="fa-solid fa-comments"></i> چت آنلاین و پشتیبانی</span>
+            </label>
+
+            <label class="custom-check-item">
+              <input type="checkbox" name="web_features" value="دارک مود و لایت مود دوگانه" />
+              <span class="check-box"><i class="fa-solid fa-check"></i></span>
+              <span class="check-label"><i class="fa-solid fa-circle-half-stroke"></i> سوئیچ دارک/لایت</span>
+            </label>
+
+            <label class="custom-check-item">
+              <input type="checkbox" name="web_features" value="شمارنده بازدید واقعی و آمارگیر" checked />
+              <span class="check-box"><i class="fa-solid fa-check"></i></span>
+              <span class="check-label"><i class="fa-solid fa-eye"></i> سیستم شمارنده بازدید</span>
+            </label>
+
+            <label class="custom-check-item">
+              <input type="checkbox" name="web_features" value="اتصال به شبکه‌های اجتماعی (اینستاگرام، تلگرام، دیسکورد، تیک‌تاک)" checked />
+              <span class="check-box"><i class="fa-solid fa-check"></i></span>
+              <span class="check-label"><i class="fa-solid fa-share-nodes"></i> اتصال به شبکه‌های اجتماعی</span>
+            </label>
+
+            <label class="custom-check-item">
+              <input type="checkbox" name="web_features" value="سئو بهینه‌سازی شده برای گوگل (SEO)" />
+              <span class="check-box"><i class="fa-solid fa-check"></i></span>
+              <span class="check-label"><i class="fa-brands fa-google"></i> سئو استاندارد گوگل</span>
+            </label>
+
+            <label class="custom-check-item">
+              <input type="checkbox" name="web_features" value="سبد خرید و سیستم فاکتور و صدور رسید" />
+              <span class="check-box"><i class="fa-solid fa-check"></i></span>
+              <span class="check-label"><i class="fa-solid fa-cart-shopping"></i> سبد خرید و صدور فاکتور</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Reference Websites & Extra Notes -->
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label" for="web-refs">سایت‌های نمونه یا رقبا که می‌پسندید</label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-globe input-icon"></i>
+              <input type="text" id="web-refs" class="form-input ltr-input" placeholder="e.g. apple.com, urclub.vercel.app" />
+            </div>
+            <span class="field-hint">لینک هر وب‌سایتی که استایلش را دوست دارید وارد کنید.</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="web-notes">توضیحات تکمیلی یا جزئیات خاص وب‌سایت</label>
+            <textarea id="web-notes" class="form-textarea" rows="3" placeholder="هر توضیح دیگری مثل نحوه چیدمان منوها، فونت ترجیحی، امکانات خاص و..."></textarea>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- SECTION B: SPECIFIC FIELDS FOR MOBILE APP -->
+      <!-- ======================================================== -->
+      <section class="step-section form-block" id="block-mobile" style="display: none;">
+        <div class="step-header">
+          <span class="step-num">۰۲</span>
+          <div class="step-title-wrap">
+            <h2 class="step-title">مشخصات و الزامات برنامه موبایل</h2>
+            <p class="step-subtitle">جزییات مربوط به ساخت اپلیکیشن اندروید یا آیفون را مشخص کنید:</p>
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label" for="app-name">نام اپلیکیشن موبایل <span class="required">*</span></label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-mobile-screen input-icon"></i>
+              <input type="text" id="app-name" class="form-input" placeholder="مثال: اپلیکیشن فروشگاهی لِوی" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">سیستم‌عامل هدف (Platform) <span class="required">*</span></label>
+            <div class="chip-selector compact" data-group="app-platform">
+              <button type="button" class="chip-btn active" data-value="هردو: اندروید و iOS (Cross-Platform)">📱 هردو (Android + iOS)</button>
+              <button type="button" class="chip-btn" data-value="فقط اندروید (Android APK/AAB)">🤖 فقط اندروید (Android)</button>
+              <button type="button" class="chip-btn" data-value="فقط آیفون (iOS)">🍎 فقط آیفون (iOS)</button>
+            </div>
+            <input type="hidden" id="app-platform-val" value="هردو: اندروید و iOS (Cross-Platform)" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">دسته‌بندی و ماهیت اپلیکیشن <span class="required">*</span></label>
+          <div class="chip-selector" data-group="app-cat">
+            <button type="button" class="chip-btn active" data-value="فروشگاهی و سفارش آنلاین">🛍️ فروشگاهی و خرید آنلاین</button>
+            <button type="button" class="chip-btn" data-value="خدماتی و رزرو وقت">📅 خدماتی و رزرو نوبت</button>
+            <button type="button" class="chip-btn" data-value="آموزشی و دوره‌های ویدیویی">📚 آموزشی و پلیر ویدیو</button>
+            <button type="button" class="chip-btn" data-value="شبکه اجتماعی و پیام‌رسان">💬 اجتماعی و پیام‌رسان</button>
+            <button type="button" class="chip-btn" data-value="ابزار کاربردی و کاربردی روزمره">🛠️ ابزار تخصصی و کاربردی</button>
+          </div>
+          <input type="hidden" id="app-cat-val" value="فروشگاهی و سفارش آنلاین" />
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">سرور و دیتابیس اپلیکیشن <span class="required">*</span></label>
+            <div class="chip-selector compact" data-group="app-db">
+              <button type="button" class="chip-btn active" data-value="دیتابیس ابری سوپابیس (Supabase / Firebase)">سوپابیس (Supabase)</button>
+              <button type="button" class="chip-btn" data-value="سرور و API اختصاصی خودم">API و سرور اختصاصی دارم</button>
+              <button type="button" class="chip-btn" data-value="آفلاین با دیتابیس داخلی گوشی (SQLite)">آفلاین داخلی (SQLite)</button>
+            </div>
+            <input type="hidden" id="app-db-val" value="دیتابیس ابری سوپابیس (Supabase / Firebase)" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">روش ثبت‌نام و ورود کاربران <span class="required">*</span></label>
+            <div class="chip-selector compact" data-group="app-auth">
+              <button type="button" class="chip-btn active" data-value="ورود با شماره موبایل و پیامک کد تایید">📲 شماره تلفن و SMS</button>
+              <button type="button" class="chip-btn" data-value="ایمیل و رمز عبور + گوگل لاگین">✉️ ایمیل + گوگل (Google Login)</button>
+              <button type="button" class="chip-btn" data-value="بدون نیاز به ثبت‌نام (ورود میهمان)">👤 ورود مستقیم میهمان</button>
+            </div>
+            <input type="hidden" id="app-auth-val" value="ورود با شماره موبایل و پیامک کد تایید" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="app-notes">امکانات ویژه و توضیحات اپلیکیشن</label>
+          <textarea id="app-notes" class="form-textarea" rows="3" placeholder="توضیح کامل صفحاتی که برنامه باید داشته باشد، نیاز به لوکیشن یا نوتیفیکیشن، پرداخت درون‌برنامه‌ای و..."></textarea>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- SECTION C: SPECIFIC FIELDS FOR DESKTOP SOFTWARE -->
+      <!-- ======================================================== -->
+      <section class="step-section form-block" id="block-desktop" style="display: none;">
+        <div class="step-header">
+          <span class="step-num">۰۲</span>
+          <div class="step-title-wrap">
+            <h2 class="step-title">مشخصات نرم‌افزار کامپیوتر (دسکتاپ)</h2>
+            <p class="step-subtitle">نیازمندی‌های نرم‌افزار ویندوز یا مک را مشخص نمایید:</p>
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label" for="desk-name">نام نرم‌افزار دسکتاپ <span class="required">*</span></label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-laptop-code input-icon"></i>
+              <input type="text" id="desk-name" class="form-input" placeholder="مثال: سیستم مدیریت مشتریان یا ربات اتوماسیون" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">سیستم‌عامل مقصد <span class="required">*</span></label>
+            <div class="chip-selector compact" data-group="desk-os">
+              <button type="button" class="chip-btn active" data-value="ویندوز (Windows 10/11 - exe / msi)">🪟 ویندوز (Windows)</button>
+              <button type="button" class="chip-btn" data-value="مک (macOS - Apple Silicon / Intel)">🍏 مک (macOS)</button>
+              <button type="button" class="chip-btn" data-value="چندسکویی (ویندوز + مک + لینوکس)">🌐 همه‌کاره (ویندوز + مک)</button>
+            </div>
+            <input type="hidden" id="desk-os-val" value="ویندوز (Windows 10/11 - exe / msi)" />
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">نوع کارکرد و موضوع نرم‌افزار <span class="required">*</span></label>
+            <div class="chip-selector compact" data-group="desk-type">
+              <button type="button" class="chip-btn active" data-value="مدیریت اداری، حسابداری و انبارداری">📊 حسابداری و انبارداری</button>
+              <button type="button" class="chip-btn" data-value="اتوماسیون، بات یا پردازش خودکار داده">🤖 اتوماسیون و ابزار خودکار</button>
+              <button type="button" class="chip-btn" data-value="پلیر، ویرایشگر یا ابزار مالتی‌مدیا">🎬 مالتی‌مدیا و گرافیک</button>
+              <button type="button" class="chip-btn" data-value="ابزار اختصاصی یا مهندسی">⚙️ ابزار اختصاصی</button>
+            </div>
+            <input type="hidden" id="desk-type-val" value="مدیریت اداری، حسابداری و انبارداری" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">نحوه اتصال و دیتابیس نرم‌افزار <span class="required">*</span></label>
+            <div class="chip-selector compact" data-group="desk-db">
+              <button type="button" class="chip-btn active" data-value="دیتابیس آفلاین محلی (SQLite / فایل در کامپیوتر)">💾 آفلاین محلی (SQLite)</button>
+              <button type="button" class="chip-btn" data-value="دیتابیس آنلاین ابری مشترک چندکاربره (Supabase/MySQL)">☁️ آنلاین ابری چندکاربره</button>
+            </div>
+            <input type="hidden" id="desk-db-val" value="دیتابیس آفلاین محلی (SQLite / فایل در کامپیوتر)" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="desk-notes">توضیحات دقیق عملیاتی و امکانات نرم‌افزار</label>
+          <textarea id="desk-notes" class="form-textarea" rows="3" placeholder="جزییات امکاناتی که نرم‌افزار باید انجام دهد (مانند چاپ فاکتور، خروجی اکسل یا PDF، هشدارها و...)"></textarea>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- SECTION D: SPECIFIC FIELDS FOR POSTER & GRAPHICS -->
+      <!-- ======================================================== -->
+      <section class="step-section form-block" id="block-poster" style="display: none;">
+        <div class="step-header">
+          <span class="step-num">۰۲</span>
+          <div class="step-title-wrap">
+            <h2 class="step-title">مشخصات طراحی پوستر و گرافیک</h2>
+            <p class="step-subtitle">ابعاد، متن‌ها، تم بصری و جزئیات گرافیکی پوستر خود را وارد کنید:</p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">ابعاد و فرمت مورد نظر پوستر <span class="required">*</span></label>
+          <div class="chip-selector" data-group="poster-size">
+            <button type="button" class="chip-btn active" data-value="استوری اینستاگرام / تیک‌تاک (1080x1920 عمودی)">
+              📱 استوری اینستاگرام و ریلز (1080x1920)
+            </button>
+            <button type="button" class="chip-btn" data-value="پست اینستاگرام (1080x1080 مربعی یا 1080x1350)">
+              🖼️ پست اینستاگرام (مربعی یا عمودی)
+            </button>
+            <button type="button" class="chip-btn" data-value="کاور یوتیوب یا آپارات (1920x1080 افقی)">
+              🎬 کاور یوتیوب (1920x1080 Thumbnail)
+            </button>
+            <button type="button" class="chip-btn" data-value="بنر چاپی یا پوستر دیواری (A3 / A4 / بیلبورد)">
+              🖨️ چاپ باکیفیت (A3 / A4 / بیلبورد)
+            </button>
+            <button type="button" class="chip-btn" data-value="طراحی لوگو و نماد بصری برند">
+              ✨ طراحی لوگو و نشان تجاری
+            </button>
+          </div>
+          <input type="hidden" id="poster-size-val" value="استوری اینستاگرام / تیک‌تاک (1080x1920 عمودی)" />
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label" for="poster-title">عنوان اصلی (تیتر بزرگ) پوستر <span class="required">*</span></label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-heading input-icon"></i>
+              <input type="text" id="poster-title" class="form-input" placeholder="مثال: مسابقات بزرگ تابستانه لِوی" />
+            </div>
+            <span class="field-hint">بزرگ‌ترین متنی که باید با فونت بولد و چشمگیر دیده شود.</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="poster-subtitle">زیرعنوان یا اطلاعات کلیدی</label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-align-right input-icon"></i>
+              <input type="text" id="poster-subtitle" class="form-input" placeholder="مثال: تاریخ: جمعه ساعت ۲۰ | جوایز ویژه" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">سبک و هویت بصری پوستر <span class="required">*</span></label>
+          <div class="chip-selector" data-group="poster-style">
+            <button type="button" class="chip-btn active" data-value="تیره، نئونی و گیمینگ (مدرن و هیجانی)">⚡ تیره، نئونی و گیمینگ</button>
+            <button type="button" class="chip-btn" data-value="خوشنویسی اصیل و نستعلیق لوکس">✒️ خوشنویسی و نستعلیق باشکوه</button>
+            <button type="button" class="chip-btn" data-value="مینیمال اروپایی (ساده و شیک)">💎 مینیمال مدرن و تمیز</button>
+            <button type="button" class="chip-btn" data-value="کلاسیک و شرکتی اداری">🏢 اداری و رسمی</button>
+            <button type="button" class="chip-btn" data-value="سه‌بعدی و فانتزی">🔮 سه‌بعدی و فانتزی</button>
+          </div>
+          <input type="hidden" id="poster-style-val" value="تیره، نئونی و گیمینگ (مدرن و هیجانی)" />
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label" for="poster-colors">رنگ‌های ترجیحی پوستر</label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-palette input-icon"></i>
+              <input type="text" id="poster-colors" class="form-input" placeholder="مثال: بنفش و فیروزه‌ای، یا مشکی و طلایی" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="poster-images">عکس‌ها یا لوگوی پیوست شده</label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-link input-icon"></i>
+              <input type="text" id="poster-images" class="form-input ltr-input" placeholder="لینک عکس/لوگو در گوگل درایو یا تلگرام" />
+            </div>
+            <span class="field-hint">اگر عکس شخص یا محصول خاصی باید قرار گیرد لینک آن را بگذارید.</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="poster-notes">سایر نوشته‌ها و توضیحات تکمیلی پوستر</label>
+          <textarea id="poster-notes" class="form-textarea" rows="3" placeholder="متن‌های فرعی، آدرس وب‌سایت یا آیدی‌های شبکه‌های اجتماعی که باید در پایین پوستر درج شود..."></textarea>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- SECTION 3: CLIENT CONTACT INFORMATION -->
+      <!-- ======================================================== -->
+      <section class="step-section" id="section-contact">
+        <div class="step-header">
+          <span class="step-num">۰۳</span>
+          <div class="step-title-wrap">
+            <h2 class="step-title">اطلاعات تماس سفارش‌دهنده</h2>
+            <p class="step-subtitle">برای ارسال پیش‌نمایش و هماهنگی نهایی پروژه، راه‌های ارتباطی خود را بنویسید:</p>
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label" for="client-name">نام و نام خانوادگی شما <span class="required">*</span></label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-user input-icon"></i>
+              <input type="text" id="client-name" class="form-input" placeholder="مثال: علی یاسین" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="client-phone">شماره تماس / واتساپ <span class="required">*</span></label>
+            <div class="input-wrap">
+              <i class="fa-brands fa-whatsapp input-icon"></i>
+              <input type="tel" id="client-phone" class="form-input ltr-input" placeholder="مثال: 0912xxxxxxx یا +49162xxxx" required />
+            </div>
+            <span class="field-hint">شماره‌ای که در واتساپ یا تلگرام در دسترس است.</span>
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label" for="client-social">آیدی تلگرام / دیسکورد / اینستاگرام</label>
+            <div class="input-wrap">
+              <i class="fa-brands fa-telegram input-icon"></i>
+              <input type="text" id="client-social" class="form-input ltr-input" placeholder="@yourhandle" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="client-email">ایمیل شما (جهت دریافت پیش‌فاکتور)</label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-envelope input-icon"></i>
+              <input type="email" id="client-email" class="form-input ltr-input" placeholder="yourname@gmail.com" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">روش ترجیحی شما برای ارتباط ما</label>
+          <div class="chip-selector compact" data-group="contact-method">
+            <button type="button" class="chip-btn active" data-value="پیام در واتساپ">💬 پیام در واتساپ</button>
+            <button type="button" class="chip-btn" data-value="پیام در تلگرام">✈️ پیام در تلگرام</button>
+            <button type="button" class="chip-btn" data-value="تماس تلفنی مستقیم">📞 تماس تلفنی مستقیم</button>
+            <button type="button" class="chip-btn" data-value="ارسال ایمیل">✉️ ایمیل</button>
+          </div>
+          <input type="hidden" id="contact-method-val" value="پیام در واتساپ" />
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- SECTION 4: SUMMARY & SUBMIT BUTTON -->
+      <!-- ======================================================== -->
+      <section class="submit-section">
+        
+        <div class="order-summary-card">
+          <div class="summary-header">
+            <i class="fa-solid fa-clipboard-check"></i>
+            <span>خلاصه مشخصات سفارش شما:</span>
+          </div>
+          <div class="summary-body" id="summary-preview">
+            <!-- Dynamically populated by form.js -->
+            <div class="summary-item">
+              <span class="s-label">نوع پروژه:</span>
+              <span class="s-val" id="sum-category">طراحی وب‌سایت</span>
+            </div>
+            <div class="summary-item">
+              <span class="s-label">نام پروژه:</span>
+              <span class="s-val" id="sum-name">هنوز وارد نشده</span>
+            </div>
+            <div class="summary-item">
+              <span class="s-label">ارسال به ایمیل:</span>
+              <span class="s-val highlight">urclub7@gmail.com</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="submit-actions">
+          <button type="submit" id="btn-submit-order" class="btn-primary-glow">
+            <span class="btn-text">
+              <i class="fa-solid fa-paper-plane"></i>
+              ثبت و ارسال کامل سفارش
+            </span>
+            <span class="btn-spinner" style="display: none;">
+              <i class="fa-solid fa-circle-notch fa-spin"></i> در حال ارسال اطلاعات...
+            </span>
+          </button>
+          <p class="submit-guarantee">
+            <i class="fa-solid fa-shield-halved"></i>
+            تمامی اطلاعات شما مستقیماً و به صورت ایمن به استودیو ارسال شده و در کمتر از ۲ ساعت پاسخ داده می‌شود.
+          </p>
+        </div>
+
+      </section>
+
+    </form>
+
+  </main>
+
+  <!-- ======================================================== -->
+  <!-- SUCCESS MODAL POPUP -->
+  <!-- ======================================================== -->
+  <div class="modal-overlay" id="success-modal">
+    <div class="modal-card">
+      <div class="modal-icon-glow">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+      <h3 class="modal-title">سفارش شما با موفقیت ثبت و ارسال شد!</h3>
+      <p class="modal-desc">
+        اطلاعات کامل پروژه شما به ایمیل <strong class="glow-text">urclub7@gmail.com</strong> فرستاده شد و کارشناسان ما به زودی با شما تماس خواهند گرفت.
+      </p>
+
+      <div class="order-ticket-box">
+        <div class="ticket-row">
+          <span>کد پیگیری سفارش:</span>
+          <strong class="ticket-code" id="ticket-id">UR-98214</strong>
+        </div>
+        <div class="ticket-row">
+          <span>پروژه انتخابی:</span>
+          <strong id="ticket-cat">طراحی وب‌سایت</strong>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <a href="https://wa.me/491624212685" target="_blank" class="modal-btn btn-wa">
+          <i class="fa-brands fa-whatsapp"></i>
+          پیام سریع در واتساپ
+        </a>
+        <a href="https://t.me/LEVI_2213" target="_blank" class="modal-btn btn-tg">
+          <i class="fa-brands fa-telegram"></i>
+          پیام در تلگرام
+        </a>
+      </div>
+
+      <button type="button" class="modal-close-btn" id="modal-close-btn">
+        بستن پنجره
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast Message -->
+  <div class="toast-container" id="toast-box"></div>
+
+  <!-- Supabase Cloud SDK (for realtime backup) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Main Application Logic -->
+  <script src="form.js"></script>
+</body>
+</html>
