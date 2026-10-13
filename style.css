@@ -118,11 +118,17 @@ a, button, input, select, label, .social-icon-btn, .views-pill, .enter-overlay {
 }
 
 .enter-text {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Tahoma', sans-serif;
   font-size: 1.15rem;
   letter-spacing: 2px;
   color: #a1a1aa;
   animation: pulseOpacity 2s infinite ease-in-out;
+  user-select: none;
+}
+
+html[dir="rtl"] .enter-text {
+  font-family: 'Tahoma', 'Inter', sans-serif;
+  letter-spacing: 1px;
 }
 
 /* Center Profile Container (Always strictly centered & LTR structure) */

@@ -293,9 +293,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  let userMutedAudio = false;
+
   function toggleSound() {
     if (!bgVideo) return;
     bgVideo.muted = !bgVideo.muted;
+    userMutedAudio = bgVideo.muted;
     if (!bgVideo.muted && bgVideo.paused) {
       bgVideo.play().catch(() => {});
     }
@@ -382,7 +385,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (btnToggleLang) {
     btnToggleLang.addEventListener("click", (e) => {
       e.stopPropagation();
-      applyLanguage(currentLang === "fa" ? "en" : "fa");
+      const nextLang = (currentLang === "fa" ? "en" : "fa");
+      applyLanguage(nextLang);
+
+      // Re-trigger the enter screen in the selected language
+      if (!isPreview && enterOverlay) {
+        isUnlocked = false;
+        if (bgVideo) bgVideo.muted = true; // Silence audio while black screen is displayed
+        enterOverlay.classList.remove("hidden");
+      }
     });
   }
 
@@ -417,8 +428,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (bgVideo && bgVideo.src) {
-      bgVideo.muted = false;
-      bgVideo.volume = 0.8;
+      if (userMutedAudio) {
+        bgVideo.muted = true;
+      } else {
+        bgVideo.muted = false;
+        bgVideo.volume = 0.8;
+      }
       const playPromise = bgVideo.play();
       if (playPromise !== undefined) {
         playPromise.then(() => {
