@@ -276,18 +276,23 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  // Razor-sharp Vector Audio SVGs
+  const SOUND_ON_SVG = `<svg class="dock-svg-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>`;
+  const SOUND_OFF_SVG = `<svg class="dock-svg-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/></svg>`;
+
   // Sound UI State
   function updateSoundUI() {
     if (!bgVideo) return;
     const isMuted = bgVideo.muted;
     if (btnToggleSound) {
+      if (soundIcon) {
+        soundIcon.innerHTML = isMuted ? SOUND_OFF_SVG : SOUND_ON_SVG;
+      }
       if (isMuted) {
         btnToggleSound.classList.add("is-muted");
-        if (soundIcon) soundIcon.className = "fa-solid fa-volume-xmark";
         if (soundLabel) soundLabel.textContent = (currentLang === "fa" ? "بی‌صدا" : "Muted");
       } else {
         btnToggleSound.classList.remove("is-muted");
-        if (soundIcon) soundIcon.className = "fa-solid fa-volume-high";
         if (soundLabel) soundLabel.textContent = (currentLang === "fa" ? "صدا" : "Sound");
       }
     }

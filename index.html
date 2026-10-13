@@ -102,19 +102,33 @@
   <nav class="site-floating-dock" id="site-floating-dock">
     <!-- 1. Language Switcher -->
     <button type="button" id="btn-toggle-lang" class="dock-btn dock-btn-lang" title="Switch Language / تغییر زبان">
-      <i class="fa-solid fa-globe"></i>
+      <svg class="dock-svg-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/>
+        <path d="M2 12h20"/>
+      </svg>
       <span id="dock-lang-label">FA</span>
     </button>
 
     <!-- 2. Order Button -->
     <button type="button" id="btn-open-order-modal" class="dock-btn dock-btn-order" title="Order Project">
-      <i class="fa-solid fa-cart-shopping"></i>
+      <svg class="dock-svg-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="8" cy="21" r="1"/>
+        <circle cx="19" cy="21" r="1"/>
+        <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+      </svg>
       <span id="dock-order-label">Order</span>
     </button>
 
     <!-- 3. Background Video Sound Mute/Unmute Button -->
     <button type="button" id="btn-toggle-sound" class="dock-btn dock-btn-sound" title="Sound Control / قطع و وصل صدا">
-      <i class="fa-solid fa-volume-high" id="sound-icon"></i>
+      <span id="sound-icon" class="dock-sound-icon-wrap">
+        <svg class="dock-svg-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+          <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+        </svg>
+      </span>
       <span id="sound-label">Sound</span>
     </button>
   </nav>

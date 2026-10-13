@@ -677,43 +677,51 @@ html[dir="rtl"] .site-floating-dock {
 .dock-btn {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
-  padding: 9px 18px;
-  background: rgba(10, 15, 29, 0.85);
+  gap: 8px;
+  padding: 8px 17px;
+  background: rgba(10, 14, 26, 0.88);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 9999px;
   color: #ffffff;
   font-family: inherit;
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 4px 22px rgba(0, 0, 0, 0.5), 0 0 16px rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 22px rgba(0, 0, 0, 0.5), 0 0 16px rgba(255, 255, 255, 0.08);
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   user-select: none;
 }
 
-.dock-btn i {
+.dock-svg-icon {
+  width: 15px;
+  height: 15px;
+  display: block;
+  stroke: #ffffff;
   color: #ffffff;
-  font-size: 14px;
+  flex-shrink: 0;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.dock-sound-icon-wrap {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.2s ease, opacity 0.2s ease;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
 }
 
 .dock-btn:hover {
   transform: translateY(-2px) scale(1.03);
   background: rgba(255, 255, 255, 0.14);
   border-color: rgba(255, 255, 255, 0.7);
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.6), 0 0 22px rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.6), 0 0 22px rgba(255, 255, 255, 0.2);
 }
 
-.dock-btn:hover i {
-  transform: scale(1.08);
+.dock-btn:hover .dock-svg-icon {
+  transform: scale(1.1);
 }
 
 .dock-btn:active {
@@ -722,16 +730,16 @@ html[dir="rtl"] .site-floating-dock {
 
 /* Sound Button active & muted states */
 .dock-btn-sound.is-muted {
-  border-color: rgba(255, 255, 255, 0.15);
-  color: rgba(255, 255, 255, 0.55);
-}
-
-.dock-btn-sound.is-muted i {
-  color: rgba(255, 255, 255, 0.55);
-}
-
-.dock-btn-sound:not(.is-muted) i {
+  border-color: rgba(255, 255, 255, 0.2);
   color: #ffffff;
+}
+
+.dock-btn-sound.is-muted .dock-svg-icon {
+  opacity: 0.8;
+}
+
+.dock-btn-sound:not(.is-muted) .dock-svg-icon {
+  opacity: 1;
 }
 
 @media (max-width: 640px) {
