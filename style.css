@@ -125,7 +125,7 @@ a, button, input, select, label, .social-icon-btn, .views-pill, .enter-overlay {
   animation: pulseOpacity 2s infinite ease-in-out;
 }
 
-/* Center Profile Container */
+/* Center Profile Container (Always strictly centered & LTR structure) */
 .profile-container {
   position: relative;
   z-index: 10;
@@ -135,6 +135,7 @@ a, button, input, select, label, .social-icon-btn, .views-pill, .enter-overlay {
   text-align: center;
   max-width: 480px;
   padding: 1.5rem;
+  direction: ltr !important;
 }
 
 /* Circular Avatar */
@@ -214,10 +215,7 @@ a, button, input, select, label, .social-icon-btn, .views-pill, .enter-overlay {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
   transition: transform 0.2s, background 0.2s, border-color 0.2s;
   user-select: none;
-}
-
-html[dir="rtl"] .presence-widget {
-  padding: 7px 10px 7px 18px;
+  direction: ltr !important;
 }
 
 .presence-widget:hover {
@@ -252,11 +250,6 @@ html[dir="rtl"] .presence-widget {
   border-radius: 50%;
 }
 
-html[dir="rtl"] .presence-status-ring {
-  right: auto;
-  left: 0;
-}
-
 .presence-info {
   display: flex;
   align-items: center;
@@ -277,13 +270,14 @@ html[dir="rtl"] .presence-status-ring {
   line-height: 1;
 }
 
-/* Horizontal Social Icons Bar */
+/* Horizontal Social Icons Bar (Always strictly identical LTR icon ordering) */
 .socials-row {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 18px;
   margin-bottom: 2.2rem;
+  direction: ltr !important;
 }
 
 .social-icon-btn {
