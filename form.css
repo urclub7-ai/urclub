@@ -111,7 +111,7 @@ body.lang-fa, body.fa {
   height: 72px;
   margin: 0 auto 18px;
   border-radius: 18px;
-  background: rgba(56, 189, 248, 0.12);
+  background: #ffffff;
   border: 1px solid rgba(56, 189, 248, 0.35);
   display: flex;
   align-items: center;
@@ -304,6 +304,7 @@ body.lang-fa, body.fa {
   width: 40px;
   height: 40px;
   border-radius: 10px;
+  background: #ffffff;
   object-fit: cover;
   box-shadow: 0 0 16px rgba(56, 189, 248, 0.4), 0 0 8px rgba(168, 85, 247, 0.3);
   border: 1px solid rgba(56, 189, 248, 0.4);
