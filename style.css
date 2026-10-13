@@ -287,20 +287,127 @@ html[dir="rtl"] .enter-text {
 }
 
 .social-icon-btn {
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.92);
   text-decoration: none;
   font-size: 1.65rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.2s ease, color 0.2s ease, filter 0.2s ease;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), color 0.25s ease, filter 0.25s ease;
   filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.6));
 }
 
 .social-icon-btn:hover {
-  transform: translateY(-4px) scale(1.15);
+  transform: translateY(-4px) scale(1.18);
   color: #ffffff;
-  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+  filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.85));
+}
+
+/* Authentic Brand Colors & Vibrant Glowing Effects on Hover */
+.social-icon-btn.social-whatsapp:hover,
+.social-icon-btn[data-social="whatsapp"]:hover,
+.social-icon-btn:has(.fa-whatsapp):hover {
+  color: #25D366 !important;
+  filter: drop-shadow(0 0 10px rgba(37, 211, 102, 0.95)) drop-shadow(0 0 22px rgba(37, 211, 102, 0.6)) !important;
+}
+
+.social-icon-btn.social-telegram:hover,
+.social-icon-btn[data-social="telegram"]:hover,
+.social-icon-btn:has(.fa-telegram):hover {
+  color: #24A1DE !important;
+  filter: drop-shadow(0 0 10px rgba(36, 161, 222, 0.95)) drop-shadow(0 0 22px rgba(36, 161, 222, 0.6)) !important;
+}
+
+.social-icon-btn.social-discord:hover,
+.social-icon-btn[data-social="discord"]:hover,
+.social-icon-btn:has(.fa-discord):hover {
+  color: #5865F2 !important;
+  filter: drop-shadow(0 0 10px rgba(88, 101, 242, 0.95)) drop-shadow(0 0 22px rgba(88, 101, 242, 0.6)) !important;
+}
+
+.social-icon-btn.social-instagram:hover,
+.social-icon-btn[data-social="instagram"]:hover,
+.social-icon-btn:has(.fa-instagram):hover {
+  color: #E1306C !important;
+  filter: drop-shadow(0 0 10px rgba(225, 48, 108, 0.95)) drop-shadow(0 0 22px rgba(193, 53, 132, 0.65)) !important;
+}
+
+.social-icon-btn.social-facebook:hover,
+.social-icon-btn[data-social="facebook"]:hover,
+.social-icon-btn:has(.fa-facebook):hover {
+  color: #1877F2 !important;
+  filter: drop-shadow(0 0 10px rgba(24, 119, 242, 0.95)) drop-shadow(0 0 22px rgba(24, 119, 242, 0.6)) !important;
+}
+
+.social-icon-btn.social-tiktok:hover,
+.social-icon-btn[data-social="tiktok"]:hover,
+.social-icon-btn:has(.fa-tiktok):hover {
+  color: #ffffff !important;
+  filter: drop-shadow(-2px -2px 6px #25F4EE) drop-shadow(2px 2px 6px #FE2C55) drop-shadow(0 0 16px rgba(254, 44, 85, 0.85)) !important;
+}
+
+.social-icon-btn.social-youtube:hover,
+.social-icon-btn[data-social="youtube"]:hover,
+.social-icon-btn:has(.fa-youtube):hover {
+  color: #FF0000 !important;
+  filter: drop-shadow(0 0 10px rgba(255, 0, 0, 0.95)) drop-shadow(0 0 22px rgba(255, 0, 0, 0.6)) !important;
+}
+
+.social-icon-btn.social-twitch:hover,
+.social-icon-btn[data-social="twitch"]:hover,
+.social-icon-btn:has(.fa-twitch):hover {
+  color: #9146FF !important;
+  filter: drop-shadow(0 0 10px rgba(145, 70, 255, 0.95)) drop-shadow(0 0 22px rgba(145, 70, 255, 0.6)) !important;
+}
+
+.social-icon-btn.social-spotify:hover,
+.social-icon-btn[data-social="spotify"]:hover,
+.social-icon-btn:has(.fa-spotify):hover {
+  color: #1DB954 !important;
+  filter: drop-shadow(0 0 10px rgba(29, 185, 84, 0.95)) drop-shadow(0 0 22px rgba(29, 185, 84, 0.6)) !important;
+}
+
+.social-icon-btn.social-steam:hover,
+.social-icon-btn[data-social="steam"]:hover,
+.social-icon-btn:has(.fa-steam):hover {
+  color: #66c0f4 !important;
+  filter: drop-shadow(0 0 10px rgba(102, 192, 244, 0.95)) drop-shadow(0 0 22px rgba(102, 192, 244, 0.6)) !important;
+}
+
+.social-icon-btn.social-twitter:hover,
+.social-icon-btn[data-social="twitter"]:hover,
+.social-icon-btn:has(.fa-x-twitter):hover,
+.social-icon-btn:has(.fa-twitter):hover {
+  color: #1DA1F2 !important;
+  filter: drop-shadow(0 0 10px rgba(29, 161, 242, 0.95)) drop-shadow(0 0 22px rgba(29, 161, 242, 0.6)) !important;
+}
+
+.social-icon-btn.social-kick:hover,
+.social-icon-btn[data-social="kick"]:hover,
+.social-icon-btn:has(.fa-k):hover {
+  color: #53FC18 !important;
+  filter: drop-shadow(0 0 10px rgba(83, 252, 24, 0.95)) drop-shadow(0 0 22px rgba(83, 252, 24, 0.6)) !important;
+}
+
+.social-icon-btn.social-snapchat:hover,
+.social-icon-btn[data-social="snapchat"]:hover,
+.social-icon-btn:has(.fa-snapchat):hover {
+  color: #FFFC00 !important;
+  filter: drop-shadow(0 0 10px rgba(255, 252, 0, 0.95)) drop-shadow(0 0 22px rgba(255, 252, 0, 0.6)) !important;
+}
+
+.social-icon-btn.social-reddit:hover,
+.social-icon-btn[data-social="reddit"]:hover,
+.social-icon-btn:has(.fa-reddit):hover {
+  color: #FF4500 !important;
+  filter: drop-shadow(0 0 10px rgba(255, 69, 0, 0.95)) drop-shadow(0 0 22px rgba(255, 69, 0, 0.6)) !important;
+}
+
+.social-icon-btn.social-github:hover,
+.social-icon-btn[data-social="github"]:hover,
+.social-icon-btn:has(.fa-github):hover {
+  color: #ffffff !important;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 22px rgba(255, 255, 255, 0.6)) !important;
 }
 
 /* Views Pill & Animated Counter */

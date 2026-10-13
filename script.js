@@ -266,7 +266,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             a.href = link;
             a.target = "_blank";
             a.rel = "noopener noreferrer";
-            a.className = "social-icon-btn";
+            a.className = `social-icon-btn social-${cat.id}`;
+            a.dataset.social = cat.id;
             a.title = cat.name;
             a.innerHTML = `<i class="${cat.icon}"></i>`;
             socialsRow.appendChild(a);
