@@ -398,7 +398,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (!isPreview && enterOverlay) {
         isLanguageTransitioning = true;
         isUnlocked = false;
-        if (bgVideo) bgVideo.muted = true; // Silence audio while curtain drops
+        if (bgVideo) {
+          bgVideo.muted = true;
+          bgVideo.pause();
+          try {
+            bgVideo.currentTime = 0;
+          } catch (e) {}
+        }
 
         // 1. Immediately drop the pitch-black curtain without changing any content
         enterOverlay.style.transition = "opacity 0.25s ease";
@@ -451,6 +457,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (bgVideo && bgVideo.src) {
+      try {
+        bgVideo.currentTime = 0; // Restart video from the very beginning!
+      } catch (e) {}
       if (userMutedAudio) {
         bgVideo.muted = true;
       } else {
