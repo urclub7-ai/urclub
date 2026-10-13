@@ -33,6 +33,13 @@ const DEFAULT_MAIN_PROFILE = {
     status: "online",
     statusColor: "#22c55e"
   },
+  persian: {
+    name: "لوی",
+    subtitle: "توسعه‌دهنده وب و بهینه‌ساز سیستم",
+    enterText: "[ برای ورود به وبسایت کلیک کنید ]",
+    orderBtnText: "سفارش",
+    presenceStatus: "آنلاین"
+  },
   socials: {}
 };
 

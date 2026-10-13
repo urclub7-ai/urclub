@@ -58,12 +58,26 @@ document.addEventListener("DOMContentLoaded", async () => {
     currentActiveProfile = profile;
     document.title = (userSlug === "main") ? "urclub" : (profile.name ? `${profile.name} • urclub` : "urclub");
 
+    const isFa = (document.documentElement.lang === "fa");
+    const faData = profile.persian || {};
+
+    const displayName = isFa ? (faData.name || profile.name || "LEVI") : (profile.name || "LEVI");
+    const displaySubtitle = isFa ? (faData.subtitle || profile.subtitle || "") : (profile.subtitle || "");
+    const displayEnter = isFa ? (faData.enterText || "[ برای ورود به وبسایت کلیک کنید ]") : "[ click anywhere to enter ]";
+    const orderBtnText = isFa ? (faData.orderBtnText || "سفارش") : "Order";
+    const displayStatus = isFa ? (faData.presenceStatus || "آنلاین") : (profile.presence && profile.presence.status ? profile.presence.status : "online");
+
     // 1. Text & Titles
-    if (nameText) nameText.textContent = profile.name || "LEVI";
+    if (nameText) nameText.textContent = displayName;
     if (profileSubtitle) {
-      profileSubtitle.textContent = profile.subtitle || "";
-      profileSubtitle.style.display = profile.subtitle ? "block" : "none";
+      profileSubtitle.textContent = displaySubtitle;
+      profileSubtitle.style.display = displaySubtitle ? "block" : "none";
     }
+    const enterTextElem = document.getElementById("enter-text");
+    if (enterTextElem) enterTextElem.textContent = displayEnter;
+    const orderBtnSpan = document.querySelector("#btn-open-order-modal span");
+    if (orderBtnSpan) orderBtnSpan.textContent = orderBtnText;
+
     const profileViews = profile.views || profile.baseViews || "10";
     renderViews(profileViews);
 
@@ -88,13 +102,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 3. Presence Widget
     if (profile.presence) {
       if (presenceHandle) presenceHandle.textContent = profile.presence.handle || profile.username || "user";
-      if (presenceStatus) presenceStatus.textContent = profile.presence.status || "online";
+      if (presenceStatus) presenceStatus.textContent = displayStatus;
       if (presenceStatusRing) {
         presenceStatusRing.style.backgroundColor = profile.presence.statusColor || "#22c55e";
       }
     } else {
       if (presenceHandle) presenceHandle.textContent = profile.username || "user";
-      if (presenceStatus) presenceStatus.textContent = "online";
+      if (presenceStatus) presenceStatus.textContent = displayStatus;
     }
 
     // 4. Background Video (Smart Device Selection: PC vs Mobile)

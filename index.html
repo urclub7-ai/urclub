@@ -63,24 +63,29 @@
     <div class="bg-vignette"></div>
   </div>
 
-  <!-- Top Corner: Floating Order Button -->
-  <button id="btn-open-order-modal" class="floating-order-btn" title="ثبت سفارش اختصاصی">
+  <!-- Top Corner: Floating Order Button & Language Switcher (English Version) -->
+  <button id="btn-open-order-modal" class="floating-order-btn" title="Order Project">
     <i class="fa-solid fa-cart-shopping"></i>
-    <span>سفارش</span>
+    <span>Order</span>
   </button>
 
-  <!-- Order Access Code Verification Modal -->
+  <a href="fa.html" class="lang-switch-pill" title="مشاهده نسخه فارسی">
+    <i class="fa-solid fa-globe"></i>
+    <span>FA</span>
+  </a>
+
+  <!-- Order Access Code Verification Modal (English) -->
   <div id="modal-order-gate" class="order-modal-backdrop" style="display: none;">
     <div class="order-modal-card">
-      <button type="button" id="btn-close-order-modal" class="order-modal-close" title="بستن">&times;</button>
+      <button type="button" id="btn-close-order-modal" class="order-modal-close" title="Close">&times;</button>
       
       <div class="order-modal-header">
         <div class="order-modal-icon-badge">
           <i class="fa-solid fa-key"></i>
         </div>
-        <h2 class="order-modal-title">ورود به بخش ثبت سفارش</h2>
+        <h2 class="order-modal-title">Enter Order Code</h2>
         <p class="order-modal-desc">
-          برای دسترسی به فرم و ثبت مشخصات پروژه کد خود را وارد کنید
+          Enter your code to access the project submission form
         </p>
       </div>
 
@@ -100,32 +105,32 @@
         <div id="order-code-error" class="order-code-error" style="display: none;"></div>
 
         <button type="submit" id="btn-verify-order-code" class="btn-verify-order">
-          <span class="btn-verify-text"><i class="fa-solid fa-arrow-left"></i> تایید و ورود به فرم</span>
-          <span class="btn-verify-spinner" style="display: none;"><i class="fa-solid fa-spinner fa-spin"></i> در حال بررسی کد...</span>
+          <span class="btn-verify-text"><i class="fa-solid fa-arrow-right"></i> Verify & Proceed</span>
+          <span class="btn-verify-spinner" style="display: none;"><i class="fa-solid fa-spinner fa-spin"></i> Verifying Code...</span>
         </button>
       </form>
 
       <div class="order-modal-footer">
         <button type="button" id="btn-no-code" class="btn-no-code-link">
-          کد ندارم
+          I don't have a code
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Admin WhatsApp Contact Modal (کد ندارم) -->
+  <!-- Admin WhatsApp Contact Modal (English) -->
   <div id="modal-admin-contact" class="admin-contact-backdrop" style="display: none;">
     <div class="admin-contact-card">
-      <button type="button" id="btn-close-admin-contact" class="admin-contact-close" title="بستن">&times;</button>
+      <button type="button" id="btn-close-admin-contact" class="admin-contact-close" title="Close">&times;</button>
       
       <div class="admin-contact-avatar-wrap">
         <img id="admin-contact-avatar" class="admin-contact-avatar" src="assets/logo.png" alt="Admin Profile" />
         <span class="admin-contact-status-dot"></span>
       </div>
 
-      <p class="admin-contact-text">برای دریافت کد سفارش خود را ثبت کنید.</p>
+      <p class="admin-contact-text">To receive an access code, register your order with admin.</p>
 
-      <a id="admin-contact-wa-link" href="https://wa.me/491624212685?text=%D8%B3%D9%84%D8%A7%D9%85%D8%8C%20%D8%A8%D8%B1%D8%A7%DB%8C%20%D8%AF%D8%B1%DB%8C%D8%A7%D9%81%D8%AA%20%DA%A9%D8%AF%20%D8%B3%D9%81%D8%A7%D8%B1%D8%B4%20%D8%AE%D9%88%D8%AF%20%D8%B1%D8%A7%20%D8%AB%D8%A8%D8%AA%20%DA%A9%D9%86%D9%85." target="_blank" class="admin-contact-wa-btn">
+      <a id="admin-contact-wa-link" href="https://wa.me/491624212685?text=Hello%2C%20I%20would%20like%20to%20register%20my%20order%20to%20receive%20an%20order%20form%20code." target="_blank" class="admin-contact-wa-btn">
         <i class="fa-brands fa-whatsapp"></i>
         <span dir="ltr">+49 162 4212685</span>
       </a>

@@ -31,11 +31,11 @@
       <nav class="admin-top-nav">
         <button type="button" id="tab-nav-bio" class="top-nav-btn active">
           <i class="fa-solid fa-user-gear"></i>
-          <span>تنظیمات بیو</span>
+          <span>Bio Settings</span>
         </button>
         <button type="button" id="tab-nav-codes" class="top-nav-btn">
           <i class="fa-solid fa-key"></i>
-          <span>کدهای سفارش</span>
+          <span>Order Codes</span>
           <span class="nav-count-badge" id="nav-active-codes-count">0</span>
         </button>
       </nav>
@@ -52,10 +52,10 @@
       <!-- Codes Quick Action (Visible on Codes tab) -->
       <div class="codes-header-controls" id="codes-header-controls" style="display: none;">
         <button type="button" id="btn-header-create-code" class="btn btn-primary">
-          <i class="fa-solid fa-plus"></i> ساخت کد سفارش جدید
+          <i class="fa-solid fa-plus"></i> New Order Code
         </button>
-        <button type="button" id="btn-header-refresh-codes" class="btn btn-outline" title="بروزرسانی داده‌های ابری">
-          <i class="fa-solid fa-arrows-rotate"></i> بروزرسانی
+        <button type="button" id="btn-header-refresh-codes" class="btn btn-outline" title="Refresh cloud data">
+          <i class="fa-solid fa-arrows-rotate"></i> Refresh
         </button>
       </div>
     </div>
@@ -74,8 +74,8 @@
       </div>
 
       <div id="codes-header-actions" class="header-actions-group" style="display: none;">
-        <a href="form.html" target="_blank" class="btn btn-secondary" title="مشاهده فرم آنلاین">
-          <i class="fa-solid fa-arrow-up-right-from-square"></i> باز کردن فرم
+        <a href="form.html" target="_blank" class="btn btn-secondary" title="Open online form">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Form
         </a>
       </div>
     </div>
@@ -91,27 +91,28 @@
     <div class="settings-container">
 
       <!-- Active Page URL & Mode Indicator -->
+      <!-- Active Page URL & Mode Indicator -->
       <div class="profile-mode-card" id="profile-mode-card">
         <div class="mode-info">
           <div class="mode-badge" id="mode-badge">
             <i class="fa-solid fa-crown"></i>
-            <span id="mode-text">صفحه اصلی شما (Root Page)</span>
+            <span id="mode-text">Root Homepage (Main)</span>
           </div>
           <div class="live-url-wrap">
-            <span class="url-label">آدرس عمومی این صفحه:</span>
+            <span class="url-label">Public Page URL:</span>
             <a id="current-live-url" href="https://urclub.vercel.app/" target="_blank" class="live-url-link">https://urclub.vercel.app/</a>
-            <button type="button" id="btn-copy-url" class="btn-copy-sm" title="کپی آدرس لینک">
-              <i class="fa-regular fa-copy"></i> کپی لینک
+            <button type="button" id="btn-copy-url" class="btn-copy-sm" title="Copy public link">
+              <i class="fa-regular fa-copy"></i> Copy Link
             </button>
           </div>
         </div>
       </div>
       
-      <!-- General Info Card -->
+      <!-- General Info Card (English) -->
       <section class="admin-card">
         <div class="card-header">
           <i class="fa-solid fa-id-card"></i>
-          <h3>General Information</h3>
+          <h3>General Information (English Page)</h3>
         </div>
         <div class="form-grid">
           <div class="form-group">
@@ -139,6 +140,47 @@
                 <span class="switch-label">Live Visitor Counter (+1)</span>
               </label>
               <span class="views-mode-hint">When ON: Each visit adds +1 with live rolling animation (90 ➔ 91). When OFF: Shows fixed custom number.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Persian Website Version Customization (Farsi Texts) -->
+      <section class="admin-card persian-settings-card" id="card-persian-settings">
+        <div class="card-header">
+          <i class="fa-solid fa-language" style="color: #38bdf8;"></i>
+          <h3>Persian Website Content (بخش فارسی وبسایت)</h3>
+          <span class="header-hint">Customize the texts specifically displayed on the Persian page (fa.html)</span>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="input-fa-name">Persian Display Name (نام نمایشی)</label>
+            <input type="text" id="input-fa-name" placeholder="مثال: لوی" dir="rtl" />
+          </div>
+          <div class="form-group">
+            <label for="input-fa-order-btn">Persian Order Button Text (متن دکمه سفارش)</label>
+            <input type="text" id="input-fa-order-btn" placeholder="سفارش" value="سفارش" dir="rtl" />
+          </div>
+          <div class="form-group full-width">
+            <label for="input-fa-subtitle">Persian Subtitle / Bio (زیرعنوان و توضیحات فارسی)</label>
+            <input type="text" id="input-fa-subtitle" placeholder="مثال: قوی‌ترین سرباز بشریت و تولیدکننده محتوا" dir="rtl" />
+          </div>
+          <div class="form-group">
+            <label for="input-fa-enter-text">Persian Enter Prompt (متن صفحه ورود)</label>
+            <input type="text" id="input-fa-enter-text" placeholder="[ برای ورود به وبسایت کلیک کنید ]" dir="rtl" />
+          </div>
+          <div class="form-group">
+            <label for="input-fa-status">Persian Presence Status (وضعیت آنلاین)</label>
+            <input type="text" id="input-fa-status" placeholder="آنلاین" dir="rtl" />
+          </div>
+          <div class="form-group full-width">
+            <div class="persian-preview-actions" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+              <a href="fa.html" target="_blank" class="btn btn-secondary">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Live Persian Page (fa.html)
+              </a>
+              <button type="button" id="btn-copy-fa-url" class="btn btn-outline">
+                <i class="fa-regular fa-copy"></i> Copy Persian Page Link
+              </button>
             </div>
           </div>
         </div>
@@ -192,19 +234,19 @@
         <div class="card-header">
           <i class="fa-solid fa-film"></i>
           <h3>Background Videos (PC & Mobile)</h3>
-          <span class="header-hint">پخش خودکار ویدیو و صدا متناسب با دستگاه کاربر</span>
+          <span class="header-hint">Auto-plays responsive video and audio matching the visitor device</span>
         </div>
         <div class="form-grid">
           <!-- 1. PC / Desktop Video -->
           <div class="form-group full-width">
             <label for="input-bg-video">
               <i class="fa-solid fa-desktop" style="color: #38bdf8;"></i> 
-              ۱. ویدیوی پس‌زمینه کامپیوتر (PC / Desktop Video - 16:9)
+              1. Desktop / PC Background Video (16:9 Landscape)
             </label>
             <div class="media-input-row">
-              <input type="text" id="input-bg-video" placeholder="لینک مستقیم MP4 یا دکمه آپلود" />
+              <input type="text" id="input-bg-video" placeholder="Direct MP4 link or upload file" />
               <label class="file-upload-btn">
-                <i class="fa-solid fa-cloud-arrow-up"></i> آپلود ویدیوی PC
+                <i class="fa-solid fa-cloud-arrow-up"></i> Upload PC Video
                 <input type="file" id="file-bg-video" accept="video/mp4,video/*" />
               </label>
             </div>
@@ -214,16 +256,16 @@
           <div class="form-group full-width">
             <label for="input-mobile-bg-video">
               <i class="fa-solid fa-mobile-screen-button" style="color: #a855f7;"></i> 
-              ۲. ویدیوی پس‌زمینه گوشی (Mobile Video - 9:16 عمودی)
+              2. Mobile Background Video (9:16 Vertical)
             </label>
             <div class="media-input-row">
-              <input type="text" id="input-mobile-bg-video" placeholder="لینک مستقیم MP4 عمودی یا دکمه آپلود" />
+              <input type="text" id="input-mobile-bg-video" placeholder="Direct vertical MP4 link or upload file" />
               <label class="file-upload-btn" style="background: linear-gradient(135deg, #a855f7, #7c3aed);">
-                <i class="fa-solid fa-cloud-arrow-up"></i> آپلود ویدیوی موبایل
+                <i class="fa-solid fa-cloud-arrow-up"></i> Upload Mobile Video
                 <input type="file" id="file-mobile-bg-video" accept="video/mp4,video/*" />
               </label>
             </div>
-            <span class="views-mode-hint" style="margin-top: 6px;">💡 نکته: در کامپیوتر ویدیوی اول و در گوشی‌های موبایل ویدیوی دوم با نهایت رزولوشن و صدا پخش می‌شود. (می‌توانید هم لینک مستقیم قرار دهید و هم فایل آپلود کنید).</span>
+            <span class="views-mode-hint" style="margin-top: 6px;">💡 Note: Desktop visitors automatically receive the 16:9 PC video, while mobile visitors receive the 9:16 vertical video with crystal clear resolution and synchronized audio.</span>
           </div>
         </div>
       </section>
@@ -332,7 +374,7 @@
         <div class="stat-card stat-card-active">
           <div class="stat-icon"><i class="fa-solid fa-key"></i></div>
           <div class="stat-info">
-            <span class="stat-label">کدهای فعال و آماده مشتری</span>
+            <span class="stat-label">Active Customer Codes</span>
             <strong class="stat-val" id="stat-active-codes">0</strong>
           </div>
         </div>
@@ -340,7 +382,7 @@
         <div class="stat-card stat-card-used">
           <div class="stat-icon"><i class="fa-solid fa-clipboard-check"></i></div>
           <div class="stat-info">
-            <span class="stat-label">سفارش‌های ثبت شده (Used)</span>
+            <span class="stat-label">Submitted Orders (Used)</span>
             <strong class="stat-val" id="stat-used-codes">0</strong>
           </div>
         </div>
@@ -348,7 +390,7 @@
         <div class="stat-card stat-card-total">
           <div class="stat-icon"><i class="fa-solid fa-database"></i></div>
           <div class="stat-info">
-            <span class="stat-label">مجموع کدهای سیستم</span>
+            <span class="stat-label">Total System Codes</span>
             <strong class="stat-val" id="stat-total-codes">0</strong>
           </div>
         </div>
@@ -358,19 +400,19 @@
       <div class="codes-action-bar">
         <div class="codes-search-wrap">
           <i class="fa-solid fa-magnifying-glass search-icon"></i>
-          <input type="text" id="input-search-codes" placeholder="جستجو بر اساس کد، نام مشتری یا یادداشت..." />
+          <input type="text" id="input-search-codes" placeholder="Search by code, customer name or note..." />
         </div>
 
         <div class="codes-filter-group">
           <select id="select-filter-status" class="codes-filter-select">
-            <option value="all">همه وضعیت‌ها</option>
-            <option value="active">🟢 فقط کدهای فعال</option>
-            <option value="used">🔵 سفارش‌های ثبت شده</option>
-            <option value="revoked">🔴 کدهای غیرفعال</option>
+            <option value="all">All Statuses</option>
+            <option value="active">🟢 Active Codes Only</option>
+            <option value="used">🔵 Submitted Orders (Used)</option>
+            <option value="revoked">🔴 Inactive / Revoked Codes</option>
           </select>
 
           <button type="button" id="btn-open-create-code" class="btn btn-primary">
-            <i class="fa-solid fa-plus"></i> ساخت کد سفارش جدید
+            <i class="fa-solid fa-plus"></i> Create New Code
           </button>
         </div>
       </div>
@@ -381,18 +423,18 @@
           <table class="codes-table">
             <thead>
               <tr>
-                <th>کد اختصاصی (۸ رقم)</th>
-                <th>مشتری / یادداشت</th>
-                <th>تاریخ ایجاد</th>
-                <th>وضعیت</th>
-                <th>مشخصات پروژه & فولدر پیشنهادی</th>
-                <th>عملیات</th>
+                <th>Access Code (8-char)</th>
+                <th>Client / Note</th>
+                <th>Created Date</th>
+                <th>Status</th>
+                <th>Project Details & Suggested Folder</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody id="codes-table-body">
               <tr>
                 <td colspan="6" class="table-loading">
-                  <i class="fa-solid fa-spinner fa-spin"></i> در حال بارگذاری کدهای سفارش از سرور...
+                  <i class="fa-solid fa-spinner fa-spin"></i> Loading order codes from cloud server...
                 </td>
               </tr>
             </tbody>
@@ -407,35 +449,35 @@
   <div id="modal-create-code" class="modal-overlay">
     <div class="modal-content modal-md">
       <div class="modal-header">
-        <h3><i class="fa-solid fa-key"></i> ساخت کد اختصاصی جدید</h3>
+        <h3><i class="fa-solid fa-key"></i> Create New Access Code</h3>
         <button type="button" id="modal-close-create-code" class="modal-close-btn">&times;</button>
       </div>
       <div class="modal-body">
         <div class="form-group">
-          <label for="input-new-code">کد اختصاصی (۸ رقمی ترکیبی)</label>
+          <label for="input-new-code">Access Code (8 characters alphanumeric)</label>
           <div class="code-gen-input-row">
             <input type="text" id="input-new-code" placeholder="" maxlength="14" spellcheck="false" />
-            <button type="button" id="btn-random-code" class="btn btn-outline" title="تولید تصادفی کد">
-              <i class="fa-solid fa-dice"></i> تصادفی
+            <button type="button" id="btn-random-code" class="btn btn-outline" title="Generate random code">
+              <i class="fa-solid fa-dice"></i> Random
             </button>
           </div>
-          <span class="views-mode-hint">کد ۸ حرف و عدد است که برای مشتری ارسال می‌کنید تا فرم را باز کند.</span>
+          <span class="views-mode-hint">8 letters & numbers to send to customer to unlock the form.</span>
         </div>
 
         <div class="form-group">
-          <label for="input-new-client">نام مشتری یا مخاطب (اختیاری)</label>
-          <input type="text" id="input-new-client" placeholder="مثال: علی رضایی یا مشتری شماره ۲ واتساپ" />
+          <label for="input-new-client">Customer Name / Contact (Optional)</label>
+          <input type="text" id="input-new-client" placeholder="e.g. John Doe or WhatsApp Client #2" />
         </div>
 
         <div class="form-group">
-          <label for="input-new-note">یادداشت برای خودتان (اختیاری)</label>
-          <input type="text" id="input-new-note" placeholder="مثال: سفارش وبسایت فروشگاهی لباس" />
+          <label for="input-new-note">Internal Note (Optional)</label>
+          <input type="text" id="input-new-note" placeholder="e.g. E-commerce Website Project" />
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" id="modal-cancel-create-code" class="btn btn-outline">انصراف</button>
+        <button type="button" id="modal-cancel-create-code" class="btn btn-outline">Cancel</button>
         <button type="button" id="modal-confirm-create-code" class="btn btn-primary">
-          <i class="fa-solid fa-check"></i> ثبت و فعال‌سازی کد
+          <i class="fa-solid fa-check"></i> Activate & Save Code
         </button>
       </div>
     </div>
@@ -445,30 +487,30 @@
   <div id="modal-code-success" class="modal-overlay">
     <div class="modal-content modal-md">
       <div class="modal-header">
-        <h3><i class="fa-solid fa-circle-check" style="color: #22c55e;"></i> کد با موفقیت ایجاد شد!</h3>
+        <h3><i class="fa-solid fa-circle-check" style="color: #22c55e;"></i> Code Created Successfully!</h3>
         <button type="button" id="modal-close-code-success" class="modal-close-btn">&times;</button>
       </div>
       <div class="modal-body text-center">
-        <p class="modal-desc">کد اختصاصی زیر در سرور فعال شد. می‌توانید آن را کپی کرده یا مستقیماً به واتساپ مشتری ارسال کنید:</p>
+        <p class="modal-desc">The access code below is now active. You can copy it or send it directly to your customer on WhatsApp:</p>
 
         <div class="created-code-box" id="created-code-box">
           <span id="display-created-code">----</span>
-          <button type="button" id="btn-copy-created-code" class="btn-copy-code-sm" title="کپی کد">
-            <i class="fa-regular fa-copy"></i> کپی کد
+          <button type="button" id="btn-copy-created-code" class="btn-copy-code-sm" title="Copy Code">
+            <i class="fa-regular fa-copy"></i> Copy Code
           </button>
         </div>
 
         <div class="share-actions-row">
           <button type="button" id="btn-copy-form-link" class="btn btn-outline">
-            <i class="fa-solid fa-link"></i> کپی لینک مستقیم فرم
+            <i class="fa-solid fa-link"></i> Copy Direct Form Link
           </button>
           <a id="btn-whatsapp-send-code" href="#" target="_blank" class="btn btn-whatsapp">
-            <i class="fa-brands fa-whatsapp"></i> ارسال به مشتری در واتساپ
+            <i class="fa-brands fa-whatsapp"></i> Send to Client on WhatsApp
           </a>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" id="modal-done-code-success" class="btn btn-primary">متوجه شدم</button>
+        <button type="button" id="modal-done-code-success" class="btn btn-primary">Done</button>
       </div>
     </div>
   </div>
@@ -477,7 +519,7 @@
   <div id="modal-view-order" class="modal-overlay">
     <div class="modal-content modal-lg">
       <div class="modal-header">
-        <h3><i class="fa-solid fa-clipboard-list"></i> مشخصات ثبت‌شده سفارش پروژه</h3>
+        <h3><i class="fa-solid fa-clipboard-list"></i> Submitted Project Order Details</h3>
         <button type="button" id="modal-close-view-order" class="modal-close-btn">&times;</button>
       </div>
       <div class="modal-body">
@@ -485,12 +527,12 @@
           <div class="folder-banner-left">
             <i class="fa-solid fa-folder-open"></i>
             <div>
-              <span class="folder-label">پیشنهاد نام پوشه پروژه در سیستم شما:</span>
+              <span class="folder-label">Suggested Local Project Folder:</span>
               <strong id="view-order-folder-name" class="folder-name-val">URCLUB_ORDER_...</strong>
             </div>
           </div>
           <button type="button" id="btn-copy-folder-name" class="btn btn-outline btn-sm">
-            <i class="fa-regular fa-copy"></i> کپی نام فولدر
+            <i class="fa-regular fa-copy"></i> Copy Folder Name
           </button>
         </div>
 
@@ -500,9 +542,9 @@
       </div>
       <div class="modal-footer">
         <button type="button" id="btn-copy-all-order-json" class="btn btn-outline">
-          <i class="fa-solid fa-code"></i> کپی متن کامل مشخصات
+          <i class="fa-solid fa-code"></i> Copy Full JSON
         </button>
-        <button type="button" id="modal-done-view-order" class="btn btn-primary">بستن پنجره</button>
+        <button type="button" id="modal-done-view-order" class="btn btn-primary">Close</button>
       </div>
     </div>
   </div>

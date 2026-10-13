@@ -14,12 +14,20 @@ document.addEventListener("DOMContentLoaded", async () => {
   const currentLiveUrl = document.getElementById("current-live-url");
   const btnCopyUrl = document.getElementById("btn-copy-url");
 
-  // Form Fields
+  // Form Fields (English Page)
   const inputName = document.getElementById("input-name");
   const inputSlug = document.getElementById("input-slug");
   const inputSubtitle = document.getElementById("input-subtitle");
   const inputViews = document.getElementById("input-views");
   const toggleRealViews = document.getElementById("toggle-real-views");
+
+  // Persian Website Content Fields
+  const inputFaName = document.getElementById("input-fa-name");
+  const inputFaOrderBtn = document.getElementById("input-fa-order-btn");
+  const inputFaSubtitle = document.getElementById("input-fa-subtitle");
+  const inputFaEnterText = document.getElementById("input-fa-enter-text");
+  const inputFaStatus = document.getElementById("input-fa-status");
+  const btnCopyFaUrl = document.getElementById("btn-copy-fa-url");
 
   // Avatars
   const inputMainAvatar = document.getElementById("input-main-avatar");
@@ -132,6 +140,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       btnDeleteProfile.style.display = "inline-flex";
     }
 
+    // Persian Website Version Fields
+    const fa = profile.persian || {};
+    if (inputFaName) inputFaName.value = fa.name || "";
+    if (inputFaOrderBtn) inputFaOrderBtn.value = fa.orderBtnText || "سفارش";
+    if (inputFaSubtitle) inputFaSubtitle.value = fa.subtitle || "";
+    if (inputFaEnterText) inputFaEnterText.value = fa.enterText || "[ برای ورود به وبسایت کلیک کنید ]";
+    if (inputFaStatus) inputFaStatus.value = fa.presenceStatus || "آنلاین";
+
     // Avatars
     inputMainAvatar.value = profile.mainAvatar || "";
     previewMainAvatar.src = profile.mainAvatar || DEFAULT_AVATAR;
@@ -224,6 +240,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         status: inputPresenceStatus.value.trim() || "online",
         statusColor: statusColor
       },
+      persian: {
+        name: inputFaName ? inputFaName.value.trim() : "",
+        orderBtnText: inputFaOrderBtn ? (inputFaOrderBtn.value.trim() || "سفارش") : "سفارش",
+        subtitle: inputFaSubtitle ? inputFaSubtitle.value.trim() : "",
+        enterText: inputFaEnterText ? (inputFaEnterText.value.trim() || "[ برای ورود به وبسایت کلیک کنید ]") : "[ برای ورود به وبسایت کلیک کنید ]",
+        presenceStatus: inputFaStatus ? (inputFaStatus.value.trim() || "آنلاین") : "آنلاین"
+      },
       socials: socialsData
     };
   }
@@ -236,8 +259,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (modeText) {
       modeText.innerHTML = isMain
-        ? `صفحه اصلی سایت شما (Root Page)`
-        : `صفحه اختصاصی: <strong>${slug}</strong>`;
+        ? `Root Homepage (Main Page)`
+        : `Custom Profile: <strong>${slug}</strong>`;
     }
     if (currentLiveUrl) {
       currentLiveUrl.href = relativeUrl;
@@ -252,7 +275,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     btnCopyUrl.addEventListener("click", () => {
       const urlToCopy = currentLiveUrl ? currentLiveUrl.textContent : "https://urclub.vercel.app/";
       navigator.clipboard.writeText(urlToCopy).then(() => {
-        showToast("آدرس لینک با موفقیت کپی شد! 📋");
+        showToast("Public URL copied to clipboard! 📋");
+      });
+    });
+  }
+
+  // Copy Persian Link Handler
+  if (btnCopyFaUrl) {
+    btnCopyFaUrl.addEventListener("click", () => {
+      const faUrl = "https://urclub.vercel.app/fa";
+      navigator.clipboard.writeText(faUrl).then(() => {
+        showToast("Persian page URL copied to clipboard! 📋");
       });
     });
   }
@@ -705,7 +738,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       codesTableBody.innerHTML = `
         <tr>
           <td colspan="6" class="table-empty">
-            ${searchTerm || filterStatus !== "all" ? "هیچ کدی با فیلتر جستجوی شما یافت نشد." : "هنوز هیچ کدی ایجاد نشده است. برای مشتری جدید یک کد ایجاد کنید!"}
+            ${searchTerm || filterStatus !== "all" ? "No access codes match your filter criteria." : "No access codes created yet. Click 'Create New Code' to create one for your customer!"}
           </td>
         </tr>
       `;
@@ -715,35 +748,35 @@ document.addEventListener("DOMContentLoaded", async () => {
     codesTableBody.innerHTML = filtered.map((item) => {
       const codeStr = item.code;
       const statusPill = item.status === "active"
-        ? `<span class="status-pill status-active"><i class="fa-solid fa-circle-dot"></i> فعال (آماده ارسال)</span>`
+        ? `<span class="status-pill status-active"><i class="fa-solid fa-circle-dot"></i> Active (Ready)</span>`
         : item.status === "used"
-        ? `<span class="status-pill status-used"><i class="fa-solid fa-circle-check"></i> سفارش ثبت شد</span>`
-        : `<span class="status-pill status-revoked"><i class="fa-solid fa-ban"></i> غیرفعال</span>`;
+        ? `<span class="status-pill status-used"><i class="fa-solid fa-circle-check"></i> Order Submitted</span>`
+        : `<span class="status-pill status-revoked"><i class="fa-solid fa-ban"></i> Revoked</span>`;
 
-      const dateStr = item.createdAt ? new Date(item.createdAt).toLocaleDateString("fa-IR") : "---";
+      const dateStr = item.createdAt ? new Date(item.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "---";
 
       // Linked order / project folder recommendation
       let orderCellHtml = "";
       if (item.status === "used") {
-        const safeClient = (item.clientName || "Client").replace(/[^a-zA-Z0-9\u0600-\u06FF_-]/g, "_").replace(/_+/g, "_");
+        const safeClient = (item.clientName || "Client").replace(/[^a-zA-Z0-9_-]/g, "_").replace(/_+/g, "_");
         const folderName = `URCLUB_${OrderCodeStore.normalize(item.code)}_${safeClient}`;
         orderCellHtml = `
           <div class="order-cell-info">
-            <span class="order-title-tag"><i class="fa-solid fa-cubes"></i> ${item.projectName || "پروژه ثبت‌شده"}</span>
-            <div class="order-folder-tag" data-copy="${folderName}" title="کلیک برای کپی نام پوشه">
+            <span class="order-title-tag"><i class="fa-solid fa-cubes"></i> ${item.projectName || "Submitted Order"}</span>
+            <div class="order-folder-tag" data-copy="${folderName}" title="Click to copy folder name">
               <i class="fa-regular fa-folder"></i> ${folderName}
             </div>
             <button type="button" class="btn-action-sm btn-action-view" data-action="view-order" data-code="${codeStr}">
-              <i class="fa-solid fa-eye"></i> مشاهده مشخصات کامل فرم
+              <i class="fa-solid fa-eye"></i> View Order Details
             </button>
           </div>
         `;
       } else {
-        orderCellHtml = `<span style="color: var(--text-muted); font-size: 0.84rem;">در انتظار ثبت توسط مشتری...</span>`;
+        orderCellHtml = `<span style="color: var(--text-muted); font-size: 0.84rem;">Awaiting client submission...</span>`;
       }
 
       const directFormUrl = `https://urclub.vercel.app/form?code=${encodeURIComponent(codeStr)}`;
-      const waMsg = encodeURIComponent(`سلام دوست عزیز،\nکد اختصاصی شما جهت ثبت سفارش در وبسایت URCLUB:\n🔑 کد: ${codeStr}\n🔗 لینک ورود مستقیم به فرم سفارش:\n${directFormUrl}\n\nبا تشکر، استودیو URCLUB`);
+      const waMsg = encodeURIComponent(`Hello,\nHere is your exclusive access code to submit your project order on URCLUB:\n🔑 Code: ${codeStr}\n🔗 Direct Form Link:\n${directFormUrl}\n\nThank you, URCLUB Studio`);
       const waLink = `https://wa.me/?text=${waMsg}`;
 
       return `
@@ -751,7 +784,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           <td>
             <div class="code-cell-wrap">
               <span>${codeStr}</span>
-              <button type="button" class="btn-table-icon" data-copy="${codeStr}" title="کپی کد">
+              <button type="button" class="btn-table-icon" data-copy="${codeStr}" title="Copy Code">
                 <i class="fa-regular fa-copy"></i>
               </button>
             </div>
@@ -765,16 +798,16 @@ document.addEventListener("DOMContentLoaded", async () => {
           <td>${orderCellHtml}</td>
           <td>
             <div class="table-actions">
-              <button type="button" class="btn-action-sm btn-action-view" data-copy="${directFormUrl}" title="کپی لینک اختصاصی فرم">
-                <i class="fa-solid fa-link"></i> لینک فرم
+              <button type="button" class="btn-action-sm btn-action-view" data-copy="${directFormUrl}" title="Copy direct form URL">
+                <i class="fa-solid fa-link"></i> Form Link
               </button>
-              <a href="${waLink}" target="_blank" class="btn-action-sm btn-action-wa" title="ارسال پیام در واتساپ">
-                <i class="fa-brands fa-whatsapp"></i> واتساپ
+              <a href="${waLink}" target="_blank" class="btn-action-sm btn-action-wa" title="Send to client via WhatsApp">
+                <i class="fa-brands fa-whatsapp"></i> WhatsApp
               </a>
-              <button type="button" class="btn-table-icon" data-action="toggle-status" data-code="${codeStr}" title="${item.status === 'revoked' ? 'فعال‌سازی مجدد' : 'غیرفعال‌سازی'}">
+              <button type="button" class="btn-table-icon" data-action="toggle-status" data-code="${codeStr}" title="${item.status === 'revoked' ? 'Reactivate code' : 'Revoke code'}">
                 <i class="fa-solid ${item.status === 'revoked' ? 'fa-arrow-rotate-left' : 'fa-ban'}"></i>
               </button>
-              <button type="button" class="btn-table-icon" style="color: #ef4444;" data-action="delete-code" data-code="${codeStr}" title="حذف کد">
+              <button type="button" class="btn-table-icon" style="color: #ef4444;" data-action="delete-code" data-code="${codeStr}" title="Delete code">
                 <i class="fa-solid fa-trash-can"></i>
               </button>
             </div>
@@ -788,7 +821,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       el.addEventListener("click", () => {
         const text = el.dataset.copy;
         navigator.clipboard.writeText(text);
-        showToast(`کپی شد: ${text}`);
+        showToast(`Copied to clipboard: ${text}`);
       });
     });
 
@@ -803,13 +836,13 @@ document.addEventListener("DOMContentLoaded", async () => {
           if (item) {
             const nextStatus = item.status === "active" ? "revoked" : "active";
             await OrderCodeStore.updateStatusAsync(code, nextStatus);
-            showToast(`وضعیت کد به ${nextStatus === 'active' ? 'فعال' : 'غیرفعال'} تغییر یافت.`);
+            showToast(`Code status changed to ${nextStatus === 'active' ? 'Active' : 'Revoked'}.`);
             await loadAndRenderCodes();
           }
         } else if (action === "delete-code") {
-          if (confirm(`آیا از حذف کد اختصاصی "${code}" اطمینان دارید؟`)) {
+          if (confirm(`Are you sure you want to permanently delete code "${code}"?`)) {
             await OrderCodeStore.deleteCodeAsync(code);
-            showToast(`کد "${code}" حذف شد.`);
+            showToast(`Code "${code}" was deleted.`);
             await loadAndRenderCodes();
           }
         } else if (action === "view-order") {
@@ -824,7 +857,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (selectFilterStatus) selectFilterStatus.addEventListener("change", renderCodesTable);
   if (btnHeaderRefreshCodes) btnHeaderRefreshCodes.addEventListener("click", () => {
     loadAndRenderCodes();
-    showToast("کدهای سفارش بروزرسانی شدند.");
+    showToast("Order codes refreshed successfully.");
   });
 
   // Open Create Code Modal
@@ -856,7 +889,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const noteVal = (inputNewNote ? inputNewNote.value : "").trim();
 
       if (!codeVal) {
-        alert("لطفاً یک کد معتبر وارد فرمایید یا روی دکمه تصادفی بزنید.");
+        alert("Please enter a valid code or click the Random button.");
         return;
       }
 
@@ -869,12 +902,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         lastCreatedCode = created.code;
         modalCreateCode.classList.remove("active");
-        showToast(`کد اختصاصی ${created.code} با موفقیت ثبت و فعال شد!`);
+        showToast(`Access code ${created.code} successfully created and activated!`);
 
         openSuccessModal(created.code);
         await loadAndRenderCodes();
       } catch (err) {
-        alert(err.message || "خطا در ایجاد کد.");
+        alert(err.message || "Error creating access code.");
       }
     });
   }
@@ -885,7 +918,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (displayCreatedCode) displayCreatedCode.textContent = code;
 
     const directFormUrl = `https://urclub.vercel.app/form?code=${encodeURIComponent(code)}`;
-    const waMsg = encodeURIComponent(`سلام دوست عزیز،\nکد اختصاصی شما جهت ثبت سفارش در وبسایت URCLUB:\n🔑 کد: ${code}\n🔗 لینک ورود مستقیم به فرم سفارش:\n${directFormUrl}\n\nبا تشکر، استودیو URCLUB`);
+    const waMsg = encodeURIComponent(`Hello,\nHere is your exclusive access code to submit your project order on URCLUB:\n🔑 Code: ${code}\n🔗 Direct Form Link:\n${directFormUrl}\n\nThank you, URCLUB Studio`);
 
     if (btnWhatsappSendCode) {
       btnWhatsappSendCode.href = `https://wa.me/?text=${waMsg}`;
@@ -894,14 +927,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (btnCopyCreatedCode) {
       btnCopyCreatedCode.onclick = () => {
         navigator.clipboard.writeText(code);
-        showToast(`کد ${code} کپی شد!`);
+        showToast(`Code ${code} copied!`);
       };
     }
 
     if (btnCopyFormLink) {
       btnCopyFormLink.onclick = () => {
         navigator.clipboard.writeText(directFormUrl);
-        showToast("لینک مستقیم فرم کپی شد!");
+        showToast("Direct form link copied!");
       };
     }
 
@@ -917,7 +950,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     modalViewOrder.classList.add("active");
 
     if (orderDetailsContainer) {
-      orderDetailsContainer.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> در حال دریافت مشخصات سفارش...</div>`;
+      orderDetailsContainer.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> Loading order details from server...</div>`;
     }
 
     try {
@@ -925,15 +958,15 @@ document.addEventListener("DOMContentLoaded", async () => {
       currentViewingOrder = orderData;
 
       const codeItem = allCodesList.find((c) => OrderCodeStore.normalize(c.code) === OrderCodeStore.normalize(code));
-      const clientName = (orderData && orderData["Client Name / نام کارفرما"]) || (codeItem && codeItem.clientName) || "Client";
-      const safeClient = clientName.replace(/[^a-zA-Z0-9\u0600-\u06FF_-]/g, "_").replace(/_+/g, "_");
+      const clientName = (orderData && (orderData["Client Name / نام کارفرما"] || orderData["Client Name"])) || (codeItem && codeItem.clientName) || "Client";
+      const safeClient = clientName.replace(/[^a-zA-Z0-9_-]/g, "_").replace(/_+/g, "_");
       const folderName = `URCLUB_${OrderCodeStore.normalize(code)}_${safeClient}`;
 
       if (viewOrderFolderName) viewOrderFolderName.textContent = folderName;
       if (btnCopyFolderName) {
         btnCopyFolderName.onclick = () => {
           navigator.clipboard.writeText(folderName);
-          showToast(`نام فولدر کپی شد: ${folderName}`);
+          showToast(`Folder name copied: ${folderName}`);
         };
       }
 
@@ -950,14 +983,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       } else if (orderDetailsContainer) {
         orderDetailsContainer.innerHTML = `
           <div style="text-align:center; padding:20px; color:var(--text-muted);">
-            مشخصات تکمیلی این سفارش در دیتابیس با شناسه اختصاصی یافت نشد. کد سفارش: ${code}
+            No extended order data found for this code in database. Access code: ${code}
           </div>
         `;
       }
     } catch (err) {
       console.error("Error viewing order:", err);
       if (orderDetailsContainer) {
-        orderDetailsContainer.innerHTML = `<div style="color:#f87171; text-align:center;">خطا در بارگذاری مشخصات سفارش.</div>`;
+        orderDetailsContainer.innerHTML = `<div style="color:#f87171; text-align:center;">Failed to load order details.</div>`;
       }
     }
   }
@@ -969,7 +1002,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     btnCopyAllOrderJson.addEventListener("click", () => {
       if (currentViewingOrder) {
         navigator.clipboard.writeText(JSON.stringify(currentViewingOrder, null, 2));
-        showToast("متن کامل مشخصات سفارش به صورت JSON کپی شد!");
+        showToast("Full order details JSON copied to clipboard!");
       }
     });
   }
