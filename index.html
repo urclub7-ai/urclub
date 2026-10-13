@@ -80,7 +80,7 @@
         </div>
         <h2 class="order-modal-title">ورود به بخش ثبت سفارش</h2>
         <p class="order-modal-desc">
-          برای دسترسی به فرم و ثبت مشخصات پروژه، لطفاً <strong>کد اختصاصی ۸ رقمی</strong> که از پشتیبانی دریافت کرده‌اید را وارد کنید:
+          برای دسترسی به فرم و ثبت مشخصات پروژه لطفاً کد خود را وارد کنید
         </p>
       </div>
 
@@ -95,7 +95,6 @@
             required 
             spellcheck="false"
           />
-          <span class="order-input-hint">کد ترکیبی از حروف و اعداد است</span>
         </div>
 
         <div id="order-code-error" class="order-code-error" style="display: none;"></div>
@@ -107,11 +106,29 @@
       </form>
 
       <div class="order-modal-footer">
-        <span>کد اختصاصی سفارش ندارید؟</span>
-        <a href="https://wa.me/491624212685?text=%D8%B3%D9%84%D8%A7%D9%85%D8%8C%20%D9%85%D9%86%20%DA%A9%D8%AF%20%D8%A7%D8%AE%D8%AA%D8%B5%D8%A7%D8%B5%DB%8C%20%D8%A8%D8%B1%D8%A7%DB%8C%20%D8%AB%D8%A8%D8%AA%20%D8%B3%D9%81%D8%A7%D8%B1%D8%B4%20%D8%AF%D8%B1%20%D8%B3%D8%A7%DB%8C%D8%AA%20URCLUB%20%D9%85%DB%8C%E2%80%8C%D8%AE%D9%88%D8%A7%D9%87%D9%85." target="_blank" class="whatsapp-request-link">
-          <i class="fa-brands fa-whatsapp"></i> دریافت کد از طریق واتساپ
-        </a>
+        <button type="button" id="btn-no-code" class="btn-no-code-link">
+          کد ندارم .
+        </button>
       </div>
+    </div>
+  </div>
+
+  <!-- Admin WhatsApp Contact Modal (کد ندارم .) -->
+  <div id="modal-admin-contact" class="admin-contact-backdrop" style="display: none;">
+    <div class="admin-contact-card">
+      <button type="button" id="btn-close-admin-contact" class="admin-contact-close" title="بستن">&times;</button>
+      
+      <div class="admin-contact-avatar-wrap">
+        <img id="admin-contact-avatar" class="admin-contact-avatar" src="assets/logo.png" alt="Admin Profile" />
+        <span class="admin-contact-status-dot"></span>
+      </div>
+
+      <p class="admin-contact-text">برای دریافت کد فورم سفارش خود را پیش ادمین ثبت کنید</p>
+
+      <a id="admin-contact-wa-link" href="https://wa.me/491624212685?text=%D8%B3%D9%84%D8%A7%D9%85%D8%8C%20%D8%A8%D8%B1%D8%A7%DB%8C%20%D8%AF%D8%B1%DB%8C%D8%A7%D9%81%D8%AA%20%DA%A9%D8%AF%20%D9%81%D9%88%D8%B1%D9%85%20%D9%85%DB%8C%E2%80%8C%D8%AE%D9%88%D8%A7%D9%87%D9%85%20%D8%B3%D9%81%D8%A7%D8%B1%D8%B4%20%D8%AE%D9%88%D8%AF%20%D8%B1%D8%A7%20%D8%AB%D8%A8%D8%AA%20%DA%A9%D9%86%D9%85." target="_blank" class="admin-contact-wa-btn">
+        <i class="fa-brands fa-whatsapp"></i>
+        <span dir="ltr">+49 162 4212685</span>
+      </a>
     </div>
   </div>
 

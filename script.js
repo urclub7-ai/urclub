@@ -438,10 +438,43 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  if (modalOrderGate) {
-    modalOrderGate.addEventListener("click", (e) => {
-      if (e.target === modalOrderGate) {
-        closeOrderModal();
+  const btnNoCode = document.getElementById("btn-no-code");
+  const modalAdminContact = document.getElementById("modal-admin-contact");
+  const btnCloseAdminContact = document.getElementById("btn-close-admin-contact");
+  const adminContactAvatar = document.getElementById("admin-contact-avatar");
+
+  function openAdminContactModal() {
+    closeOrderModal();
+    if (!modalAdminContact) return;
+    if (adminContactAvatar && profileAvatar) {
+      adminContactAvatar.src = profileAvatar.src || "assets/logo.png";
+    }
+    modalAdminContact.style.display = "flex";
+  }
+
+  function closeAdminContactModal() {
+    if (!modalAdminContact) return;
+    modalAdminContact.style.display = "none";
+  }
+
+  if (btnNoCode) {
+    btnNoCode.addEventListener("click", (e) => {
+      e.stopPropagation();
+      openAdminContactModal();
+    });
+  }
+
+  if (btnCloseAdminContact) {
+    btnCloseAdminContact.addEventListener("click", (e) => {
+      e.stopPropagation();
+      closeAdminContactModal();
+    });
+  }
+
+  if (modalAdminContact) {
+    modalAdminContact.addEventListener("click", (e) => {
+      if (e.target === modalAdminContact) {
+        closeAdminContactModal();
       }
     });
   }

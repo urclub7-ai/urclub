@@ -623,6 +623,30 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  const btnGateNoCode = document.getElementById("btn-gate-no-code");
+  const modalGateAdminContact = document.getElementById("modal-gate-admin-contact");
+  const btnCloseGateAdminContact = document.getElementById("btn-close-gate-admin-contact");
+
+  if (btnGateNoCode) {
+    btnGateNoCode.addEventListener("click", () => {
+      if (modalGateAdminContact) modalGateAdminContact.style.display = "flex";
+    });
+  }
+
+  if (btnCloseGateAdminContact) {
+    btnCloseGateAdminContact.addEventListener("click", () => {
+      if (modalGateAdminContact) modalGateAdminContact.style.display = "none";
+    });
+  }
+
+  if (modalGateAdminContact) {
+    modalGateAdminContact.addEventListener("click", (e) => {
+      if (e.target === modalGateAdminContact) {
+        modalGateAdminContact.style.display = "none";
+      }
+    });
+  }
+
   checkInitialOrderCode();
 
   // ==========================================================================
