@@ -677,12 +677,12 @@ html[dir="rtl"] .site-floating-dock {
 .dock-btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 9px;
   padding: 9px 18px;
-  background: rgba(10, 15, 29, 0.82);
+  background: rgba(10, 15, 29, 0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 9999px;
   color: #ffffff;
   font-family: inherit;
@@ -696,15 +696,24 @@ html[dir="rtl"] .site-floating-dock {
 
 .dock-btn i {
   color: #ffffff;
-  font-size: 14px;
-  transition: transform 0.25s ease, color 0.25s ease;
+  font-size: 16.5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.25s ease, color 0.25s ease, filter 0.25s ease;
+  filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.6));
 }
 
 .dock-btn:hover {
   transform: translateY(-2px) scale(1.03);
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.65);
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.7);
   box-shadow: 0 8px 28px rgba(0, 0, 0, 0.6), 0 0 22px rgba(255, 255, 255, 0.25);
+}
+
+.dock-btn:hover i {
+  transform: scale(1.12);
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.9));
 }
 
 .dock-btn:active {
@@ -714,15 +723,17 @@ html[dir="rtl"] .site-floating-dock {
 /* Sound Button active & muted states */
 .dock-btn-sound.is-muted {
   border-color: rgba(255, 255, 255, 0.15);
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .dock-btn-sound.is-muted i {
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.55);
+  filter: none;
 }
 
 .dock-btn-sound:not(.is-muted) i {
   color: #ffffff;
+  filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.6));
 }
 
 @media (max-width: 640px) {
@@ -737,9 +748,12 @@ html[dir="rtl"] .site-floating-dock {
     left: auto;
   }
   .dock-btn {
-    padding: 7px 13px;
-    font-size: 12.5px;
-    gap: 6px;
+    padding: 7px 14px;
+    font-size: 13px;
+    gap: 7px;
+  }
+  .dock-btn i {
+    font-size: 15px;
   }
 }
 
