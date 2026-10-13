@@ -47,6 +47,41 @@
 </head>
 <body>
 
+  <!-- Initial Language Selection Modal (Before Enter Screen) -->
+  <div id="lang-selection-overlay" class="lang-selection-overlay">
+    <div class="lang-selection-card">
+      <div class="lang-selection-logo-wrap">
+        <img src="assets/logo.png" alt="URCLUB" class="lang-selection-logo" />
+      </div>
+
+      <h2 class="lang-selection-title">Select Language / انتخاب زبان</h2>
+      <p class="lang-selection-subtitle">
+        Please select your language to enter the website<br>
+        لطفاً زبان مورد نظر خود را برای ورود به سایت انتخاب نمایید
+      </p>
+
+      <div class="lang-selection-options">
+        <button type="button" class="lang-opt-btn" id="btn-choose-en">
+          <div class="lang-opt-flag">🇬🇧</div>
+          <div class="lang-opt-text">
+            <strong>English</strong>
+            <span>Enter in English</span>
+          </div>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+
+        <button type="button" class="lang-opt-btn" id="btn-choose-fa">
+          <div class="lang-opt-flag">🇮🇷</div>
+          <div class="lang-opt-text">
+            <strong>فارسی</strong>
+            <span>ورود به زبان فارسی</span>
+          </div>
+          <i class="fa-solid fa-arrow-left"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Click/Tap to Enter Screen -->
   <div id="enter-overlay" class="enter-overlay">
     <div class="enter-content">
@@ -63,18 +98,28 @@
     <div class="bg-vignette"></div>
   </div>
 
-  <!-- Top Corner: Floating Order Button & Language Switcher (English Version) -->
-  <button id="btn-open-order-modal" class="floating-order-btn" title="Order Project">
-    <i class="fa-solid fa-cart-shopping"></i>
-    <span>Order</span>
-  </button>
+  <!-- Top Floating Action Dock (Language, Order, Sound) -->
+  <nav class="site-floating-dock" id="site-floating-dock">
+    <!-- 1. Language Switcher -->
+    <button type="button" id="btn-toggle-lang" class="dock-btn dock-btn-lang" title="Switch Language / تغییر زبان">
+      <i class="fa-solid fa-globe"></i>
+      <span id="dock-lang-label">FA</span>
+    </button>
 
-  <a href="fa.html" class="lang-switch-pill" title="مشاهده نسخه فارسی">
-    <i class="fa-solid fa-globe"></i>
-    <span>FA</span>
-  </a>
+    <!-- 2. Order Button -->
+    <button type="button" id="btn-open-order-modal" class="dock-btn dock-btn-order" title="Order Project">
+      <i class="fa-solid fa-cart-shopping"></i>
+      <span id="dock-order-label">Order</span>
+    </button>
 
-  <!-- Order Access Code Verification Modal (English) -->
+    <!-- 3. Background Video Sound Mute/Unmute Button -->
+    <button type="button" id="btn-toggle-sound" class="dock-btn dock-btn-sound" title="Sound Control / قطع و وصل صدا">
+      <i class="fa-solid fa-volume-high" id="sound-icon"></i>
+      <span id="sound-label">Sound</span>
+    </button>
+  </nav>
+
+  <!-- Order Access Code Verification Modal -->
   <div id="modal-order-gate" class="order-modal-backdrop" style="display: none;">
     <div class="order-modal-card">
       <button type="button" id="btn-close-order-modal" class="order-modal-close" title="Close">&times;</button>
@@ -83,8 +128,8 @@
         <div class="order-modal-icon-badge">
           <i class="fa-solid fa-key"></i>
         </div>
-        <h2 class="order-modal-title">Enter Order Code</h2>
-        <p class="order-modal-desc">
+        <h2 class="order-modal-title" id="order-modal-title">Enter Order Code</h2>
+        <p class="order-modal-desc" id="order-modal-desc">
           Enter your code to access the project submission form
         </p>
       </div>
@@ -105,7 +150,7 @@
         <div id="order-code-error" class="order-code-error" style="display: none;"></div>
 
         <button type="submit" id="btn-verify-order-code" class="btn-verify-order">
-          <span class="btn-verify-text"><i class="fa-solid fa-arrow-right"></i> Verify & Proceed</span>
+          <span class="btn-verify-text" id="btn-verify-text"><i class="fa-solid fa-arrow-right"></i> Verify & Proceed</span>
           <span class="btn-verify-spinner" style="display: none;"><i class="fa-solid fa-spinner fa-spin"></i> Verifying Code...</span>
         </button>
       </form>
@@ -118,7 +163,7 @@
     </div>
   </div>
 
-  <!-- Admin WhatsApp Contact Modal (English) -->
+  <!-- Admin WhatsApp Contact Modal -->
   <div id="modal-admin-contact" class="admin-contact-backdrop" style="display: none;">
     <div class="admin-contact-card">
       <button type="button" id="btn-close-admin-contact" class="admin-contact-close" title="Close">&times;</button>
@@ -128,7 +173,7 @@
         <span class="admin-contact-status-dot"></span>
       </div>
 
-      <p class="admin-contact-text">To receive an access code, register your order with admin.</p>
+      <p class="admin-contact-text" id="admin-contact-text">To receive an access code, register your order with admin.</p>
 
       <a id="admin-contact-wa-link" href="https://wa.me/491624212685?text=Hello%2C%20I%20would%20like%20to%20register%20my%20order%20to%20receive%20an%20order%20form%20code." target="_blank" class="admin-contact-wa-btn">
         <i class="fa-brands fa-whatsapp"></i>

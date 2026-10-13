@@ -18,6 +18,22 @@ document.addEventListener("DOMContentLoaded", async () => {
   const viewsCount = document.getElementById("views-count");
   const viewsPill = document.querySelector(".views-pill");
 
+  // Initial Language Selection & Floating Dock Elements
+  const langSelectionOverlay = document.getElementById("lang-selection-overlay");
+  const btnChooseEn = document.getElementById("btn-choose-en");
+  const btnChooseFa = document.getElementById("btn-choose-fa");
+
+  const btnToggleLang = document.getElementById("btn-toggle-lang");
+  const dockLangLabel = document.getElementById("dock-lang-label");
+  const btnOpenOrder = document.getElementById("btn-open-order-modal");
+  const dockOrderLabel = document.getElementById("dock-order-label");
+  const btnToggleSound = document.getElementById("btn-toggle-sound");
+  const soundIcon = document.getElementById("sound-icon");
+  const soundLabel = document.getElementById("sound-label");
+
+  const enterText = document.getElementById("enter-text");
+  let currentLang = document.documentElement.lang === "fa" ? "fa" : "en";
+
   const DEFAULT_AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23a855f7'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E";
 
   // Read Profile Slug from URL Query (Default to "main" for the root website!)
@@ -258,18 +274,129 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  const enterText = document.getElementById("enter-text");
+  // Sound UI State
+  function updateSoundUI() {
+    if (!bgVideo) return;
+    const isMuted = bgVideo.muted;
+    if (btnToggleSound) {
+      if (isMuted) {
+        btnToggleSound.classList.add("is-muted");
+        if (soundIcon) soundIcon.className = "fa-solid fa-volume-xmark";
+        if (soundLabel) soundLabel.textContent = (currentLang === "fa" ? "بی‌صدا" : "Muted");
+      } else {
+        btnToggleSound.classList.remove("is-muted");
+        if (soundIcon) soundIcon.className = "fa-solid fa-volume-high";
+        if (soundLabel) soundLabel.textContent = (currentLang === "fa" ? "صدا" : "Sound");
+      }
+    }
+  }
 
-  // Customize prompt for mobile/touch screens: "tap" instead of "click"
-  const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (window.innerWidth <= 768);
-  if (isTouchDevice && enterText) {
-    enterText.textContent = "[ tap anywhere to enter ]";
+  function toggleSound() {
+    if (!bgVideo) return;
+    bgVideo.muted = !bgVideo.muted;
+    if (!bgVideo.muted && bgVideo.paused) {
+      bgVideo.play().catch(() => {});
+    }
+    updateSoundUI();
+  }
+
+  if (btnToggleSound) {
+    btnToggleSound.addEventListener("click", (e) => {
+      e.stopPropagation();
+      toggleSound();
+    });
+  }
+
+  // Language Engine
+  function applyLanguage(lang) {
+    currentLang = lang;
+    document.documentElement.lang = lang;
+    document.documentElement.dir = (lang === "fa" ? "rtl" : "ltr");
+
+    // Dock
+    if (dockLangLabel) dockLangLabel.textContent = (lang === "fa" ? "EN" : "FA");
+    const faData = currentActiveProfile?.persian || {};
+    if (dockOrderLabel) {
+      dockOrderLabel.textContent = (lang === "fa" ? (faData.orderBtnText || "سفارش") : "Order");
+    }
+    updateSoundUI();
+
+    // Enter prompt
+    if (enterText) {
+      enterText.textContent = (lang === "fa"
+        ? (faData.enterText || "[ برای ورود به وبسایت کلیک کنید ]")
+        : "[ click anywhere to enter ]");
+    }
+
+    // Profile Texts
+    if (currentActiveProfile) {
+      if (nameText) nameText.textContent = (lang === "fa" ? (faData.name || currentActiveProfile.name || "LEVI") : (currentActiveProfile.name || "LEVI"));
+      if (profileSubtitle) {
+        const sub = (lang === "fa" ? (faData.subtitle || currentActiveProfile.subtitle || "") : (currentActiveProfile.subtitle || ""));
+        profileSubtitle.textContent = sub;
+        profileSubtitle.style.display = sub ? "block" : "none";
+      }
+      if (presenceStatus) {
+        presenceStatus.textContent = (lang === "fa" ? (faData.presenceStatus || "آنلاین") : (currentActiveProfile.presence?.status || "online"));
+      }
+    }
+
+    // Order gate modal texts
+    const orderModalTitle = document.getElementById("order-modal-title");
+    const orderModalDesc = document.getElementById("order-modal-desc");
+    const btnVerifyText = document.getElementById("btn-verify-text");
+    const btnNoCode = document.getElementById("btn-no-code");
+    const adminContactText = document.getElementById("admin-contact-text");
+    const adminContactWaLink = document.getElementById("admin-contact-wa-link");
+
+    if (lang === "fa") {
+      if (orderModalTitle) orderModalTitle.textContent = "ورود به بخش ثبت سفارش";
+      if (orderModalDesc) orderModalDesc.textContent = "برای دسترسی به فرم و ثبت مشخصات پروژه کد خود را وارد کنید";
+      if (btnVerifyText) btnVerifyText.innerHTML = '<i class="fa-solid fa-arrow-left"></i> تایید و ورود به فرم';
+      if (btnNoCode) btnNoCode.textContent = "کد ندارم";
+      if (adminContactText) adminContactText.textContent = "برای دریافت کد سفارش خود را ثبت کنید.";
+      if (adminContactWaLink) adminContactWaLink.href = "https://wa.me/491624212685?text=%D8%B3%D9%84%D8%A7%D9%85%D8%8C%20%D8%A8%D8%B1%D8%A7%DB%8C%20%D8%AF%D8%B1%DB%8C%D8%A7%D9%81%D8%AA%20%DA%A9%D8%AF%20%D8%B3%D9%81%D8%A7%D8%B1%D8%B4%20%D8%AE%D9%88%D8%AF%20%D8%B1%D8%A7%20%D8%AB%D8%A8%D8%AA%20%DA%A9%D9%86%D9%85.";
+    } else {
+      if (orderModalTitle) orderModalTitle.textContent = "Enter Order Code";
+      if (orderModalDesc) orderModalDesc.textContent = "Enter your code to access the project submission form";
+      if (btnVerifyText) btnVerifyText.innerHTML = '<i class="fa-solid fa-arrow-right"></i> Verify & Proceed';
+      if (btnNoCode) btnNoCode.textContent = "I don't have a code";
+      if (adminContactText) adminContactText.textContent = "To receive an access code, register your order with admin.";
+      if (adminContactWaLink) adminContactWaLink.href = "https://wa.me/491624212685?text=Hello%2C%20I%20would%20like%20to%20register%20my%20order%20to%20receive%20an%20order%20form%20code.";
+    }
+  }
+
+  if (btnToggleLang) {
+    btnToggleLang.addEventListener("click", (e) => {
+      e.stopPropagation();
+      applyLanguage(currentLang === "fa" ? "en" : "fa");
+    });
+  }
+
+  // Initial Language Selection Modal Events
+  if (btnChooseEn) {
+    btnChooseEn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      applyLanguage("en");
+      if (langSelectionOverlay) langSelectionOverlay.classList.add("hidden");
+    });
+  }
+
+  if (btnChooseFa) {
+    btnChooseFa.addEventListener("click", (e) => {
+      e.stopPropagation();
+      applyLanguage("fa");
+      if (langSelectionOverlay) langSelectionOverlay.classList.add("hidden");
+    });
   }
 
   // Handle Preview Mode vs Full Page Click/Tap to Enter
   let isUnlocked = false;
   function unlockBio() {
     if (isUnlocked) return;
+    if (langSelectionOverlay && !langSelectionOverlay.classList.contains("hidden") && langSelectionOverlay.style.display !== "none") {
+      return;
+    }
     isUnlocked = true;
 
     if (enterOverlay) {
@@ -283,30 +410,33 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (playPromise !== undefined) {
         playPromise.then(() => {
           bgVideo.classList.add("playing");
+          updateSoundUI();
         }).catch((err) => {
           console.warn("Unmuted autoplay restricted on mobile, keeping muted playback:", err);
           bgVideo.muted = true;
           bgVideo.play().then(() => {
             bgVideo.classList.add("playing");
+            updateSoundUI();
           }).catch(() => {});
         });
       }
     }
+    updateSoundUI();
   }
 
   if (isPreview) {
+    if (langSelectionOverlay) langSelectionOverlay.classList.add("hidden");
     if (enterOverlay) enterOverlay.classList.add("hidden");
     if (bgVideo && bgVideo.src) {
       bgVideo.muted = true;
       bgVideo.play().then(() => bgVideo.classList.add("playing")).catch(() => {});
+      updateSoundUI();
     }
   } else {
     if (enterOverlay) {
       enterOverlay.addEventListener("click", unlockBio);
       enterOverlay.addEventListener("touchend", unlockBio);
     }
-    document.addEventListener("click", unlockBio, { once: true });
-    document.addEventListener("touchend", unlockBio, { once: true });
   }
 
   // Initial Load from Supabase Cloud Database
@@ -413,7 +543,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   // ==========================================================================
   // FLOATING ORDER GATE MODAL HANDLERS
   // ==========================================================================
-  const btnOpenOrder = document.getElementById("btn-open-order-modal");
   const modalOrderGate = document.getElementById("modal-order-gate");
   const btnCloseOrder = document.getElementById("btn-close-order-modal");
   const orderCodeForm = document.getElementById("order-code-form");
