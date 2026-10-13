@@ -513,26 +513,16 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================================================
   // 4. LANGUAGE GATE INITIAL OVERLAY (BLURRED UNTIL CHOSEN)
   // ==========================================================================
-  // Check if language was previously selected in this session
-  const storedChoice = sessionStorage.getItem("urclub_lang_chosen");
-
-  if (!storedChoice) {
-    // Show Gate Modal, lock and heavily blur page
-    if (langGateOverlay) langGateOverlay.classList.remove("hidden");
-    if (appMainWrapper) appMainWrapper.classList.add("blurred-gate");
-  } else {
-    // Already chosen in this session: unlock blur and load chosen language
-    const savedLang = localStorage.getItem("urclub_lang") || "fa";
-    if (langGateOverlay) langGateOverlay.classList.add("hidden");
-    if (appMainWrapper) appMainWrapper.classList.remove("blurred-gate");
-    setLanguage(savedLang);
-  }
+  // ALWAYS ENFORCE BLURRED LANGUAGE GATE ON SITE ENTRY
+  // Site remains locked and blurred until user clicks Persian or English
+  // ==========================================================================
+  if (langGateOverlay) langGateOverlay.classList.remove("hidden");
+  if (appMainWrapper) appMainWrapper.classList.add("blurred-gate");
 
   // Handle Gate Choice Buttons
   document.querySelectorAll(".lang-select-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       const chosenLang = btn.dataset.lang;
-      sessionStorage.setItem("urclub_lang_chosen", "1");
       localStorage.setItem("urclub_lang", chosenLang);
 
       setLanguage(chosenLang);

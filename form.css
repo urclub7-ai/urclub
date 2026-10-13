@@ -70,9 +70,9 @@ body.lang-fa, body.fa {
 .lang-gate-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(5, 5, 8, 0.75);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(5, 5, 8, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   z-index: 99999;
   display: flex;
   align-items: center;
@@ -87,6 +87,7 @@ body.lang-fa, body.fa {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+  display: none;
 }
 
 .lang-gate-card {
@@ -224,10 +225,11 @@ body.lang-fa, body.fa {
 }
 
 .app-main-wrapper.blurred-gate {
-  filter: blur(18px) brightness(0.6);
+  filter: blur(24px) brightness(0.5);
+  -webkit-filter: blur(24px) brightness(0.5);
   pointer-events: none;
   user-select: none;
-  transform: scale(0.985);
+  transform: scale(0.98);
 }
 
 /* Ambient Glowing Background Elements */
