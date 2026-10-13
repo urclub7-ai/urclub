@@ -107,18 +107,23 @@ body.lang-fa, body.fa {
 }
 
 .lang-gate-icon {
-  width: 64px;
-  height: 64px;
+  width: 72px;
+  height: 72px;
   margin: 0 auto 18px;
   border-radius: 18px;
-  background: rgba(168, 85, 247, 0.15);
-  border: 1px solid rgba(168, 85, 247, 0.4);
-  color: var(--accent-purple);
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.35);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.8rem;
-  box-shadow: 0 0 25px rgba(168, 85, 247, 0.3);
+  overflow: hidden;
+  box-shadow: 0 0 25px rgba(56, 189, 248, 0.35);
+}
+
+.lang-gate-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .lang-gate-title {
@@ -286,7 +291,29 @@ body.lang-fa, body.fa {
   text-decoration: none;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.brand-logo:hover {
+  transform: translateY(-1px);
+  opacity: 0.95;
+}
+
+.brand-logo-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.4), 0 0 8px rgba(168, 85, 247, 0.3);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  flex-shrink: 0;
+}
+
+.brand-logo-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
 }
 
 .logo-badge {
@@ -295,19 +322,17 @@ body.lang-fa, body.fa {
   font-size: 1.15rem;
   letter-spacing: 1px;
   color: #ffffff;
-  background: linear-gradient(135deg, #a855f7 0%, #38bdf8 100%);
+  background: linear-gradient(135deg, #38bdf8 0%, #a855f7 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.logo-sub {
-  font-size: 0.7rem;
+.logo-url {
+  font-size: 0.68rem;
   font-family: var(--font-mono);
-  background: rgba(255, 255, 255, 0.1);
-  padding: 2px 6px;
-  border-radius: var(--radius-sm);
-  color: var(--text-muted);
-  letter-spacing: 1px;
+  color: #38bdf8;
+  letter-spacing: 0.5px;
+  opacity: 0.9;
 }
 
 .header-controls {
@@ -1252,6 +1277,20 @@ html[dir="ltr"] .toast-msg.error {
   /* 2. Safe Area Insets for Notch / Dynamic Island & Home Bar */
   .site-header {
     padding-top: max(10px, env(safe-area-inset-top, 0px));
+  }
+
+  .brand-logo-img {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+  }
+
+  .logo-badge {
+    font-size: 1.02rem;
+  }
+
+  .logo-url {
+    font-size: 0.6rem;
   }
 
   .page-container {
