@@ -201,30 +201,36 @@ a, button, input, select, label, .social-icon-btn, .views-pill, .enter-overlay {
 
 /* Presence Widget (Pill Card) */
 .presence-widget {
-  background: rgba(20, 20, 25, 0.55);
+  background: rgba(20, 20, 25, 0.65);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 18px;
-  padding: 10px 18px;
-  display: flex;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 9999px;
+  padding: 7px 18px 7px 10px;
+  display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 11px;
   margin-bottom: 1.6rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
   transition: transform 0.2s, background 0.2s, border-color 0.2s;
+  user-select: none;
+}
+
+html[dir="rtl"] .presence-widget {
+  padding: 7px 10px 7px 18px;
 }
 
 .presence-widget:hover {
-  background: rgba(30, 30, 38, 0.7);
-  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(30, 30, 38, 0.8);
+  border-color: rgba(255, 255, 255, 0.25);
   transform: translateY(-2px);
 }
 
 .presence-avatar-wrap {
   position: relative;
-  width: 44px;
-  height: 44px;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
 }
 
 .presence-mini-avatar {
@@ -237,33 +243,38 @@ a, button, input, select, label, .social-icon-btn, .views-pill, .enter-overlay {
 
 .presence-status-ring {
   position: absolute;
-  bottom: -1px;
-  right: -1px;
-  width: 13px;
-  height: 13px;
+  bottom: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
   background-color: #22c55e; /* Green for online */
-  border: 2.5px solid #16161e;
+  border: 2px solid #141419;
   border-radius: 50%;
+}
+
+html[dir="rtl"] .presence-status-ring {
+  right: auto;
+  left: 0;
 }
 
 .presence-info {
   display: flex;
-  flex-direction: column;
-  text-align: left;
+  align-items: center;
+  justify-content: center;
 }
 
 .presence-handle {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #ffffff;
-  letter-spacing: 0.3px;
+  display: none !important;
 }
 
 .presence-status {
-  font-size: 0.8rem;
-  font-style: italic;
-  color: rgba(255, 255, 255, 0.6);
-  margin-top: 1px;
+  font-family: 'Tahoma', 'Segoe UI', Arial, sans-serif !important;
+  font-size: 0.92rem;
+  font-weight: 700;
+  font-style: normal;
+  color: #ffffff;
+  letter-spacing: 0.2px;
+  line-height: 1;
 }
 
 /* Horizontal Social Icons Bar */

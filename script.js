@@ -81,7 +81,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const displaySubtitle = isFa ? (faData.subtitle || profile.subtitle || "") : (profile.subtitle || "");
     const displayEnter = isFa ? (faData.enterText || "[ برای ورود به وبسایت کلیک کنید ]") : "[ click anywhere to enter ]";
     const orderBtnText = isFa ? (faData.orderBtnText || "سفارش") : "Order";
-    const displayStatus = isFa ? (faData.presenceStatus || "آنلاین") : (profile.presence && profile.presence.status ? profile.presence.status : "online");
+    const displayStatus = isFa
+      ? (faData.presenceStatus || "آنلاین")
+      : ((profile.presence && profile.presence.status && profile.presence.status !== "آنلاین") ? profile.presence.status : "online");
 
     // 1. Text & Titles
     if (nameText) nameText.textContent = displayName;
@@ -115,16 +117,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (profileAvatar) profileAvatar.src = mainImg;
     if (presenceMiniAvatar) presenceMiniAvatar.src = presenceImg;
 
-    // 3. Presence Widget
-    if (profile.presence) {
-      if (presenceHandle) presenceHandle.textContent = profile.presence.handle || profile.username || "user";
-      if (presenceStatus) presenceStatus.textContent = displayStatus;
-      if (presenceStatusRing) {
-        presenceStatusRing.style.backgroundColor = profile.presence.statusColor || "#22c55e";
-      }
-    } else {
-      if (presenceHandle) presenceHandle.textContent = profile.username || "user";
-      if (presenceStatus) presenceStatus.textContent = displayStatus;
+    // 3. Presence Widget (Username removed completely, online status only)
+    if (presenceHandle) {
+      presenceHandle.style.display = "none";
+      presenceHandle.textContent = "";
+    }
+    if (presenceStatus) {
+      presenceStatus.textContent = displayStatus;
+    }
+    if (presenceStatusRing) {
+      presenceStatusRing.style.backgroundColor = (profile.presence && profile.presence.statusColor) ? profile.presence.statusColor : "#22c55e";
     }
 
     // 4. Background Video (Smart Device Selection: PC vs Mobile)
@@ -336,8 +338,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         profileSubtitle.textContent = sub;
         profileSubtitle.style.display = sub ? "block" : "none";
       }
+      if (presenceHandle) {
+        presenceHandle.style.display = "none";
+        presenceHandle.textContent = "";
+      }
       if (presenceStatus) {
-        presenceStatus.textContent = (lang === "fa" ? (faData.presenceStatus || "آنلاین") : (currentActiveProfile.presence?.status || "online"));
+        if (lang === "fa") {
+          presenceStatus.textContent = faData.presenceStatus || "آنلاین";
+        } else {
+          const engStatus = (currentActiveProfile?.presence?.status && currentActiveProfile.presence.status !== "آنلاین")
+            ? currentActiveProfile.presence.status
+            : "online";
+          presenceStatus.textContent = engStatus;
+        }
       }
     }
 
