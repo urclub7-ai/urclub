@@ -81,9 +81,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const displaySubtitle = isFa ? (faData.subtitle || profile.subtitle || "") : (profile.subtitle || "");
     const displayEnter = isFa ? (faData.enterText || "[ برای ورود به وبسایت کلیک کنید ]") : "[ click anywhere to enter ]";
     const orderBtnText = isFa ? (faData.orderBtnText || "سفارش") : "Order";
+    const rawPresenceStatus = (profile.presence && profile.presence.status) ? profile.presence.status.trim() : "";
+    const rawFaStatus = (faData && faData.presenceStatus) ? faData.presenceStatus.trim() : "";
     const displayStatus = isFa
-      ? (faData.presenceStatus || "آنلاین")
-      : ((profile.presence && profile.presence.status && profile.presence.status !== "آنلاین") ? profile.presence.status : "online");
+      ? (rawFaStatus || rawPresenceStatus || "آنلاین")
+      : (rawPresenceStatus || rawFaStatus || "online");
 
     // 1. Text & Titles
     if (nameText) nameText.textContent = displayName;
@@ -352,13 +354,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         presenceHandle.textContent = "";
       }
       if (presenceStatus) {
+        const pStatus = (currentActiveProfile?.presence?.status || "").trim();
+        const fStatus = (faData?.presenceStatus || "").trim();
         if (lang === "fa") {
-          presenceStatus.textContent = faData.presenceStatus || "آنلاین";
+          presenceStatus.textContent = fStatus || pStatus || "آنلاین";
         } else {
-          const engStatus = (currentActiveProfile?.presence?.status && currentActiveProfile.presence.status !== "آنلاین")
-            ? currentActiveProfile.presence.status
-            : "online";
-          presenceStatus.textContent = engStatus;
+          presenceStatus.textContent = pStatus || fStatus || "online";
         }
       }
     }

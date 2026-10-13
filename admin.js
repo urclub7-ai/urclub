@@ -49,6 +49,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const inputPresenceStatus = document.getElementById("input-presence-status");
   const colorRadios = document.querySelectorAll('input[name="presence-color"]');
   const inputCustomColor = document.getElementById("input-custom-color");
+  let faStatusManuallyTouched = false;
 
   // Switches
   const toggleSparkles = document.getElementById("toggle-sparkles");
@@ -146,7 +147,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (inputFaOrderBtn) inputFaOrderBtn.value = fa.orderBtnText || "سفارش";
     if (inputFaSubtitle) inputFaSubtitle.value = fa.subtitle || "";
     if (inputFaEnterText) inputFaEnterText.value = fa.enterText || "[ برای ورود به وبسایت کلیک کنید ]";
-    if (inputFaStatus) inputFaStatus.value = fa.presenceStatus || "آنلاین";
+    faStatusManuallyTouched = false;
+    const faStatusVal = (fa.presenceStatus || "").trim();
+    const enStatusVal = (profile.presence && profile.presence.status) ? profile.presence.status.trim() : "";
+    if (inputFaStatus) inputFaStatus.value = faStatusVal || enStatusVal || "آنلاین";
 
     // Avatars
     inputMainAvatar.value = profile.mainAvatar || "";
@@ -162,7 +166,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Presence
     if (profile.presence) {
       inputPresenceHandle.value = profile.presence.handle || "";
-      inputPresenceStatus.value = profile.presence.status || "";
+      inputPresenceStatus.value = enStatusVal || faStatusVal || "online";
       const statusColor = profile.presence.statusColor || "#22c55e";
       inputCustomColor.value = statusColor;
       
@@ -237,7 +241,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       mobileBackgroundVideo: inputMobileBgVideo.value.trim(),
       presence: {
         handle: inputPresenceHandle.value.trim() || slug,
-        status: inputPresenceStatus.value.trim() || "online",
+        status: (inputPresenceStatus.value.trim() || (inputFaStatus ? inputFaStatus.value.trim() : "") || "online"),
         statusColor: statusColor
       },
       persian: {
@@ -245,7 +249,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         orderBtnText: inputFaOrderBtn ? (inputFaOrderBtn.value.trim() || "سفارش") : "سفارش",
         subtitle: inputFaSubtitle ? inputFaSubtitle.value.trim() : "",
         enterText: inputFaEnterText ? (inputFaEnterText.value.trim() || "[ برای ورود به وبسایت کلیک کنید ]") : "[ برای ورود به وبسایت کلیک کنید ]",
-        presenceStatus: inputFaStatus ? (inputFaStatus.value.trim() || "آنلاین") : "آنلاین"
+        presenceStatus: (!faStatusManuallyTouched && inputPresenceStatus.value.trim())
+          ? inputPresenceStatus.value.trim()
+          : (inputFaStatus ? (inputFaStatus.value.trim() || inputPresenceStatus.value.trim() || "آنلاین") : (inputPresenceStatus.value.trim() || "آنلاین"))
       },
       socials: socialsData
     };
@@ -475,6 +481,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     previewPresenceAvatar.src = e.target.value || DEFAULT_AVATAR;
     updatePreviewFrame();
   });
+
+  // Sync Presence Status inputs so that editing one updates the other smoothly
+  if (inputPresenceStatus && inputFaStatus) {
+    inputFaStatus.addEventListener("input", () => {
+      faStatusManuallyTouched = true;
+    });
+    inputPresenceStatus.addEventListener("input", () => {
+      if (!faStatusManuallyTouched) {
+        inputFaStatus.value = inputPresenceStatus.value;
+      }
+    });
+  }
 
   // Attach live preview updates (WITHOUT saving to cloud until Save is clicked)
   document.addEventListener("input", (e) => {
