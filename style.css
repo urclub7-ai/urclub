@@ -1296,4 +1296,261 @@ html[dir="rtl"] .site-floating-dock {
   transform: scale(0.98);
 }
 
+/* ==========================================================================
+   SITE FOOTER (PRIVACY, HOW WE WORK, TERMS, HELP & COPYRIGHT 2026)
+   ========================================================================== */
+.site-footer {
+  margin-top: 1.6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+}
+
+.footer-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.footer-link-btn {
+  background: none;
+  border: none;
+  padding: 4px 6px;
+  color: rgba(255, 255, 255, 0.45);
+  font-family: 'Inter', 'Vazirmatn', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  outline: none;
+}
+
+.footer-link-btn:hover {
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+  transform: translateY(-1px);
+}
+
+.footer-copyright {
+  font-family: 'Inter', 'Vazirmatn', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.74rem;
+  color: rgba(255, 255, 255, 0.32);
+  letter-spacing: 0.4px;
+  text-align: center;
+  margin: 0;
+  user-select: none;
+}
+
+/* Info Modal Custom Styling */
+.info-modal-card {
+  max-width: 520px !important;
+  text-align: left;
+}
+
+html[dir="rtl"] .info-modal-card,
+.info-modal-card.fa-dir {
+  text-align: right;
+  direction: rtl;
+}
+
+.info-modal-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.info-modal-icon-badge {
+  width: 54px;
+  height: 54px;
+  margin: 0 auto 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.45rem;
+  color: #ffffff;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.info-modal-tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  letter-spacing: 1.5px;
+  color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 3px 10px;
+  border-radius: 9999px;
+  margin-top: 6px;
+}
+
+.info-modal-body {
+  color: #e2e8f0;
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+
+.info-intro {
+  color: rgba(255, 255, 255, 0.88);
+  margin-bottom: 16px;
+  font-size: 0.94rem;
+  line-height: 1.65;
+}
+
+.info-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.info-list li {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 0.88rem;
+  color: #cbd5e1;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.info-list li i {
+  color: #ffffff;
+  margin-top: 4px;
+  font-size: 0.92rem;
+  flex-shrink: 0;
+}
+
+.info-list li strong {
+  color: #ffffff;
+}
+
+/* How We Work 4-Step Cards */
+.how-steps-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.how-step-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 11px 14px;
+  transition: all 0.2s ease;
+}
+
+.how-step-card:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.how-step-card.highlight {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.08);
+}
+
+.how-step-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 800;
+  font-size: 0.92rem;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.how-step-card.highlight .how-step-badge {
+  background: #ffffff;
+  color: #000000;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
+}
+
+.how-step-text {
+  text-align: left;
+}
+
+html[dir="rtl"] .how-step-text,
+.how-steps-container.fa-dir .how-step-text {
+  text-align: right;
+}
+
+.how-step-text strong {
+  display: block;
+  font-size: 0.92rem;
+  color: #ffffff;
+  margin-bottom: 2px;
+}
+
+.how-step-text p {
+  margin: 0;
+  font-size: 0.82rem;
+  color: #94a3b8;
+  line-height: 1.5;
+}
+
+.help-actions-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.help-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.help-btn-wa {
+  background: #25d366;
+  color: #ffffff;
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.35);
+}
+
+.help-btn-wa:hover {
+  background: #22bf5b;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(37, 211, 102, 0.5);
+}
+
+.help-btn-tg {
+  background: #229ed9;
+  color: #ffffff;
+  box-shadow: 0 6px 20px rgba(34, 158, 217, 0.35);
+}
+
+.help-btn-tg:hover {
+  background: #1e8ec3;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(34, 158, 217, 0.5);
+}
+
 

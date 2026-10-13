@@ -387,6 +387,23 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (adminContactText) adminContactText.textContent = "To receive an access code, register your order with admin.";
       if (adminContactWaLink) adminContactWaLink.href = "https://wa.me/491624212685?text=Hello%2C%20I%20would%20like%20to%20register%20my%20order%20to%20receive%20an%20order%20form%20code.";
     }
+
+    // Footer button & copyright labels
+    const btnFooterPrivacy = document.getElementById("btn-footer-privacy");
+    const btnFooterHow = document.getElementById("btn-footer-how");
+    const btnFooterTerms = document.getElementById("btn-footer-terms");
+    const btnFooterHelp = document.getElementById("btn-footer-help");
+    const footerCopyright = document.getElementById("footer-copyright");
+
+    if (btnFooterPrivacy) btnFooterPrivacy.textContent = (lang === "fa") ? "حریم خصوصی" : "Privacy";
+    if (btnFooterHow) btnFooterHow.textContent = (lang === "fa") ? "روش کار ما" : "How We Work";
+    if (btnFooterTerms) btnFooterTerms.textContent = (lang === "fa") ? "قوانین و شرایط" : "Terms";
+    if (btnFooterHelp) btnFooterHelp.textContent = (lang === "fa") ? "پشتیبانی" : "Help";
+    if (footerCopyright) footerCopyright.textContent = (lang === "fa") ? "© ۲۰۲۶ تمامی حقوق برای URCLUB محفوظ است" : "© 2026 URCLUB • All Rights Reserved";
+
+    if (typeof updateActiveInfoModalLang === "function") {
+      updateActiveInfoModalLang(lang);
+    }
   }
 
   let isLanguageTransitioning = false;
@@ -743,6 +760,374 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (btnVerify) btnVerify.disabled = false;
         if (btnVerifyText) btnVerifyText.style.display = "inline-flex";
         if (btnVerifySpinner) btnVerifySpinner.style.display = "none";
+      }
+    });
+  }
+
+  // ==========================================================================
+  // SITE INFORMATION MODAL (Privacy, How We Work, Terms, Help)
+  // ==========================================================================
+  const modalSiteInfo = document.getElementById("modal-site-info");
+  const infoModalCard = document.getElementById("info-modal-card");
+  const infoModalClose = document.getElementById("btn-close-info-modal");
+  const infoModalIcon = document.getElementById("info-modal-icon");
+  const infoModalTitle = document.getElementById("info-modal-title");
+  const infoModalTag = document.getElementById("info-modal-tag");
+  const infoModalBody = document.getElementById("info-modal-body");
+
+  let currentInfoModalType = null;
+
+  function renderInfoModalContent(type, lang) {
+    if (!infoModalBody || !infoModalTitle || !infoModalIcon || !infoModalTag) return;
+    const isFa = (lang === "fa");
+    if (infoModalCard) {
+      if (isFa) {
+        infoModalCard.classList.add("fa-dir");
+      } else {
+        infoModalCard.classList.remove("fa-dir");
+      }
+    }
+
+    if (type === "privacy") {
+      infoModalIcon.innerHTML = '<i class="fa-solid fa-shield-halved"></i>';
+      infoModalTag.textContent = isFa ? "امنیت و محرمانگی تضمین‌شده" : "CONFIDENTIAL & SECURE";
+      infoModalTitle.textContent = isFa ? "سیاست حفظ حریم خصوصی" : "Privacy Policy";
+
+      if (isFa) {
+        infoModalBody.innerHTML = `
+          <p class="info-intro">
+            در استودیو URCLUB، حفظ امنیت اطلاعات، هویت کاربری و محرمانگی تمام پروژه‌های شما اولویت مطلق ماست. ما متعهد به شفافیت و حفاظت کامل از دارایی‌های دیجیتال شما هستیم.
+          </p>
+          <ul class="info-list">
+            <li class="info-list-item">
+              <i class="fa-solid fa-lock"></i>
+              <div>
+                <strong>محرمانگی فایل‌ها و رسانه‌ها:</strong>
+                <span>تمام عکس‌ها، ویدیوها، کدهای اختصاصی و محتواهای ارسالی شما در سرورهای امن نگهداری شده و هرگز در اختیار شخص ثالث قرار نمی‌گیرند.</span>
+              </div>
+            </li>
+            <li class="info-list-item">
+              <i class="fa-solid fa-user-shield"></i>
+              <div>
+                <strong>مالکیت ۱۰۰ درصدی پروژه:</strong>
+                <span>تمامی فایل‌های نهایی و کدهای اختصاصی ایجاد شده پس از تحویل، منحصراً متعلق به شخص سفارش‌دهنده است.</span>
+              </div>
+            </li>
+            <li class="info-list-item">
+              <i class="fa-solid fa-fingerprint"></i>
+              <div>
+                <strong>ارتباط مستقیم و کدهای اعتباری:</strong>
+                <span>کدهای دسترسی به فرم به صورت منحصر‌به‌فرد و یک‌بار مصرف تنها از طریق پشتیبانی مستقیم ارسال می‌شوند تا از ثبت اطلاعات ناخواسته جلوگیری شود.</span>
+              </div>
+            </li>
+            <li class="info-list-item">
+              <i class="fa-solid fa-ban"></i>
+              <div>
+                <strong>عدم ردیابی تبلیغاتی:</strong>
+                <span>هیچ‌گونه ردیابی شخص ثالث یا فروش داده‌های کاربری به وب‌سایت‌های دیگر در اکوسیستم URCLUB وجود ندارد.</span>
+              </div>
+            </li>
+          </ul>
+        `;
+      } else {
+        infoModalBody.innerHTML = `
+          <p class="info-intro">
+            At URCLUB Studio, your privacy, creative branding, and personal identity are protected with industry-grade confidentiality standards. We never compromise on your data safety.
+          </p>
+          <ul class="info-list">
+            <li class="info-list-item">
+              <i class="fa-solid fa-lock"></i>
+              <div>
+                <strong>Zero Public Leaks & Encrypted Storage:</strong>
+                <span>All multimedia assets, custom branding materials, and profile information you provide remain strictly confidential.</span>
+              </div>
+            </li>
+            <li class="info-list-item">
+              <i class="fa-solid fa-user-shield"></i>
+              <div>
+                <strong>Full Client Ownership:</strong>
+                <span>Upon project completion, you retain 100% intellectual property ownership of your personalized digital biolink page.</span>
+              </div>
+            </li>
+            <li class="info-list-item">
+              <i class="fa-solid fa-fingerprint"></i>
+              <div>
+                <strong>Secure One-Time Access Codes:</strong>
+                <span>Order submission is protected by unique studio-generated access codes issued directly via private channels.</span>
+              </div>
+            </li>
+            <li class="info-list-item">
+              <i class="fa-solid fa-ban"></i>
+              <div>
+                <strong>No Third-Party Tracking or Ads:</strong>
+                <span>We never sell or distribute your data to external data brokers, marketers, or analytics networks.</span>
+              </div>
+            </li>
+          </ul>
+        `;
+      }
+    } else if (type === "how") {
+      infoModalIcon.innerHTML = '<i class="fa-solid fa-route"></i>';
+      infoModalTag.textContent = isFa ? "مراحل ۴ گانه تحویل سریع" : "4-STEP WORKFLOW";
+      infoModalTitle.textContent = isFa ? "روش کار و نحوه سفارش" : "How We Work";
+
+      if (isFa) {
+        infoModalBody.innerHTML = `
+          <p class="info-intro">
+            فرآیند ساخت و طراحی بایولینک اختصاصی در URCLUB ساده، سریع و تضمین‌شده است:
+          </p>
+          <div class="how-steps-container">
+            <div class="how-step-card">
+              <div class="how-step-num">۱</div>
+              <div class="how-step-content">
+                <h4>ارتباط و ثبت سفارش در واتس‌اپ</h4>
+                <p>در ابتدا از طریق دکمه ثبت سفارش یا مستقیماً در واتس‌اپ به ما پیام می‌دهید و پلن یا طرح مدنظر خود را مشخص می‌کنید.</p>
+              </div>
+            </div>
+            <div class="how-step-card">
+              <div class="how-step-num">۲</div>
+              <div class="how-step-content">
+                <h4>دریافت کد اختصاصی سفارش</h4>
+                <p>تیم پشتیبانی ما یک کد تایید و دسترسی منحصر‌به‌فرد (Order Access Code) به صورت خصوصی برای شما ارسال می‌کند.</p>
+              </div>
+            </div>
+            <div class="how-step-card">
+              <div class="how-step-num">۳</div>
+              <div class="how-step-content">
+                <h4>باز شدن فرم و ارسال مشخصات</h4>
+                <p>کد را در پنجره سفارش وارد می‌کنید تا فرم اختصاصی پروژه باز شود. اطلاعات، نام، شبکه‌های اجتماعی و ویدیوها را ثبت و ارسال می‌کنید.</p>
+              </div>
+            </div>
+            <div class="how-step-card highlight">
+              <span class="how-step-badge">تضمین سرعت</span>
+              <div class="how-step-num">۴</div>
+              <div class="how-step-content">
+                <h4>تحویل نمونه اول در ۲۴ ساعت اول</h4>
+                <p>طراحان ما کار را بلافاصله آغاز کرده و نمونه اولیه و تعاملی پروژه شما را در ۲۴ ساعت اول برایتان ارسال می‌کنند تا پس از تایید نهایی شود.</p>
+              </div>
+            </div>
+          </div>
+        `;
+      } else {
+        infoModalBody.innerHTML = `
+          <p class="info-intro">
+            Our streamlined 4-step workflow ensures rapid turnaround, premium aesthetics, and complete transparency:
+          </p>
+          <div class="how-steps-container">
+            <div class="how-step-card">
+              <div class="how-step-num">1</div>
+              <div class="how-step-content">
+                <h4>Reach Out on WhatsApp</h4>
+                <p>Click order or message us directly on WhatsApp to choose your style and confirm project requirements.</p>
+              </div>
+            </div>
+            <div class="how-step-card">
+              <div class="how-step-num">2</div>
+              <div class="how-step-content">
+                <h4>Receive Your Unique Access Code</h4>
+                <p>Our studio team issues a verified Order Access Code directly to your private chat.</p>
+              </div>
+            </div>
+            <div class="how-step-card">
+              <div class="how-step-num">3</div>
+              <div class="how-step-content">
+                <h4>Unlock & Submit Order Form</h4>
+                <p>Enter your code to unlock the project submission form (urclub.vercel.app/form), provide your handles, theme assets, and submit.</p>
+              </div>
+            </div>
+            <div class="how-step-card highlight">
+              <span class="how-step-badge">Speed Guarantee</span>
+              <div class="how-step-num">4</div>
+              <div class="how-step-content">
+                <h4>First Sample within 24 Hours</h4>
+                <p>Our creative team develops your custom biolink and delivers the interactive first prototype within the first 24 hours.</p>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    } else if (type === "terms") {
+      infoModalIcon.innerHTML = '<i class="fa-solid fa-file-contract"></i>';
+      infoModalTag.textContent = isFa ? "مقررات و تضمین کیفیت" : "CLIENT AGREEMENT";
+      infoModalTitle.textContent = isFa ? "قوانین و شرایط کاری" : "Terms & Conditions";
+
+      if (isFa) {
+        infoModalBody.innerHTML = `
+          <p class="info-intro">
+            تمامی خدمات ارائه شده توسط استودیو URCLUB تحت شرایط شفاف زیر جهت تضمین رضایت ۱۰۰ درصدی شما اجرا می‌گردد:
+          </p>
+          <ul class="info-list">
+            <li class="info-list-item">
+              <i class="fa-solid fa-clock"></i>
+              <div>
+                <strong>تعهد تحویل سریع (۲۴ ساعت):</strong>
+                <span>اولین نمونه پیش‌نمایش در ۲۴ ساعت اولیه پس از ارسال فرم تحویل داده خواهد شد.</span>
+              </div>
+            </li>
+            <li class="info-list-item">
+              <i class="fa-solid fa-pen-ruler"></i>
+              <div>
+                <strong>ویرایش و بازبینی رایگان:</strong>
+                <span>شما تا حصول رضایت کامل حق اعمال اصلاحات و تنظیمات متنی/بصری روی نمونه اولیه را خواهید داشت.</span>
+              </div>
+            </li>
+            <li class="info-list-item">
+              <i class="fa-solid fa-key"></i>
+              <div>
+                <strong>اعتبار کد سفارش:</strong>
+                <span>هر کد اختصاصی برای ثبت یک پروژه فعال صادر می‌شود و انتقال آن به دیگران مجاز نمی‌باشد.</span>
+              </div>
+            </li>
+            <li class="info-list-item">
+              <i class="fa-solid fa-copyright"></i>
+              <div>
+                <strong>کپی‌رایت و مالکیت:</strong>
+                <span>تمامی حقوق متعلق به سال ۲۰۲۶ محفوظ بوده و استفاده تجاری یا کپی‌برداری غیرمجاز از سورس استودیو ممنوع است.</span>
+              </div>
+            </li>
+          </ul>
+        `;
+      } else {
+        infoModalBody.innerHTML = `
+          <p class="info-intro">
+            All design and engineering services provided by URCLUB Studio adhere to transparent quality guarantees:
+          </p>
+          <ul class="info-list">
+            <li class="info-list-item">
+              <i class="fa-solid fa-clock"></i>
+              <div>
+                <strong>24-Hour Delivery Guarantee:</strong>
+                <span>The first working prototype is delivered within the initial 24 hours following form submission.</span>
+              </div>
+            </li>
+            <li class="info-list-item">
+              <i class="fa-solid fa-pen-ruler"></i>
+              <div>
+                <strong>Complimentary Revisions:</strong>
+                <span>We refine typography, media sync, and color effects until you are completely satisfied with the result.</span>
+              </div>
+            </li>
+            <li class="info-list-item">
+              <i class="fa-solid fa-key"></i>
+              <div>
+                <strong>Single-Use Order Verification:</strong>
+                <span>Access codes are uniquely mapped to your order to protect queue priority and project integrity.</span>
+              </div>
+            </li>
+            <li class="info-list-item">
+              <i class="fa-solid fa-copyright"></i>
+              <div>
+                <strong>Copyright Protection (2026):</strong>
+                <span>All brand identities and assets are protected. Unauthorized reselling of core templates is prohibited.</span>
+              </div>
+            </li>
+          </ul>
+        `;
+      }
+    } else if (type === "help") {
+      infoModalIcon.innerHTML = '<i class="fa-solid fa-headset"></i>';
+      infoModalTag.textContent = isFa ? "پشتیبانی و راهنمایی" : "DIRECT ASSISTANCE";
+      infoModalTitle.textContent = isFa ? "مرکز پشتیبانی URCLUB" : "Help & Support";
+
+      if (isFa) {
+        infoModalBody.innerHTML = `
+          <p class="info-intro">
+            سوالی درباره دریافت کد سفارش دارید یا نیاز به راهنمایی در ثبت فرم دارید؟ تیم پشتیبانی ما به صورت مستقیم پاسخگوی شماست.
+          </p>
+          <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 18px;">
+            <a href="https://wa.me/491624212685?text=%D8%B3%D9%84%D8%A7%D9%85%D8%8C%20%D9%86%DB%8C%D8%A7%D8%B2%20%D8%A8%D9%87%20%D8%B1%D8%A7%D9%87%D9%86%D9%85%D8%A7%DB%8C%DB%8C%20%D9%88%20%D9%BE%D8%B4%D8%AA%DB%8C%D8%A8%D8%A7%D9%86%DB%8C%20%D8%AF%D8%A7%D8%B1%D9%85." target="_blank" rel="noopener noreferrer" class="help-action-btn">
+              <i class="fa-brands fa-whatsapp" style="font-size: 1.35rem; color: #25d366;"></i>
+              <span>پشتیبانی مستقیم در واتس‌اپ (پاسخگویی سریع)</span>
+            </a>
+            <a href="https://t.me/urclub" target="_blank" rel="noopener noreferrer" class="help-action-btn">
+              <i class="fa-brands fa-telegram" style="font-size: 1.35rem; color: #229ed9;"></i>
+              <span>کانال و پشتیبانی تلگرام (@urclub)</span>
+            </a>
+          </div>
+        `;
+      } else {
+        infoModalBody.innerHTML = `
+          <p class="info-intro">
+            Have questions about ordering, need code assistance, or want to track your project progress? Our team is available 24/7.
+          </p>
+          <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 18px;">
+            <a href="https://wa.me/491624212685?text=Hello%2C%20I%20need%20assistance%20with%20my%20URCLUB%20order." target="_blank" rel="noopener noreferrer" class="help-action-btn">
+              <i class="fa-brands fa-whatsapp" style="font-size: 1.35rem; color: #25d366;"></i>
+              <span>Direct WhatsApp Support (Instant Reply)</span>
+            </a>
+            <a href="https://t.me/urclub" target="_blank" rel="noopener noreferrer" class="help-action-btn">
+              <i class="fa-brands fa-telegram" style="font-size: 1.35rem; color: #229ed9;"></i>
+              <span>Telegram Channel & Support (@urclub)</span>
+            </a>
+          </div>
+        `;
+      }
+    }
+  }
+
+  function openInfoModal(type) {
+    if (!modalSiteInfo) return;
+    currentInfoModalType = type;
+    renderInfoModalContent(type, currentLang);
+    modalSiteInfo.style.display = "flex";
+  }
+
+  function closeInfoModal() {
+    if (!modalSiteInfo) return;
+    modalSiteInfo.style.display = "none";
+    currentInfoModalType = null;
+  }
+
+  window.updateActiveInfoModalLang = function(lang) {
+    if (currentInfoModalType && modalSiteInfo && modalSiteInfo.style.display === "flex") {
+      renderInfoModalContent(currentInfoModalType, lang);
+    }
+  };
+
+  const btnFooterPrivacy = document.getElementById("btn-footer-privacy");
+  const btnFooterHow = document.getElementById("btn-footer-how");
+  const btnFooterTerms = document.getElementById("btn-footer-terms");
+  const btnFooterHelp = document.getElementById("btn-footer-help");
+
+  if (btnFooterPrivacy) {
+    btnFooterPrivacy.addEventListener("click", (e) => {
+      e.stopPropagation();
+      openInfoModal("privacy");
+    });
+  }
+
+  if (btnFooterHow) {
+    btnFooterHow.addEventListener("click", (e) => {
+      e.stopPropagation();
+      openInfoModal("how");
+    });
+  }
+
+  if (btnFooterTerms) {
+    btnFooterTerms.addEventListener("click", (e) => {
+      e.stopPropagation();
+      openInfoModal("terms");
+    });
+  }
+
+  if (btnFooterHelp) {
+    btnFooterHelp.addEventListener("click", (e) => {
+      e.stopPropagation();
+      openInfoModal("help");
+    });
+  }
+
+  if (infoModalClose) {
+    infoModalClose.addEventListener("click", (e) => {
+      e.stopPropagation();
+      closeInfoModal();
+    });
+  }
+
+  if (modalSiteInfo) {
+    modalSiteInfo.addEventListener("click", (e) => {
+      if (e.target === modalSiteInfo) {
+        closeInfoModal();
       }
     });
   }
