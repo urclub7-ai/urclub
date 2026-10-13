@@ -382,17 +382,35 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  let isLanguageTransitioning = false;
+
   if (btnToggleLang) {
     btnToggleLang.addEventListener("click", (e) => {
       e.stopPropagation();
+      if (isLanguageTransitioning) return;
       const nextLang = (currentLang === "fa" ? "en" : "fa");
-      applyLanguage(nextLang);
 
-      // Re-trigger the enter screen in the selected language
       if (!isPreview && enterOverlay) {
+        isLanguageTransitioning = true;
         isUnlocked = false;
-        if (bgVideo) bgVideo.muted = true; // Silence audio while black screen is displayed
+        if (bgVideo) bgVideo.muted = true; // Silence audio while curtain drops
+
+        // 1. Immediately drop the pitch-black curtain without changing any content
+        enterOverlay.style.transition = "opacity 0.25s ease";
+        if (enterText) enterText.style.visibility = "hidden";
         enterOverlay.classList.remove("hidden");
+
+        // 2. ONLY AFTER screen is 100% black (260ms), apply language behind the curtain!
+        setTimeout(() => {
+          applyLanguage(nextLang);
+          if (enterText) {
+            enterText.style.visibility = "visible";
+          }
+          enterOverlay.style.transition = ""; // Restore standard 0.8s unlock fade
+          isLanguageTransitioning = false;
+        }, 260);
+      } else {
+        applyLanguage(nextLang);
       }
     });
   }
@@ -417,7 +435,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Handle Preview Mode vs Full Page Click/Tap to Enter
   let isUnlocked = false;
   function unlockBio() {
-    if (isUnlocked) return;
+    if (isUnlocked || isLanguageTransitioning) return;
     if (langSelectionOverlay && !langSelectionOverlay.classList.contains("hidden") && langSelectionOverlay.style.display !== "none") {
       return;
     }
