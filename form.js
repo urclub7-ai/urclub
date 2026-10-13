@@ -5,10 +5,36 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   // ==========================================================================
+  // 0. DIGIT LOCALIZATION HELPERS (FA <-> EN)
+  // ==========================================================================
+  const PERSIAN_DIGITS = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+  const LATIN_DIGITS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+
+  function toPersianDigits(str) {
+    if (str === null || str === undefined) return "";
+    return String(str).replace(/[0-9]/g, (d) => PERSIAN_DIGITS[d]);
+  }
+
+  function toLatinDigits(str) {
+    if (str === null || str === undefined) return "";
+    return String(str).replace(/[۰-۹]/g, (d) => {
+      const idx = PERSIAN_DIGITS.indexOf(d);
+      return idx !== -1 ? LATIN_DIGITS[idx] : d;
+    });
+  }
+
+  // ==========================================================================
   // 1. I18N DICTIONARY (PERSIAN & ENGLISH)
   // ==========================================================================
   const I18N = {
     fa: {
+      order_code_label: "کد سفارش:",
+      code_gate_title: "فرم اختصاصی ثبت پروژه URCLUB",
+      code_gate_subtitle: "برای دسترسی به فرم و ثبت مشخصات پروژه کد خود را وارد کنید",
+      code_gate_btn: '<i class="fa-solid fa-key"></i> باز کردن و ورود به فرم',
+      code_gate_spinner: "در حال اعتبارسنجی...",
+      code_gate_no_code: "کد ندارم",
+      admin_contact_text: "برای دریافت کد سفارش خود را ثبت کنید.",
       header_status: "پذیرش سفارشات فعال است",
       hero_pill: "پروپوزال و ثبت مشخصات دقیق پروژه",
       hero_title_1: "پروژه اختصاصی خود را ",
@@ -213,6 +239,13 @@ document.addEventListener("DOMContentLoaded", () => {
     },
 
     en: {
+      order_code_label: "Order Code:",
+      code_gate_title: "URCLUB Exclusive Project Registration",
+      code_gate_subtitle: "Enter your verified order code to access the project proposal form",
+      code_gate_btn: '<i class="fa-solid fa-key"></i> Verify & Open Form',
+      code_gate_spinner: "Verifying code...",
+      code_gate_no_code: "I don't have a code",
+      admin_contact_text: "To receive an access code, register your order with admin.",
       header_status: "Accepting New Projects",
       hero_pill: "Project Proposal & Detailed Specifications",
       hero_title_1: "Design & Order Your ",
@@ -464,17 +497,22 @@ document.addEventListener("DOMContentLoaded", () => {
   function setLanguage(lang) {
     currentLang = (lang === "en") ? "en" : "fa";
     const dict = I18N[currentLang];
+    const isEn = (currentLang === "en");
 
     // 1. HTML Direction & Font Class
     document.documentElement.lang = currentLang;
-    document.documentElement.dir = (currentLang === "en") ? "ltr" : "rtl";
+    document.documentElement.dir = isEn ? "ltr" : "rtl";
     document.body.className = "lang-" + currentLang;
 
     // 2. Translate Elements with data-i18n
     document.querySelectorAll("[data-i18n]").forEach((el) => {
       const key = el.dataset.i18n;
       if (dict[key]) {
-        el.textContent = dict[key];
+        if (dict[key].includes("<")) {
+          el.innerHTML = dict[key];
+        } else {
+          el.textContent = dict[key];
+        }
       }
     });
 
@@ -486,7 +524,22 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // 4. Update Header Switcher Active State
+    // 4. Localize Step Numbers (01, 02, 03 vs ۰۱, ۰۲, ۰۳)
+    document.querySelectorAll(".step-num").forEach((el) => {
+      const stepVal = el.getAttribute("data-step") || toLatinDigits(el.textContent.trim());
+      el.setAttribute("data-step", stepVal);
+      el.textContent = isEn ? stepVal : toPersianDigits(stepVal);
+    });
+
+    // 5. Update Order Code Badge Value
+    if (headerCodeVal) {
+      const currentCode = verifiedOrderCode || (headerCodeVal.textContent !== "----" ? headerCodeVal.textContent : "");
+      if (currentCode) {
+        headerCodeVal.textContent = isEn ? toLatinDigits(currentCode) : currentCode;
+      }
+    }
+
+    // 6. Update Header Switcher Active State
     if (langOptFa && langOptEn) {
       if (currentLang === "fa") {
         langOptFa.classList.add("active");
@@ -497,7 +550,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    // 5. Update Category Card Labels in Summary
+    // 7. Update Category Card Labels in Summary
     const catTitles = {
       website: dict.cat_web_title,
       mobile: dict.cat_app_title,
@@ -508,6 +561,18 @@ document.addEventListener("DOMContentLoaded", () => {
       sumCategory.textContent = catTitles[activeCategory] || dict.cat_web_title;
     }
     updateSummaryName();
+
+    // 8. Update Active Chip Hidden Values to Match Language
+    document.querySelectorAll(".chip-selector").forEach((container) => {
+      const groupName = container.dataset.group;
+      const hiddenInput = document.getElementById(`${groupName}-val`);
+      const activeChip = container.querySelector(".chip-btn.active");
+      if (hiddenInput && activeChip) {
+        hiddenInput.value = (isEn && activeChip.dataset.valueEn)
+          ? activeChip.dataset.valueEn
+          : activeChip.dataset.value;
+      }
+    });
   }
 
   // ==========================================================================
@@ -562,7 +627,9 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (e) {}
 
     if (headerOrderBadge) headerOrderBadge.style.display = "inline-flex";
-    if (headerCodeVal) headerCodeVal.textContent = code;
+    if (headerCodeVal) {
+      headerCodeVal.textContent = (currentLang === "en") ? toLatinDigits(code) : code;
+    }
 
     if (codeGateOverlay) codeGateOverlay.style.display = "none";
     if (langGateOverlay) {
@@ -648,6 +715,14 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   checkInitialOrderCode();
+
+  // Initialize saved or default language
+  const savedLang = localStorage.getItem("urclub_lang");
+  if (savedLang === "en" || savedLang === "fa") {
+    setLanguage(savedLang);
+  } else {
+    setLanguage("fa");
+  }
 
   // ==========================================================================
   // 4. LANGUAGE GATE INITIAL OVERLAY (BLURRED UNTIL CHOSEN)
@@ -990,7 +1065,8 @@ document.addEventListener("DOMContentLoaded", () => {
     btnText.style.display = "inline-flex";
     btnSpinner.style.display = "none";
 
-    ticketIdEl.textContent = activeOrderCode !== "N/A" ? `${activeOrderCode} • ${randomTicket}` : randomTicket;
+    const displayTicket = activeOrderCode !== "N/A" ? `${activeOrderCode} • ${randomTicket}` : randomTicket;
+    ticketIdEl.textContent = (currentLang === "en") ? toLatinDigits(displayTicket) : displayTicket;
     ticketCatEl.textContent = `${catTitles[activeCategory]} (${projectName})`;
 
     const waBtn = document.querySelector(".btn-wa");

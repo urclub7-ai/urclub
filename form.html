@@ -52,8 +52,8 @@
       <div class="code-gate-icon">
         <i class="fa-solid fa-lock"></i>
       </div>
-      <h2 class="code-gate-title">فرم اختصاصی ثبت پروژه URCLUB</h2>
-      <p class="code-gate-subtitle">
+      <h2 class="code-gate-title" data-i18n="code_gate_title">فرم اختصاصی ثبت پروژه URCLUB</h2>
+      <p class="code-gate-subtitle" data-i18n="code_gate_subtitle">
         برای دسترسی به فرم و ثبت مشخصات پروژه کد خود را وارد کنید
       </p>
 
@@ -73,13 +73,13 @@
         <div id="gate-code-error" class="code-gate-error" style="display: none;"></div>
 
         <button type="submit" id="btn-gate-verify" class="btn-gate-submit">
-          <span class="btn-gate-text"><i class="fa-solid fa-key"></i> باز کردن و ورود به فرم</span>
-          <span class="btn-gate-spinner" style="display: none;"><i class="fa-solid fa-spinner fa-spin"></i> در حال اعتبارسنجی...</span>
+          <span class="btn-gate-text" data-i18n="code_gate_btn"><i class="fa-solid fa-key"></i> باز کردن و ورود به فرم</span>
+          <span class="btn-gate-spinner" style="display: none;"><i class="fa-solid fa-spinner fa-spin"></i> <span data-i18n="code_gate_spinner">در حال اعتبارسنجی...</span></span>
         </button>
       </form>
 
       <div class="code-gate-footer">
-        <button type="button" id="btn-gate-no-code" class="btn-no-code-link">
+        <button type="button" id="btn-gate-no-code" class="btn-no-code-link" data-i18n="code_gate_no_code">
           کد ندارم
         </button>
       </div>
@@ -96,7 +96,7 @@
         <span class="admin-contact-status-dot"></span>
       </div>
 
-      <p class="admin-contact-text">برای دریافت کد سفارش خود را ثبت کنید.</p>
+      <p class="admin-contact-text" data-i18n="admin_contact_text">برای دریافت کد سفارش خود را ثبت کنید.</p>
 
       <a href="https://wa.me/491624212685?text=%D8%B3%D9%84%D8%A7%D9%85%D8%8C%20%D8%A8%D8%B1%D8%A7%DB%8C%20%D8%AF%D8%B1%DB%8C%D8%A7%D9%81%D8%AA%20%DA%A9%D8%AF%20%D8%B3%D9%81%D8%A7%D8%B1%D8%B4%20%D8%AE%D9%88%D8%AF%20%D8%B1%D8%A7%20%D8%AB%D8%A8%D8%AA%20%DA%A9%D9%86%D9%85." target="_blank" class="admin-contact-wa-btn">
         <i class="fa-brands fa-whatsapp"></i>
@@ -170,7 +170,7 @@
           <!-- Verified Order Code Badge -->
           <div class="header-code-pill" id="header-order-badge" style="display: none;">
             <i class="fa-solid fa-shield-halved"></i>
-            <span class="code-label">کد سفارش:</span>
+            <span class="code-label" data-i18n="order_code_label">کد سفارش:</span>
             <strong id="header-code-val">----</strong>
             <span class="code-verified-icon"><i class="fa-solid fa-circle-check"></i></span>
           </div>
@@ -212,7 +212,7 @@
       <!-- Step 1: Category Selection Cards -->
       <section class="step-section" id="section-categories">
         <div class="step-header">
-          <span class="step-num">۰۱</span>
+          <span class="step-num" data-step="01">۰۱</span>
           <div class="step-title-wrap">
             <h2 class="step-title" data-i18n="step1_title">انتخاب نوع پروژه</h2>
             <p class="step-subtitle" data-i18n="step1_subtitle">ابتدا دسته‌بندی خدمتی که مد نظر دارید را انتخاب کنید:</p>
@@ -292,7 +292,7 @@
         <!-- ======================================================== -->
         <section class="step-section form-block" id="block-website">
           <div class="step-header">
-            <span class="step-num">۰۲</span>
+            <span class="step-num" data-step="02">۰۲</span>
             <div class="step-title-wrap">
               <h2 class="step-title" data-i18n="step2_web_title">مشخصات و جزییات فنی وب‌سایت</h2>
               <p class="step-subtitle" data-i18n="step2_web_subtitle">تمام جزییات ظاهری، دامنه، دیتابیس و صفحات وب‌سایت خود را مشخص کنید:</p>
@@ -568,7 +568,7 @@
         <!-- ======================================================== -->
         <section class="step-section form-block" id="block-mobile" style="display: none;">
           <div class="step-header">
-            <span class="step-num">۰۲</span>
+            <span class="step-num" data-step="02">۰۲</span>
             <div class="step-title-wrap">
               <h2 class="step-title" data-i18n="step2_app_title">مشخصات و الزامات برنامه موبایل</h2>
               <p class="step-subtitle" data-i18n="step2_app_subtitle">جزییات مربوط به ساخت اپلیکیشن اندروید یا آیفون را مشخص کنید:</p>
@@ -640,7 +640,7 @@
         <!-- ======================================================== -->
         <section class="step-section form-block" id="block-desktop" style="display: none;">
           <div class="step-header">
-            <span class="step-num">۰۲</span>
+            <span class="step-num" data-step="02">۰۲</span>
             <div class="step-title-wrap">
               <h2 class="step-title" data-i18n="step2_desk_title">مشخصات نرم‌افزار کامپیوتر (دسکتاپ)</h2>
               <p class="step-subtitle" data-i18n="step2_desk_subtitle">نیازمندی‌های نرم‌افزار ویندوز یا مک را مشخص نمایید:</p>
@@ -700,7 +700,7 @@
         <!-- ======================================================== -->
         <section class="step-section form-block" id="block-poster" style="display: none;">
           <div class="step-header">
-            <span class="step-num">۰۲</span>
+            <span class="step-num" data-step="02">۰۲</span>
             <div class="step-title-wrap">
               <h2 class="step-title" data-i18n="step2_poster_title">مشخصات طراحی پوستر و گرافیک</h2>
               <p class="step-subtitle" data-i18n="step2_poster_subtitle">ابعاد، متن‌ها، تم بصری و جزئیات گرافیکی پوستر خود را وارد کنید:</p>
@@ -790,7 +790,7 @@
         <!-- ======================================================== -->
         <section class="step-section" id="section-contact">
           <div class="step-header">
-            <span class="step-num">۰۳</span>
+            <span class="step-num" data-step="03">۰۳</span>
             <div class="step-title-wrap">
               <h2 class="step-title" data-i18n="step3_contact_title">اطلاعات تماس سفارش‌دهنده</h2>
               <p class="step-subtitle" data-i18n="step3_contact_subtitle">برای ارسال پیش‌نمایش و هماهنگی نهایی پروژه، راه‌های ارتباطی خود را بنویسید:</p>

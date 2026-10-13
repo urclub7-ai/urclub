@@ -246,29 +246,29 @@ body.lang-fa, body.fa {
   align-items: center;
   gap: 8px;
   padding: 6px 14px;
-  background: rgba(14, 23, 42, 0.85);
-  border: 1px solid rgba(56, 189, 248, 0.4);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: var(--radius-full);
   font-size: 0.82rem;
-  color: var(--text-muted);
-  box-shadow: 0 0 14px rgba(56, 189, 248, 0.18);
+  color: #e2e8f0;
+  box-shadow: 0 0 16px rgba(255, 255, 255, 0.08);
 }
 
 .header-code-pill strong {
-  color: #38bdf8;
+  color: #ffffff;
   font-family: var(--font-mono);
   letter-spacing: 1px;
 }
 
 .header-code-pill i {
-  color: #38bdf8;
+  color: #ffffff;
   font-size: 0.85rem;
 }
 
 .code-verified-icon {
   color: #22c55e;
   font-size: 0.8rem;
-  margin-right: 2px;
+  margin-inline-start: 2px;
 }
 
 @keyframes codeGateFade {
