@@ -511,6 +511,121 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ==========================================================================
+  // 3.5 ORDER ACCESS CODE GATE (STRICT AUTHORIZATION GATE)
+  // ==========================================================================
+  const codeGateOverlay = document.getElementById("code-gate-overlay");
+  const formGateCodeForm = document.getElementById("form-gate-code-form");
+  const gateCodeInput = document.getElementById("gate-code-input");
+  const gateCodeError = document.getElementById("gate-code-error");
+  const btnGateVerify = document.getElementById("btn-gate-verify");
+  const headerOrderBadge = document.getElementById("header-order-badge");
+  const headerCodeVal = document.getElementById("header-code-val");
+
+  let verifiedOrderCode = "";
+
+  async function checkInitialOrderCode() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const paramCode = urlParams.get("code");
+    const sessionCode = sessionStorage.getItem("urclub_order_code");
+    const testCode = (paramCode || sessionCode || "").trim();
+
+    if (testCode && typeof OrderCodeStore !== "undefined") {
+      try {
+        const res = await OrderCodeStore.verifyCodeAsync(testCode);
+        if (res.valid) {
+          unlockFormWithCode(res.codeObj.code);
+          return;
+        }
+      } catch (e) {
+        console.warn("verifyCodeAsync notice:", e);
+      }
+    }
+
+    // If not verified or no code, lock form behind Code Gate
+    if (codeGateOverlay) {
+      codeGateOverlay.style.display = "flex";
+      if (langGateOverlay) langGateOverlay.style.display = "none";
+      if (testCode && gateCodeInput) {
+        gateCodeInput.value = testCode;
+        if (gateCodeError) {
+          gateCodeError.textContent = "کد وارد شده معتبر نمی‌باشد یا قبلاً استفاده شده است.";
+          gateCodeError.style.display = "block";
+        }
+      }
+    }
+  }
+
+  function unlockFormWithCode(code) {
+    verifiedOrderCode = code;
+    try {
+      sessionStorage.setItem("urclub_order_code", code);
+    } catch (e) {}
+
+    if (headerOrderBadge) headerOrderBadge.style.display = "inline-flex";
+    if (headerCodeVal) headerCodeVal.textContent = code;
+
+    if (codeGateOverlay) codeGateOverlay.style.display = "none";
+    if (langGateOverlay) {
+      langGateOverlay.style.display = "flex";
+      langGateOverlay.classList.remove("hidden");
+    }
+  }
+
+  if (gateCodeInput) {
+    gateCodeInput.addEventListener("input", (e) => {
+      e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9-]/g, "");
+      if (gateCodeError) gateCodeError.style.display = "none";
+    });
+  }
+
+  if (formGateCodeForm) {
+    formGateCodeForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const val = gateCodeInput ? gateCodeInput.value.trim() : "";
+      if (!val) return;
+
+      const btnText = btnGateVerify ? btnGateVerify.querySelector(".btn-gate-text") : null;
+      const btnSpin = btnGateVerify ? btnGateVerify.querySelector(".btn-gate-spinner") : null;
+      if (btnGateVerify) btnGateVerify.disabled = true;
+      if (btnText) btnText.style.display = "none";
+      if (btnSpin) btnSpin.style.display = "inline-flex";
+
+      try {
+        if (typeof OrderCodeStore !== "undefined") {
+          const res = await OrderCodeStore.verifyCodeAsync(val);
+          if (res.valid) {
+            unlockFormWithCode(res.codeObj.code);
+          } else {
+            let msg = "کد وارد شده در سیستم یافت نشد. لطفاً از صحت کد اطمینان حاصل فرمایید.";
+            if (res.reason === "alreadyUsed") {
+              msg = "این کد قبلاً برای ثبت یک سفارش استفاده شده است. لطفاً کد دیگری از واتساپ دریافت فرمایید.";
+            } else if (res.reason === "revoked") {
+              msg = "این کد توسط مدیریت غیرفعال شده است.";
+            }
+            if (gateCodeError) {
+              gateCodeError.textContent = msg;
+              gateCodeError.style.display = "block";
+            }
+          }
+        } else {
+          unlockFormWithCode(val);
+        }
+      } catch (err) {
+        if (gateCodeError) {
+          gateCodeError.textContent = "خطا در اتصال به سرور. لطفاً مجدداً تلاش نمایید.";
+          gateCodeError.style.display = "block";
+        }
+      } finally {
+        if (btnGateVerify) btnGateVerify.disabled = false;
+        if (btnText) btnText.style.display = "inline-flex";
+        if (btnSpin) btnSpin.style.display = "none";
+      }
+    });
+  }
+
+  checkInitialOrderCode();
+
+  // ==========================================================================
   // 4. LANGUAGE GATE INITIAL OVERLAY (BLURRED UNTIL CHOSEN)
   // ==========================================================================
   // ALWAYS ENFORCE BLURRED LANGUAGE GATE ON SITE ENTRY
@@ -783,10 +898,16 @@ document.addEventListener("DOMContentLoaded", () => {
       };
     }
 
+    const safeClientFolder = clientName.replace(/[^a-zA-Z0-9\u0600-\u06FF_-]/g, "_").replace(/_+/g, "_");
+    const activeOrderCode = verifiedOrderCode || "N/A";
+    const recommendedFolderName = `URCLUB_${(activeOrderCode !== "N/A" && typeof OrderCodeStore !== "undefined") ? OrderCodeStore.normalize(activeOrderCode) : randomTicket}_${safeClientFolder}`;
+
     const fullPayload = {
-      _subject: `[URCLUB Order] ${catTitles[activeCategory]} - ${projectName} (${clientName})`,
+      _subject: `[URCLUB Order] کد: ${activeOrderCode} - ${catTitles[activeCategory]} - ${projectName} (${clientName})`,
       _captcha: "false",
       _template: "table",
+      "Order Access Code / کد اختصاصی سفارش": activeOrderCode,
+      "Project Folder Name / نام پوشه پیشنهادی": recommendedFolderName,
       "Tracking Ticket / کد پیگیری": randomTicket,
       "Project Category / نوع پروژه": catTitles[activeCategory],
       "Project Name / عنوان": projectName,
@@ -817,7 +938,21 @@ document.addEventListener("DOMContentLoaded", () => {
       console.warn("FormSubmit fetch notice:", err);
     }
 
-    if (supabaseClient) {
+    // Persist order in Supabase and update code status
+    if (typeof OrderCodeStore !== "undefined" && verifiedOrderCode) {
+      try {
+        await OrderCodeStore.markCodeUsedAsync(verifiedOrderCode, {
+          clientName: clientName,
+          projectName: projectName,
+          orderTicket: randomTicket,
+          folderName: recommendedFolderName,
+          category: catTitles[activeCategory],
+          fullPayload: fullPayload
+        });
+      } catch (err) {
+        console.warn("OrderCodeStore markCodeUsed notice:", err);
+      }
+    } else if (supabaseClient) {
       try {
         await supabaseClient.from("bio_profiles").upsert({
           id: `order_${randomTicket.toLowerCase()}`,
@@ -831,7 +966,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btnText.style.display = "inline-flex";
     btnSpinner.style.display = "none";
 
-    ticketIdEl.textContent = randomTicket;
+    ticketIdEl.textContent = activeOrderCode !== "N/A" ? `${activeOrderCode} • ${randomTicket}` : randomTicket;
     ticketCatEl.textContent = `${catTitles[activeCategory]} (${projectName})`;
 
     const waBtn = document.querySelector(".btn-wa");

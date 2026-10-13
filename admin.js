@@ -550,4 +550,434 @@ document.addEventListener("DOMContentLoaded", async () => {
   renderSocialInputs();
   await populateProfileDropdown();
   await loadProfile("main");
+
+  // ==========================================================================
+  // TAB NAVIGATION (BIO SETTINGS vs ORDER CODES MANAGEMENT)
+  // ==========================================================================
+  const tabNavBio = document.getElementById("tab-nav-bio");
+  const tabNavCodes = document.getElementById("tab-nav-codes");
+  const tabContentBio = document.getElementById("tab-content-bio");
+  const tabContentCodes = document.getElementById("tab-content-codes");
+
+  const bioHeaderControls = document.getElementById("bio-header-controls");
+  const codesHeaderControls = document.getElementById("codes-header-controls");
+  const bioHeaderActions = document.getElementById("bio-header-actions");
+  const codesHeaderActions = document.getElementById("codes-header-actions");
+
+  function switchTab(target) {
+    if (target === "codes") {
+      tabNavBio.classList.remove("active");
+      tabNavCodes.classList.add("active");
+      tabContentBio.style.display = "none";
+      tabContentCodes.style.display = "block";
+
+      if (bioHeaderControls) bioHeaderControls.style.display = "none";
+      if (codesHeaderControls) codesHeaderControls.style.display = "flex";
+      if (bioHeaderActions) bioHeaderActions.style.display = "none";
+      if (codesHeaderActions) codesHeaderActions.style.display = "flex";
+
+      loadAndRenderCodes();
+    } else {
+      tabNavBio.classList.add("active");
+      tabNavCodes.classList.remove("active");
+      tabContentBio.style.display = "block";
+      tabContentCodes.style.display = "none";
+
+      if (bioHeaderControls) bioHeaderControls.style.display = "flex";
+      if (codesHeaderControls) codesHeaderControls.style.display = "none";
+      if (bioHeaderActions) bioHeaderActions.style.display = "flex";
+      if (codesHeaderActions) codesHeaderActions.style.display = "none";
+    }
+  }
+
+  if (tabNavBio) tabNavBio.addEventListener("click", () => switchTab("bio"));
+  if (tabNavCodes) tabNavCodes.addEventListener("click", () => switchTab("codes"));
+
+  // ==========================================================================
+  // ORDER CODES MANAGEMENT LOGIC
+  // ==========================================================================
+  const statActiveCodes = document.getElementById("stat-active-codes");
+  const statUsedCodes = document.getElementById("stat-used-codes");
+  const statTotalCodes = document.getElementById("stat-total-codes");
+  const navActiveCodesCount = document.getElementById("nav-active-codes-count");
+
+  const inputSearchCodes = document.getElementById("input-search-codes");
+  const selectFilterStatus = document.getElementById("select-filter-status");
+  const codesTableBody = document.getElementById("codes-table-body");
+
+  const btnOpenCreateCode = document.getElementById("btn-open-create-code");
+  const btnHeaderCreateCode = document.getElementById("btn-header-create-code");
+  const btnHeaderRefreshCodes = document.getElementById("btn-header-refresh-codes");
+
+  // Create Code Modal Elements
+  const modalCreateCode = document.getElementById("modal-create-code");
+  const modalCloseCreateCode = document.getElementById("modal-close-create-code");
+  const modalCancelCreateCode = document.getElementById("modal-cancel-create-code");
+  const modalConfirmCreateCode = document.getElementById("modal-confirm-create-code");
+  const inputNewCode = document.getElementById("input-new-code");
+  const inputNewClient = document.getElementById("input-new-client");
+  const inputNewNote = document.getElementById("input-new-note");
+  const btnRandomCode = document.getElementById("btn-random-code");
+
+  // Success Modal Elements
+  const modalCodeSuccess = document.getElementById("modal-code-success");
+  const modalCloseCodeSuccess = document.getElementById("modal-close-code-success");
+  const modalDoneCodeSuccess = document.getElementById("modal-done-code-success");
+  const displayCreatedCode = document.getElementById("display-created-code");
+  const btnCopyCreatedCode = document.getElementById("btn-copy-created-code");
+  const btnCopyFormLink = document.getElementById("btn-copy-form-link");
+  const btnWhatsappSendCode = document.getElementById("btn-whatsapp-send-code");
+
+  // View Order Modal Elements
+  const modalViewOrder = document.getElementById("modal-view-order");
+  const modalCloseViewOrder = document.getElementById("modal-close-view-order");
+  const modalDoneViewOrder = document.getElementById("modal-done-view-order");
+  const viewOrderFolderName = document.getElementById("view-order-folder-name");
+  const btnCopyFolderName = document.getElementById("btn-copy-folder-name");
+  const orderDetailsContainer = document.getElementById("order-details-container");
+  const btnCopyAllOrderJson = document.getElementById("btn-copy-all-order-json");
+
+  let allCodesList = [];
+  let lastCreatedCode = "";
+  let currentViewingOrder = null;
+
+  async function loadAndRenderCodes() {
+    if (typeof OrderCodeStore === "undefined") return;
+
+    if (codesTableBody) {
+      codesTableBody.innerHTML = `
+        <tr>
+          <td colspan="6" class="table-loading">
+            <i class="fa-solid fa-spinner fa-spin"></i> در حال بارگذاری کدهای سفارش از سرور...
+          </td>
+        </tr>
+      `;
+    }
+
+    try {
+      allCodesList = await OrderCodeStore.getAllCodesAsync();
+      updateCodesStats();
+      renderCodesTable();
+    } catch (err) {
+      console.error("Error loading order codes:", err);
+      if (codesTableBody) {
+        codesTableBody.innerHTML = `
+          <tr>
+            <td colspan="6" class="table-empty" style="color: #f87171;">
+              خطا در دریافت کدها از سرور. لطفاً اتصال اینترنت را بررسی فرمایید.
+            </td>
+          </tr>
+        `;
+      }
+    }
+  }
+
+  function updateCodesStats() {
+    const active = allCodesList.filter((c) => c.status === "active").length;
+    const used = allCodesList.filter((c) => c.status === "used").length;
+    const total = allCodesList.length;
+
+    if (statActiveCodes) statActiveCodes.textContent = active;
+    if (statUsedCodes) statUsedCodes.textContent = used;
+    if (statTotalCodes) statTotalCodes.textContent = total;
+    if (navActiveCodesCount) navActiveCodesCount.textContent = active;
+  }
+
+  function renderCodesTable() {
+    if (!codesTableBody) return;
+
+    const searchTerm = (inputSearchCodes ? inputSearchCodes.value : "").trim().toLowerCase();
+    const filterStatus = selectFilterStatus ? selectFilterStatus.value : "all";
+
+    const filtered = allCodesList.filter((item) => {
+      if (filterStatus !== "all" && item.status !== filterStatus) return false;
+      if (searchTerm) {
+        const c = (item.code || "").toLowerCase();
+        const client = (item.clientName || "").toLowerCase();
+        const note = (item.note || "").toLowerCase();
+        const proj = (item.projectName || "").toLowerCase();
+        return c.includes(searchTerm) || client.includes(searchTerm) || note.includes(searchTerm) || proj.includes(searchTerm);
+      }
+      return true;
+    });
+
+    if (filtered.length === 0) {
+      codesTableBody.innerHTML = `
+        <tr>
+          <td colspan="6" class="table-empty">
+            ${searchTerm || filterStatus !== "all" ? "هیچ کدی با فیلتر جستجوی شما یافت نشد." : "هنوز هیچ کدی ایجاد نشده است. برای مشتری جدید یک کد ایجاد کنید!"}
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    codesTableBody.innerHTML = filtered.map((item) => {
+      const codeStr = item.code;
+      const statusPill = item.status === "active"
+        ? `<span class="status-pill status-active"><i class="fa-solid fa-circle-dot"></i> فعال (آماده ارسال)</span>`
+        : item.status === "used"
+        ? `<span class="status-pill status-used"><i class="fa-solid fa-circle-check"></i> سفارش ثبت شد</span>`
+        : `<span class="status-pill status-revoked"><i class="fa-solid fa-ban"></i> غیرفعال</span>`;
+
+      const dateStr = item.createdAt ? new Date(item.createdAt).toLocaleDateString("fa-IR") : "---";
+
+      // Linked order / project folder recommendation
+      let orderCellHtml = "";
+      if (item.status === "used") {
+        const safeClient = (item.clientName || "Client").replace(/[^a-zA-Z0-9\u0600-\u06FF_-]/g, "_").replace(/_+/g, "_");
+        const folderName = `URCLUB_${OrderCodeStore.normalize(item.code)}_${safeClient}`;
+        orderCellHtml = `
+          <div class="order-cell-info">
+            <span class="order-title-tag"><i class="fa-solid fa-cubes"></i> ${item.projectName || "پروژه ثبت‌شده"}</span>
+            <div class="order-folder-tag" data-copy="${folderName}" title="کلیک برای کپی نام پوشه">
+              <i class="fa-regular fa-folder"></i> ${folderName}
+            </div>
+            <button type="button" class="btn-action-sm btn-action-view" data-action="view-order" data-code="${codeStr}">
+              <i class="fa-solid fa-eye"></i> مشاهده مشخصات کامل فرم
+            </button>
+          </div>
+        `;
+      } else {
+        orderCellHtml = `<span style="color: var(--text-muted); font-size: 0.84rem;">در انتظار ثبت توسط مشتری...</span>`;
+      }
+
+      const directFormUrl = `https://urclub.vercel.app/form?code=${encodeURIComponent(codeStr)}`;
+      const waMsg = encodeURIComponent(`سلام دوست عزیز،\nکد اختصاصی شما جهت ثبت سفارش در وبسایت URCLUB:\n🔑 کد: ${codeStr}\n🔗 لینک ورود مستقیم به فرم سفارش:\n${directFormUrl}\n\nبا تشکر، استودیو URCLUB`);
+      const waLink = `https://wa.me/?text=${waMsg}`;
+
+      return `
+        <tr>
+          <td>
+            <div class="code-cell-wrap">
+              <span>${codeStr}</span>
+              <button type="button" class="btn-table-icon" data-copy="${codeStr}" title="کپی کد">
+                <i class="fa-regular fa-copy"></i>
+              </button>
+            </div>
+          </td>
+          <td>
+            <strong>${item.clientName || "---"}</strong>
+            ${item.note ? `<br><small style="color: var(--text-muted);">${item.note}</small>` : ""}
+          </td>
+          <td style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted);">${dateStr}</td>
+          <td>${statusPill}</td>
+          <td>${orderCellHtml}</td>
+          <td>
+            <div class="table-actions">
+              <button type="button" class="btn-action-sm btn-action-view" data-copy="${directFormUrl}" title="کپی لینک اختصاصی فرم">
+                <i class="fa-solid fa-link"></i> لینک فرم
+              </button>
+              <a href="${waLink}" target="_blank" class="btn-action-sm btn-action-wa" title="ارسال پیام در واتساپ">
+                <i class="fa-brands fa-whatsapp"></i> واتساپ
+              </a>
+              <button type="button" class="btn-table-icon" data-action="toggle-status" data-code="${codeStr}" title="${item.status === 'revoked' ? 'فعال‌سازی مجدد' : 'غیرفعال‌سازی'}">
+                <i class="fa-solid ${item.status === 'revoked' ? 'fa-arrow-rotate-left' : 'fa-ban'}"></i>
+              </button>
+              <button type="button" class="btn-table-icon" style="color: #ef4444;" data-action="delete-code" data-code="${codeStr}" title="حذف کد">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join("");
+
+    // Attach copy buttons
+    codesTableBody.querySelectorAll("[data-copy]").forEach((el) => {
+      el.addEventListener("click", () => {
+        const text = el.dataset.copy;
+        navigator.clipboard.writeText(text);
+        showToast(`کپی شد: ${text}`);
+      });
+    });
+
+    // Attach row actions
+    codesTableBody.querySelectorAll("[data-action]").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const action = btn.dataset.action;
+        const code = btn.dataset.code;
+
+        if (action === "toggle-status") {
+          const item = allCodesList.find((c) => OrderCodeStore.normalize(c.code) === OrderCodeStore.normalize(code));
+          if (item) {
+            const nextStatus = item.status === "active" ? "revoked" : "active";
+            await OrderCodeStore.updateStatusAsync(code, nextStatus);
+            showToast(`وضعیت کد به ${nextStatus === 'active' ? 'فعال' : 'غیرفعال'} تغییر یافت.`);
+            await loadAndRenderCodes();
+          }
+        } else if (action === "delete-code") {
+          if (confirm(`آیا از حذف کد اختصاصی "${code}" اطمینان دارید؟`)) {
+            await OrderCodeStore.deleteCodeAsync(code);
+            showToast(`کد "${code}" حذف شد.`);
+            await loadAndRenderCodes();
+          }
+        } else if (action === "view-order") {
+          openViewOrderModal(code);
+        }
+      });
+    });
+  }
+
+  // Filter & Search Events
+  if (inputSearchCodes) inputSearchCodes.addEventListener("input", renderCodesTable);
+  if (selectFilterStatus) selectFilterStatus.addEventListener("change", renderCodesTable);
+  if (btnHeaderRefreshCodes) btnHeaderRefreshCodes.addEventListener("click", () => {
+    loadAndRenderCodes();
+    showToast("کدهای سفارش بروزرسانی شدند.");
+  });
+
+  // Open Create Code Modal
+  function openCreateCodeModal() {
+    if (!modalCreateCode) return;
+    modalCreateCode.classList.add("active");
+    if (inputNewCode) inputNewCode.value = OrderCodeStore.generateCode();
+    if (inputNewClient) inputNewClient.value = "";
+    if (inputNewNote) inputNewNote.value = "";
+    if (inputNewClient) inputNewClient.focus();
+  }
+
+  if (btnOpenCreateCode) btnOpenCreateCode.addEventListener("click", openCreateCodeModal);
+  if (btnHeaderCreateCode) btnHeaderCreateCode.addEventListener("click", openCreateCodeModal);
+
+  if (btnRandomCode) {
+    btnRandomCode.addEventListener("click", () => {
+      if (inputNewCode) inputNewCode.value = OrderCodeStore.generateCode();
+    });
+  }
+
+  if (modalCloseCreateCode) modalCloseCreateCode.addEventListener("click", () => modalCreateCode.classList.remove("active"));
+  if (modalCancelCreateCode) modalCancelCreateCode.addEventListener("click", () => modalCreateCode.classList.remove("active"));
+
+  if (modalConfirmCreateCode) {
+    modalConfirmCreateCode.addEventListener("click", async () => {
+      const codeVal = (inputNewCode ? inputNewCode.value : "").trim().toUpperCase();
+      const clientVal = (inputNewClient ? inputNewClient.value : "").trim();
+      const noteVal = (inputNewNote ? inputNewNote.value : "").trim();
+
+      if (!codeVal) {
+        alert("لطفاً یک کد معتبر وارد فرمایید یا روی دکمه تصادفی بزنید.");
+        return;
+      }
+
+      try {
+        const created = await OrderCodeStore.createCodeAsync({
+          code: codeVal,
+          clientName: clientVal,
+          note: noteVal
+        });
+
+        lastCreatedCode = created.code;
+        modalCreateCode.classList.remove("active");
+        showToast(`کد اختصاصی ${created.code} با موفقیت ثبت و فعال شد!`);
+
+        openSuccessModal(created.code);
+        await loadAndRenderCodes();
+      } catch (err) {
+        alert(err.message || "خطا در ایجاد کد.");
+      }
+    });
+  }
+
+  // Success Modal
+  function openSuccessModal(code) {
+    if (!modalCodeSuccess) return;
+    if (displayCreatedCode) displayCreatedCode.textContent = code;
+
+    const directFormUrl = `https://urclub.vercel.app/form?code=${encodeURIComponent(code)}`;
+    const waMsg = encodeURIComponent(`سلام دوست عزیز،\nکد اختصاصی شما جهت ثبت سفارش در وبسایت URCLUB:\n🔑 کد: ${code}\n🔗 لینک ورود مستقیم به فرم سفارش:\n${directFormUrl}\n\nبا تشکر، استودیو URCLUB`);
+
+    if (btnWhatsappSendCode) {
+      btnWhatsappSendCode.href = `https://wa.me/?text=${waMsg}`;
+    }
+
+    if (btnCopyCreatedCode) {
+      btnCopyCreatedCode.onclick = () => {
+        navigator.clipboard.writeText(code);
+        showToast(`کد ${code} کپی شد!`);
+      };
+    }
+
+    if (btnCopyFormLink) {
+      btnCopyFormLink.onclick = () => {
+        navigator.clipboard.writeText(directFormUrl);
+        showToast("لینک مستقیم فرم کپی شد!");
+      };
+    }
+
+    modalCodeSuccess.classList.add("active");
+  }
+
+  if (modalCloseCodeSuccess) modalCloseCodeSuccess.addEventListener("click", () => modalCodeSuccess.classList.remove("active"));
+  if (modalDoneCodeSuccess) modalDoneCodeSuccess.addEventListener("click", () => modalCodeSuccess.classList.remove("active"));
+
+  // View Order Details Modal
+  async function openViewOrderModal(code) {
+    if (!modalViewOrder) return;
+    modalViewOrder.classList.add("active");
+
+    if (orderDetailsContainer) {
+      orderDetailsContainer.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> در حال دریافت مشخصات سفارش...</div>`;
+    }
+
+    try {
+      const orderData = await OrderCodeStore.getOrderDetailsAsync(code);
+      currentViewingOrder = orderData;
+
+      const codeItem = allCodesList.find((c) => OrderCodeStore.normalize(c.code) === OrderCodeStore.normalize(code));
+      const clientName = (orderData && orderData["Client Name / نام کارفرما"]) || (codeItem && codeItem.clientName) || "Client";
+      const safeClient = clientName.replace(/[^a-zA-Z0-9\u0600-\u06FF_-]/g, "_").replace(/_+/g, "_");
+      const folderName = `URCLUB_${OrderCodeStore.normalize(code)}_${safeClient}`;
+
+      if (viewOrderFolderName) viewOrderFolderName.textContent = folderName;
+      if (btnCopyFolderName) {
+        btnCopyFolderName.onclick = () => {
+          navigator.clipboard.writeText(folderName);
+          showToast(`نام فولدر کپی شد: ${folderName}`);
+        };
+      }
+
+      if (orderData && orderDetailsContainer) {
+        const ignoredKeys = ["_captcha", "_template", "normCode", "updated_at"];
+        orderDetailsContainer.innerHTML = Object.entries(orderData)
+          .filter(([k]) => !ignoredKeys.includes(k))
+          .map(([k, v]) => `
+            <div class="order-detail-card">
+              <span class="detail-label">${k}</span>
+              <span class="detail-val">${String(v)}</span>
+            </div>
+          `).join("");
+      } else if (orderDetailsContainer) {
+        orderDetailsContainer.innerHTML = `
+          <div style="text-align:center; padding:20px; color:var(--text-muted);">
+            مشخصات تکمیلی این سفارش در دیتابیس با شناسه اختصاصی یافت نشد. کد سفارش: ${code}
+          </div>
+        `;
+      }
+    } catch (err) {
+      console.error("Error viewing order:", err);
+      if (orderDetailsContainer) {
+        orderDetailsContainer.innerHTML = `<div style="color:#f87171; text-align:center;">خطا در بارگذاری مشخصات سفارش.</div>`;
+      }
+    }
+  }
+
+  if (modalCloseViewOrder) modalCloseViewOrder.addEventListener("click", () => modalViewOrder.classList.remove("active"));
+  if (modalDoneViewOrder) modalDoneViewOrder.addEventListener("click", () => modalViewOrder.classList.remove("active"));
+
+  if (btnCopyAllOrderJson) {
+    btnCopyAllOrderJson.addEventListener("click", () => {
+      if (currentViewingOrder) {
+        navigator.clipboard.writeText(JSON.stringify(currentViewingOrder, null, 2));
+        showToast("متن کامل مشخصات سفارش به صورت JSON کپی شد!");
+      }
+    });
+  }
+
+  // Pre-load codes count badge on init
+  OrderCodeStore.getAllCodesAsync().then((list) => {
+    allCodesList = list;
+    updateCodesStats();
+  }).catch(() => {});
 });
+

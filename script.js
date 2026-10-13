@@ -395,4 +395,117 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     }, 250);
   });
+
+  // ==========================================================================
+  // FLOATING ORDER GATE MODAL HANDLERS
+  // ==========================================================================
+  const btnOpenOrder = document.getElementById("btn-open-order-modal");
+  const modalOrderGate = document.getElementById("modal-order-gate");
+  const btnCloseOrder = document.getElementById("btn-close-order-modal");
+  const orderCodeForm = document.getElementById("order-code-form");
+  const orderCodeInput = document.getElementById("order-code-input");
+  const orderCodeError = document.getElementById("order-code-error");
+  const btnVerify = document.getElementById("btn-verify-order-code");
+  const btnVerifyText = btnVerify ? btnVerify.querySelector(".btn-verify-text") : null;
+  const btnVerifySpinner = btnVerify ? btnVerify.querySelector(".btn-verify-spinner") : null;
+
+  function openOrderModal() {
+    if (!modalOrderGate) return;
+    modalOrderGate.style.display = "flex";
+    if (orderCodeError) orderCodeError.style.display = "none";
+    if (orderCodeInput) {
+      orderCodeInput.value = "";
+      setTimeout(() => orderCodeInput.focus(), 150);
+    }
+  }
+
+  function closeOrderModal() {
+    if (!modalOrderGate) return;
+    modalOrderGate.style.display = "none";
+  }
+
+  if (btnOpenOrder) {
+    btnOpenOrder.addEventListener("click", (e) => {
+      e.stopPropagation();
+      openOrderModal();
+    });
+  }
+
+  if (btnCloseOrder) {
+    btnCloseOrder.addEventListener("click", (e) => {
+      e.stopPropagation();
+      closeOrderModal();
+    });
+  }
+
+  if (modalOrderGate) {
+    modalOrderGate.addEventListener("click", (e) => {
+      if (e.target === modalOrderGate) {
+        closeOrderModal();
+      }
+    });
+  }
+
+  // Format code input while typing (uppercase and auto-hyphen if 8 chars)
+  if (orderCodeInput) {
+    orderCodeInput.addEventListener("input", (e) => {
+      let val = e.target.value.toUpperCase().replace(/[^A-Z0-9-]/g, "");
+      e.target.value = val;
+      if (orderCodeError) orderCodeError.style.display = "none";
+    });
+  }
+
+  // Verify Code Form Submit
+  if (orderCodeForm) {
+    orderCodeForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const rawCode = orderCodeInput ? orderCodeInput.value.trim() : "";
+      if (!rawCode) return;
+
+      // Loading UI
+      if (btnVerify) btnVerify.disabled = true;
+      if (btnVerifyText) btnVerifyText.style.display = "none";
+      if (btnVerifySpinner) btnVerifySpinner.style.display = "inline-flex";
+      if (orderCodeError) orderCodeError.style.display = "none";
+
+      try {
+        if (typeof OrderCodeStore !== "undefined") {
+          const result = await OrderCodeStore.verifyCodeAsync(rawCode);
+          if (result.valid) {
+            const formattedCode = result.codeObj.code;
+            try {
+              sessionStorage.setItem("urclub_order_code", formattedCode);
+            } catch (err) {}
+            // Redirect to form with code
+            window.location.href = `form.html?code=${encodeURIComponent(formattedCode)}`;
+            return;
+          } else {
+            let errorMsg = "کد وارد شده معتبر نمی‌باشد. لطفاً مجدداً بررسی فرمایید.";
+            if (result.reason === "alreadyUsed") {
+              errorMsg = "این کد قبلاً استفاده شده و سفارش آن ثبت گردیده است. جهت ثبت سفارش جدید، کد دیگری از واتساپ دریافت فرمایید.";
+            } else if (result.reason === "revoked") {
+              errorMsg = "این کد توسط مدیریت غیرفعال شده است. لطفاً با پشتیبانی در تماس باشید.";
+            }
+            if (orderCodeError) {
+              orderCodeError.textContent = errorMsg;
+              orderCodeError.style.display = "block";
+            }
+          }
+        } else {
+          // Fallback redirect if offline
+          window.location.href = `form.html?code=${encodeURIComponent(rawCode)}`;
+        }
+      } catch (err) {
+        console.error("Code verification error:", err);
+        if (orderCodeError) {
+          orderCodeError.textContent = "خطا در برقراری ارتباط با سرور. لطفاً مجدداً تلاش کنید.";
+          orderCodeError.style.display = "block";
+        }
+      } finally {
+        if (btnVerify) btnVerify.disabled = false;
+        if (btnVerifyText) btnVerifyText.style.display = "inline-flex";
+        if (btnVerifySpinner) btnVerifySpinner.style.display = "none";
+      }
+    });
+  }
 });

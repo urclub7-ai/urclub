@@ -313,3 +313,223 @@ class ProfileStore {
     } catch (e) {}
   }
 }
+
+/**
+ * ============================================================================
+ * OrderCodeStore - Cloud-Synced Order Access & Tracking Codes (Supabase)
+ * ============================================================================
+ */
+const ORDER_CODES_DOC_ID = "urclub_order_codes";
+const ORDER_CODES_LOCAL_KEY = "urclub_cached_order_codes";
+
+class OrderCodeStore {
+  static getSupabase() {
+    return ProfileStore.getSupabase();
+  }
+
+  // Normalize code for comparison (uppercase, strip hyphens & whitespace)
+  static normalize(code) {
+    if (!code) return "";
+    return String(code).trim().toUpperCase().replace(/[^A-Z0-9]/g, "");
+  }
+
+  // Format 8-char code as XXXX-XXXX for presentation
+  static formatDisplay(code) {
+    const clean = this.normalize(code);
+    if (clean.length === 8) {
+      return `${clean.slice(0, 4)}-${clean.slice(4)}`;
+    }
+    return code ? String(code).toUpperCase() : "";
+  }
+
+  // Generate crisp 8-character alphanumeric code
+  static generateCode() {
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // omits confusing 0/O, 1/I
+    let p1 = "", p2 = "";
+    for (let i = 0; i < 4; i++) p1 += chars.charAt(Math.floor(Math.random() * chars.length));
+    for (let i = 0; i < 4; i++) p2 += chars.charAt(Math.floor(Math.random() * chars.length));
+    return `${p1}-${p2}`;
+  }
+
+  // Fetch all codes from Cloud with Local fallback
+  static async getAllCodesAsync() {
+    const sb = this.getSupabase();
+    if (sb) {
+      try {
+        const { data, error } = await sb
+          .from("bio_profiles")
+          .select("data")
+          .eq("id", ORDER_CODES_DOC_ID)
+          .single();
+        if (!error && data && data.data && Array.isArray(data.data.codes)) {
+          try {
+            localStorage.setItem(ORDER_CODES_LOCAL_KEY, JSON.stringify(data.data.codes));
+          } catch (e) {}
+          return data.data.codes;
+        }
+      } catch (e) {
+        console.warn("OrderCodeStore getAllCodesAsync error:", e);
+      }
+    }
+
+    try {
+      const cached = localStorage.getItem(ORDER_CODES_LOCAL_KEY);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch (e) {}
+
+    return [];
+  }
+
+  // Save codes list to Cloud
+  static async saveCodesAsync(codesList) {
+    try {
+      localStorage.setItem(ORDER_CODES_LOCAL_KEY, JSON.stringify(codesList));
+    } catch (e) {}
+
+    const sb = this.getSupabase();
+    if (sb) {
+      try {
+        await sb.from("bio_profiles").upsert({
+          id: ORDER_CODES_DOC_ID,
+          data: { codes: codesList },
+          updated_at: new Date().toISOString()
+        });
+        return true;
+      } catch (e) {
+        console.error("OrderCodeStore saveCodesAsync error:", e);
+      }
+    }
+    return false;
+  }
+
+  // Verify a code entered by a customer
+  static async verifyCodeAsync(rawInput) {
+    const norm = this.normalize(rawInput);
+    if (!norm) return { valid: false, reason: "empty" };
+
+    const list = await this.getAllCodesAsync();
+    const match = list.find((item) => this.normalize(item.code) === norm);
+
+    if (!match) {
+      return { valid: false, reason: "notFound" };
+    }
+
+    if (match.status === "used") {
+      return { valid: false, reason: "alreadyUsed", codeObj: match };
+    }
+
+    if (match.status === "revoked") {
+      return { valid: false, reason: "revoked", codeObj: match };
+    }
+
+    return { valid: true, codeObj: match };
+  }
+
+  // Create and register a new code
+  static async createCodeAsync({ code, clientName, note }) {
+    const formatted = code ? code.trim().toUpperCase() : this.generateCode();
+    const norm = this.normalize(formatted);
+    const list = await this.getAllCodesAsync();
+
+    if (list.some((item) => this.normalize(item.code) === norm)) {
+      throw new Error("این کد قبلاً در سیستم ثبت شده است.");
+    }
+
+    const newEntry = {
+      code: formatted,
+      normalized: norm,
+      clientName: (clientName || "").trim() || "مشتری جدید",
+      note: (note || "").trim(),
+      status: "active", // "active" | "used" | "revoked"
+      createdAt: new Date().toISOString(),
+      usedAt: null,
+      orderTicket: null,
+      projectName: null
+    };
+
+    list.unshift(newEntry);
+    await this.saveCodesAsync(list);
+    return newEntry;
+  }
+
+  // Mark code as used when customer submits order
+  static async markCodeUsedAsync(rawCode, orderDetails = {}) {
+    const norm = this.normalize(rawCode);
+    const list = await this.getAllCodesAsync();
+    const idx = list.findIndex((item) => this.normalize(item.code) === norm);
+
+    if (idx !== -1) {
+      list[idx].status = "used";
+      list[idx].usedAt = new Date().toISOString();
+      if (orderDetails.clientName) list[idx].clientName = orderDetails.clientName;
+      if (orderDetails.projectName) list[idx].projectName = orderDetails.projectName;
+      if (orderDetails.orderTicket) list[idx].orderTicket = orderDetails.orderTicket;
+      await this.saveCodesAsync(list);
+    }
+
+    // Also persist order record in bio_profiles under order_<norm>
+    const sb = this.getSupabase();
+    if (sb) {
+      try {
+        await sb.from("bio_profiles").upsert({
+          id: `order_${norm.toLowerCase()}`,
+          data: {
+            code: rawCode,
+            normCode: norm,
+            ...orderDetails,
+            updated_at: new Date().toISOString()
+          },
+          updated_at: new Date().toISOString()
+        });
+      } catch (e) {
+        console.warn("Order persistence notice:", e);
+      }
+    }
+
+    return true;
+  }
+
+  // Toggle or change status
+  static async updateStatusAsync(rawCode, newStatus) {
+    const norm = this.normalize(rawCode);
+    const list = await this.getAllCodesAsync();
+    const item = list.find((c) => this.normalize(c.code) === norm);
+    if (item) {
+      item.status = newStatus;
+      await this.saveCodesAsync(list);
+      return true;
+    }
+    return false;
+  }
+
+  // Delete code
+  static async deleteCodeAsync(rawCode) {
+    const norm = this.normalize(rawCode);
+    let list = await this.getAllCodesAsync();
+    list = list.filter((c) => this.normalize(c.code) !== norm);
+    await this.saveCodesAsync(list);
+    return true;
+  }
+
+  // Fetch full submitted order details for a code
+  static async getOrderDetailsAsync(rawCode) {
+    const norm = this.normalize(rawCode);
+    const sb = this.getSupabase();
+    if (sb) {
+      try {
+        const { data, error } = await sb
+          .from("bio_profiles")
+          .select("data")
+          .eq("id", `order_${norm.toLowerCase()}`)
+          .single();
+        if (!error && data && data.data) {
+          return data.data;
+        }
+      } catch (e) {}
+    }
+    return null;
+  }
+}

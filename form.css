@@ -65,6 +65,210 @@ body.lang-fa, body.fa {
 }
 
 /* ==========================================================================
+   ORDER ACCESS CODE GATE OVERLAY (STRICT SECURITY LOCK SCREEN)
+   ========================================================================== */
+.code-gate-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 4, 8, 0.94);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: codeGateFade 0.3s ease forwards;
+  direction: rtl;
+}
+
+.code-gate-card {
+  background: linear-gradient(145deg, #0e121e, #070911);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  border-radius: var(--radius-lg);
+  padding: 38px 30px;
+  max-width: 460px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.9), 0 0 40px rgba(56, 189, 248, 0.25);
+  animation: codeCardPop 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.code-gate-icon {
+  width: 68px;
+  height: 68px;
+  margin: 0 auto 18px auto;
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(168, 85, 247, 0.25));
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 25px rgba(56, 189, 248, 0.3);
+}
+
+.code-gate-icon i {
+  font-size: 28px;
+  color: #38bdf8;
+}
+
+.code-gate-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 10px;
+}
+
+.code-gate-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+
+.code-gate-subtitle strong {
+  color: #38bdf8;
+}
+
+.code-gate-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.code-gate-input-wrap {
+  width: 100%;
+}
+
+.code-gate-input {
+  width: 100%;
+  padding: 15px 18px;
+  background: rgba(0, 0, 0, 0.65);
+  border: 1.5px solid rgba(56, 189, 248, 0.4);
+  border-radius: var(--radius-md);
+  color: #38bdf8;
+  font-family: var(--font-mono);
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.code-gate-input:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 25px rgba(56, 189, 248, 0.45);
+  background: rgba(0, 0, 0, 0.85);
+}
+
+.code-gate-error {
+  padding: 11px 14px;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  border-radius: 12px;
+  color: #fca5a5;
+  font-size: 0.86rem;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.btn-gate-submit {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, #0284c7, #38bdf8);
+  border: none;
+  border-radius: var(--radius-md);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 1.02rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+}
+
+.btn-gate-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(2, 132, 199, 0.6);
+  background: linear-gradient(135deg, #0369a1, #38bdf8);
+}
+
+.code-gate-footer {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+.whatsapp-gate-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #22c55e;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.whatsapp-gate-link:hover {
+  color: #4ade80;
+  text-decoration: underline;
+  transform: scale(1.02);
+}
+
+/* Header Code Verified Pill */
+.header-code-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: rgba(14, 23, 42, 0.85);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  border-radius: var(--radius-full);
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.18);
+}
+
+.header-code-pill strong {
+  color: #38bdf8;
+  font-family: var(--font-mono);
+  letter-spacing: 1px;
+}
+
+.header-code-pill i {
+  color: #38bdf8;
+  font-size: 0.85rem;
+}
+
+.code-verified-icon {
+  color: #22c55e;
+  font-size: 0.8rem;
+  margin-right: 2px;
+}
+
+@keyframes codeGateFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes codeCardPop {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ==========================================================================
    LANGUAGE GATE OVERLAY (BLURS THE SITE UNTIL LANGUAGE IS CHOSEN)
    ========================================================================== */
 .lang-gate-overlay {

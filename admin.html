@@ -26,30 +26,63 @@
         <img src="assets/logo.png" alt="URCLUB" style="width: 28px; height: 28px; border-radius: 7px; object-fit: cover; box-shadow: 0 0 10px rgba(56,189,248,0.4);" />
         <span>URCLUB <strong>ADMIN</strong></span>
       </div>
+
+      <!-- Main Navigation Tabs -->
+      <nav class="admin-top-nav">
+        <button type="button" id="tab-nav-bio" class="top-nav-btn active">
+          <i class="fa-solid fa-user-gear"></i>
+          <span>تنظیمات بیو</span>
+        </button>
+        <button type="button" id="tab-nav-codes" class="top-nav-btn">
+          <i class="fa-solid fa-key"></i>
+          <span>کدهای سفارش</span>
+          <span class="nav-count-badge" id="nav-active-codes-count">0</span>
+        </button>
+      </nav>
       
-      <!-- Profile Switcher -->
-      <div class="profile-select-wrap">
+      <!-- Profile Switcher (Visible on Bio tab) -->
+      <div class="profile-select-wrap" id="bio-header-controls">
         <label for="profile-select">Current Profile:</label>
         <select id="profile-select" class="profile-dropdown"></select>
+        <button id="btn-add-profile" class="btn btn-outline">
+          <i class="fa-solid fa-plus"></i> New Profile
+        </button>
       </div>
 
-      <button id="btn-add-profile" class="btn btn-outline">
-        <i class="fa-solid fa-plus"></i> New Profile
-      </button>
+      <!-- Codes Quick Action (Visible on Codes tab) -->
+      <div class="codes-header-controls" id="codes-header-controls" style="display: none;">
+        <button type="button" id="btn-header-create-code" class="btn btn-primary">
+          <i class="fa-solid fa-plus"></i> ساخت کد سفارش جدید
+        </button>
+        <button type="button" id="btn-header-refresh-codes" class="btn btn-outline" title="بروزرسانی داده‌های ابری">
+          <i class="fa-solid fa-arrows-rotate"></i> بروزرسانی
+        </button>
+      </div>
     </div>
 
     <div class="header-right">
-      <button id="btn-delete-profile" class="btn btn-danger-outline" title="Delete current profile">
-        <i class="fa-solid fa-trash-can"></i> Delete
-      </button>
-      <a id="btn-view-public" href="index.html" target="_blank" class="btn btn-secondary">
-        <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Live Bio
-      </a>
-      <button id="btn-save-all" class="btn btn-primary">
-        <i class="fa-solid fa-floppy-disk"></i> Save Changes
-      </button>
+      <div id="bio-header-actions" class="header-actions-group">
+        <button id="btn-delete-profile" class="btn btn-danger-outline" title="Delete current profile">
+          <i class="fa-solid fa-trash-can"></i> Delete
+        </button>
+        <a id="btn-view-public" href="index.html" target="_blank" class="btn btn-secondary">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Live Bio
+        </a>
+        <button id="btn-save-all" class="btn btn-primary">
+          <i class="fa-solid fa-floppy-disk"></i> Save Changes
+        </button>
+      </div>
+
+      <div id="codes-header-actions" class="header-actions-group" style="display: none;">
+        <a href="form.html" target="_blank" class="btn btn-secondary" title="مشاهده فرم آنلاین">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> باز کردن فرم
+        </a>
+      </div>
     </div>
   </header>
+
+  <!-- TAB 1: BIO PROFILES VIEW -->
+  <div id="tab-content-bio" class="tab-content-pane active">
 
   <!-- Main Admin Layout -->
   <div class="admin-layout">
@@ -285,6 +318,193 @@
       </div>
     </div>
 
+  </div>
+  </div> <!-- END TAB 1: BIO PROFILES VIEW -->
+
+  <!-- ===================================================================== -->
+  <!-- TAB 2: ORDER CODES MANAGEMENT VIEW                                    -->
+  <!-- ===================================================================== -->
+  <div id="tab-content-codes" class="tab-content-pane" style="display: none;">
+    <div class="codes-manager-container">
+
+      <!-- Top KPI Stats Row -->
+      <div class="codes-stats-grid">
+        <div class="stat-card stat-card-active">
+          <div class="stat-icon"><i class="fa-solid fa-key"></i></div>
+          <div class="stat-info">
+            <span class="stat-label">کدهای فعال و آماده مشتری</span>
+            <strong class="stat-val" id="stat-active-codes">0</strong>
+          </div>
+        </div>
+
+        <div class="stat-card stat-card-used">
+          <div class="stat-icon"><i class="fa-solid fa-clipboard-check"></i></div>
+          <div class="stat-info">
+            <span class="stat-label">سفارش‌های ثبت شده (Used)</span>
+            <strong class="stat-val" id="stat-used-codes">0</strong>
+          </div>
+        </div>
+
+        <div class="stat-card stat-card-total">
+          <div class="stat-icon"><i class="fa-solid fa-database"></i></div>
+          <div class="stat-info">
+            <span class="stat-label">مجموع کدهای سیستم</span>
+            <strong class="stat-val" id="stat-total-codes">0</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls & Action Bar -->
+      <div class="codes-action-bar">
+        <div class="codes-search-wrap">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input type="text" id="input-search-codes" placeholder="جستجو بر اساس کد، نام مشتری یا یادداشت..." />
+        </div>
+
+        <div class="codes-filter-group">
+          <select id="select-filter-status" class="codes-filter-select">
+            <option value="all">همه وضعیت‌ها</option>
+            <option value="active">🟢 فقط کدهای فعال</option>
+            <option value="used">🔵 سفارش‌های ثبت شده</option>
+            <option value="revoked">🔴 کدهای غیرفعال</option>
+          </select>
+
+          <button type="button" id="btn-open-create-code" class="btn btn-primary">
+            <i class="fa-solid fa-plus"></i> ساخت کد سفارش جدید
+          </button>
+        </div>
+      </div>
+
+      <!-- Codes Table Card -->
+      <div class="admin-card table-card">
+        <div class="table-responsive">
+          <table class="codes-table">
+            <thead>
+              <tr>
+                <th>کد اختصاصی (۸ رقم)</th>
+                <th>مشتری / یادداشت</th>
+                <th>تاریخ ایجاد</th>
+                <th>وضعیت</th>
+                <th>مشخصات پروژه & فولدر پیشنهادی</th>
+                <th>عملیات</th>
+              </tr>
+            </thead>
+            <tbody id="codes-table-body">
+              <tr>
+                <td colspan="6" class="table-loading">
+                  <i class="fa-solid fa-spinner fa-spin"></i> در حال بارگذاری کدهای سفارش از سرور...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Modal: Create New Order Code -->
+  <div id="modal-create-code" class="modal-overlay">
+    <div class="modal-content modal-md">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-key"></i> ساخت کد اختصاصی جدید</h3>
+        <button type="button" id="modal-close-create-code" class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="input-new-code">کد اختصاصی (۸ رقمی ترکیبی)</label>
+          <div class="code-gen-input-row">
+            <input type="text" id="input-new-code" placeholder="مثال: A7K9-B2W8" maxlength="14" spellcheck="false" />
+            <button type="button" id="btn-random-code" class="btn btn-outline" title="تولید تصادفی کد">
+              <i class="fa-solid fa-dice"></i> تصادفی
+            </button>
+          </div>
+          <span class="views-mode-hint">کد ۸ حرف و عدد است که برای مشتری ارسال می‌کنید تا فرم را باز کند.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="input-new-client">نام مشتری یا مخاطب (اختیاری)</label>
+          <input type="text" id="input-new-client" placeholder="مثال: علی رضایی یا مشتری شماره ۲ واتساپ" />
+        </div>
+
+        <div class="form-group">
+          <label for="input-new-note">یادداشت برای خودتان (اختیاری)</label>
+          <input type="text" id="input-new-note" placeholder="مثال: سفارش وبسایت فروشگاهی لباس" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="modal-cancel-create-code" class="btn btn-outline">انصراف</button>
+        <button type="button" id="modal-confirm-create-code" class="btn btn-primary">
+          <i class="fa-solid fa-check"></i> ثبت و فعال‌سازی کد
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Code Created Success & Share Box -->
+  <div id="modal-code-success" class="modal-overlay">
+    <div class="modal-content modal-md">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-circle-check" style="color: #22c55e;"></i> کد با موفقیت ایجاد شد!</h3>
+        <button type="button" id="modal-close-code-success" class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body text-center">
+        <p class="modal-desc">کد اختصاصی زیر در سرور فعال شد. می‌توانید آن را کپی کرده یا مستقیماً به واتساپ مشتری ارسال کنید:</p>
+
+        <div class="created-code-box" id="created-code-box">
+          <span id="display-created-code">----</span>
+          <button type="button" id="btn-copy-created-code" class="btn-copy-code-sm" title="کپی کد">
+            <i class="fa-regular fa-copy"></i> کپی کد
+          </button>
+        </div>
+
+        <div class="share-actions-row">
+          <button type="button" id="btn-copy-form-link" class="btn btn-outline">
+            <i class="fa-solid fa-link"></i> کپی لینک مستقیم فرم
+          </button>
+          <a id="btn-whatsapp-send-code" href="#" target="_blank" class="btn btn-whatsapp">
+            <i class="fa-brands fa-whatsapp"></i> ارسال به مشتری در واتساپ
+          </a>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="modal-done-code-success" class="btn btn-primary">متوجه شدم</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: View Submitted Order Details -->
+  <div id="modal-view-order" class="modal-overlay">
+    <div class="modal-content modal-lg">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-clipboard-list"></i> مشخصات ثبت‌شده سفارش پروژه</h3>
+        <button type="button" id="modal-close-view-order" class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="order-folder-banner">
+          <div class="folder-banner-left">
+            <i class="fa-solid fa-folder-open"></i>
+            <div>
+              <span class="folder-label">پیشنهاد نام پوشه پروژه در سیستم شما:</span>
+              <strong id="view-order-folder-name" class="folder-name-val">URCLUB_ORDER_...</strong>
+            </div>
+          </div>
+          <button type="button" id="btn-copy-folder-name" class="btn btn-outline btn-sm">
+            <i class="fa-regular fa-copy"></i> کپی نام فولدر
+          </button>
+        </div>
+
+        <div id="order-details-container" class="order-details-grid">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="btn-copy-all-order-json" class="btn btn-outline">
+          <i class="fa-solid fa-code"></i> کپی متن کامل مشخصات
+        </button>
+        <button type="button" id="modal-done-view-order" class="btn btn-primary">بستن پنجره</button>
+      </div>
+    </div>
   </div>
 
   <!-- Toast Notification -->

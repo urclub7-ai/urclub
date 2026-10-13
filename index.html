@@ -63,6 +63,58 @@
     <div class="bg-vignette"></div>
   </div>
 
+  <!-- Top Corner: Floating Order Button -->
+  <button id="btn-open-order-modal" class="floating-order-btn" title="ثبت سفارش اختصاصی">
+    <i class="fa-solid fa-cart-shopping"></i>
+    <span>سفارش</span>
+  </button>
+
+  <!-- Order Access Code Verification Modal -->
+  <div id="modal-order-gate" class="order-modal-backdrop" style="display: none;">
+    <div class="order-modal-card">
+      <button type="button" id="btn-close-order-modal" class="order-modal-close" title="بستن">&times;</button>
+      
+      <div class="order-modal-header">
+        <div class="order-modal-icon-badge">
+          <i class="fa-solid fa-key"></i>
+        </div>
+        <h2 class="order-modal-title">ورود به بخش ثبت سفارش</h2>
+        <p class="order-modal-desc">
+          برای دسترسی به فرم و ثبت مشخصات پروژه، لطفاً <strong>کد اختصاصی ۸ رقمی</strong> که از پشتیبانی دریافت کرده‌اید را وارد کنید:
+        </p>
+      </div>
+
+      <form id="order-code-form" class="order-code-form" autocomplete="off">
+        <div class="order-input-wrapper">
+          <input 
+            type="text" 
+            id="order-code-input" 
+            class="order-code-input" 
+            placeholder="مثال: A7K9-B2W8" 
+            maxlength="14" 
+            required 
+            spellcheck="false"
+          />
+          <span class="order-input-hint">کد ترکیبی از حروف و اعداد است</span>
+        </div>
+
+        <div id="order-code-error" class="order-code-error" style="display: none;"></div>
+
+        <button type="submit" id="btn-verify-order-code" class="btn-verify-order">
+          <span class="btn-verify-text"><i class="fa-solid fa-arrow-left"></i> تایید و ورود به فرم</span>
+          <span class="btn-verify-spinner" style="display: none;"><i class="fa-solid fa-spinner fa-spin"></i> در حال بررسی کد...</span>
+        </button>
+      </form>
+
+      <div class="order-modal-footer">
+        <span>کد اختصاصی سفارش ندارید؟</span>
+        <a href="https://wa.me/491624212685?text=%D8%B3%D9%84%D8%A7%D9%85%D8%8C%20%D9%85%D9%86%20%DA%A9%D8%AF%20%D8%A7%D8%AE%D8%AA%D8%B5%D8%A7%D8%B5%DB%8C%20%D8%A8%D8%B1%D8%A7%DB%8C%20%D8%AB%D8%A8%D8%AA%20%D8%B3%D9%81%D8%A7%D8%B1%D8%B4%20%D8%AF%D8%B1%20%D8%B3%D8%A7%DB%8C%D8%AA%20URCLUB%20%D9%85%DB%8C%E2%80%8C%D8%AE%D9%88%D8%A7%D9%87%D9%85." target="_blank" class="whatsapp-request-link">
+          <i class="fa-brands fa-whatsapp"></i> دریافت کد از طریق واتساپ
+        </a>
+      </div>
+    </div>
+  </div>
+
   <!-- Center Profile Container -->
   <main class="profile-container">
     

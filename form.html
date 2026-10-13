@@ -45,6 +45,49 @@
 <body>
 
   <!-- ======================================================== -->
+  <!-- ORDER ACCESS CODE GATE OVERLAY (STRICT SECURITY LOCK) -->
+  <!-- ======================================================== -->
+  <div class="code-gate-overlay" id="code-gate-overlay" style="display: none;">
+    <div class="code-gate-card">
+      <div class="code-gate-icon">
+        <i class="fa-solid fa-lock"></i>
+      </div>
+      <h2 class="code-gate-title">فرم اختصاصی ثبت پروژه URCLUB</h2>
+      <p class="code-gate-subtitle">
+        دسترسی به این فرم حفاظت‌شده است. جهت باز شدن فرم، لطفاً <strong>کد اختصاصی ۸ رقمی</strong> دریافتی از پشتیبانی را وارد کنید:
+      </p>
+
+      <form id="form-gate-code-form" class="code-gate-form" autocomplete="off">
+        <div class="code-gate-input-wrap">
+          <input 
+            type="text" 
+            id="gate-code-input" 
+            class="code-gate-input" 
+            placeholder="کد سفارش: A7K9-B2W8" 
+            maxlength="14" 
+            required 
+            spellcheck="false"
+          />
+        </div>
+
+        <div id="gate-code-error" class="code-gate-error" style="display: none;"></div>
+
+        <button type="submit" id="btn-gate-verify" class="btn-gate-submit">
+          <span class="btn-gate-text"><i class="fa-solid fa-key"></i> باز کردن و ورود به فرم</span>
+          <span class="btn-gate-spinner" style="display: none;"><i class="fa-solid fa-spinner fa-spin"></i> در حال اعتبارسنجی...</span>
+        </button>
+      </form>
+
+      <div class="code-gate-footer">
+        <span>کد اختصاصی سفارش ندارید؟</span>
+        <a href="https://wa.me/491624212685?text=%D8%B3%D9%84%D8%A7%D9%85%D8%8C%20%D9%85%D9%86%20%DA%A9%D8%AF%20%D8%A7%D8%AE%D8%AA%D8%B5%D8%A7%D8%B5%DB%8C%20%D8%A8%D8%B1%D8%A7%DB%8C%20%D8%AB%D8%A8%D8%AA%20%D8%B3%D9%81%D8%A7%D8%B1%D8%B4%20%D8%AF%D8%B1%20%D8%B3%D8%A7%DB%8C%D8%AA%20URCLUB%20%D9%85%DB%8C%E2%80%8C%D8%AE%D9%88%D8%A7%D9%87%D9%85." target="_blank" class="whatsapp-gate-link">
+          <i class="fa-brands fa-whatsapp"></i> دریافت کد اختصاصی از واتساپ
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
   <!-- INITIAL LANGUAGE GATE MODAL (SITE IS BLURRED UNTIL CHOSEN) -->
   <!-- ======================================================== -->
   <div class="lang-gate-overlay" id="lang-gate-overlay">
@@ -106,6 +149,14 @@
         </a>
 
         <div class="header-controls">
+          <!-- Verified Order Code Badge -->
+          <div class="header-code-pill" id="header-order-badge" style="display: none;">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span class="code-label">کد سفارش:</span>
+            <strong id="header-code-val">----</strong>
+            <span class="code-verified-icon"><i class="fa-solid fa-circle-check"></i></span>
+          </div>
+
           <!-- Mid-Form Language Switcher Pill -->
           <div class="lang-switch-pill" id="lang-toggle-btn" title="تغییر زبان / Switch Language">
             <i class="fa-solid fa-globe"></i>
@@ -875,6 +926,8 @@
 
   <!-- Supabase Cloud SDK (for realtime backup) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Storage & Cloud Codes Engine -->
+  <script src="storage.js"></script>
   <!-- Main Application Logic -->
   <script src="form.js"></script>
 </body>
