@@ -49,6 +49,7 @@ const SOCIAL_CATALOG = [
   { id: "whatsapp", name: "WhatsApp", icon: "fa-brands fa-whatsapp", color: "#25D366", placeholder: "https://wa.me/yournumber" },
   { id: "instagram", name: "Instagram", icon: "fa-brands fa-instagram", color: "#E1306C", placeholder: "https://instagram.com/yourhandle" },
   { id: "telegram", name: "Telegram", icon: "fa-brands fa-telegram", color: "#229ED9", placeholder: "https://t.me/yourusername" },
+  { id: "facebook", name: "Facebook", icon: "fa-brands fa-facebook", color: "#1877F2", placeholder: "https://facebook.com/yourprofile" },
   { id: "youtube", name: "YouTube", icon: "fa-brands fa-youtube", color: "#FF0000", placeholder: "https://youtube.com/@yourchannel" },
   { id: "twitch", name: "Twitch", icon: "fa-brands fa-twitch", color: "#9146FF", placeholder: "https://twitch.tv/yourchannel" },
   { id: "steam", name: "Steam", icon: "fa-brands fa-steam", color: "#66c0f4", placeholder: "https://steamcommunity.com/id/yourprofile" },
