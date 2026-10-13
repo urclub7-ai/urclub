@@ -696,12 +696,13 @@ html[dir="rtl"] .site-floating-dock {
 
 .dock-btn i {
   color: #ffffff;
-  font-size: 16.5px;
+  font-size: 14px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.25s ease, color 0.25s ease, filter 0.25s ease;
-  filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.6));
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .dock-btn:hover {
@@ -712,8 +713,7 @@ html[dir="rtl"] .site-floating-dock {
 }
 
 .dock-btn:hover i {
-  transform: scale(1.12);
-  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.9));
+  transform: scale(1.08);
 }
 
 .dock-btn:active {
@@ -728,12 +728,10 @@ html[dir="rtl"] .site-floating-dock {
 
 .dock-btn-sound.is-muted i {
   color: rgba(255, 255, 255, 0.55);
-  filter: none;
 }
 
 .dock-btn-sound:not(.is-muted) i {
   color: #ffffff;
-  filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.6));
 }
 
 @media (max-width: 640px) {
@@ -753,7 +751,7 @@ html[dir="rtl"] .site-floating-dock {
     gap: 7px;
   }
   .dock-btn i {
-    font-size: 15px;
+    font-size: 13.5px;
   }
 }
 
