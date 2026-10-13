@@ -1297,30 +1297,48 @@ html[dir="rtl"] .site-floating-dock {
 }
 
 /* ==========================================================================
-   SITE FOOTER (PRIVACY, HOW WE WORK, TERMS, HELP & COPYRIGHT 2026)
+   SITE FOOTER (PRIVACY, HOW WE WORK, TERMS & COPYRIGHT 2026)
+   Positioned at the very bottom edge of the site:
+   - English (LTR): bottom-left corner
+   - Persian (RTL): bottom-right corner
    ========================================================================== */
 .site-footer {
-  margin-top: 1.6rem;
+  position: fixed;
+  bottom: 22px;
+  left: 24px;
+  right: auto;
+  z-index: 50;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-  width: 100%;
+  align-items: flex-start;
+  text-align: left;
+  gap: 6px;
+  direction: ltr;
+  pointer-events: auto;
+  transition: all 0.3s ease;
+}
+
+/* When site is in RTL (Persian) -> bottom-right corner */
+html[dir="rtl"] .site-footer,
+html[lang="fa"] .site-footer {
+  left: auto;
+  right: 24px;
+  align-items: flex-end;
+  text-align: right;
+  direction: rtl;
 }
 
 .footer-links {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 16px;
+  gap: 14px;
   flex-wrap: wrap;
 }
 
 .footer-link-btn {
   background: none;
   border: none;
-  padding: 4px 6px;
+  padding: 2px 4px;
   color: rgba(255, 255, 255, 0.45);
   font-family: 'Inter', 'Vazirmatn', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 0.82rem;
@@ -1339,12 +1357,34 @@ html[dir="rtl"] .site-floating-dock {
 
 .footer-copyright {
   font-family: 'Inter', 'Vazirmatn', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 0.74rem;
+  font-size: 0.73rem;
   color: rgba(255, 255, 255, 0.32);
   letter-spacing: 0.4px;
-  text-align: center;
   margin: 0;
   user-select: none;
+}
+
+@media (max-width: 640px) {
+  .site-footer {
+    bottom: 14px;
+    left: 14px;
+    right: auto;
+    gap: 4px;
+  }
+  html[dir="rtl"] .site-footer,
+  html[lang="fa"] .site-footer {
+    left: auto;
+    right: 14px;
+  }
+  .footer-links {
+    gap: 10px;
+  }
+  .footer-link-btn {
+    font-size: 0.76rem;
+  }
+  .footer-copyright {
+    font-size: 0.68rem;
+  }
 }
 
 /* Info Modal Custom Styling */

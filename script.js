@@ -392,13 +392,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const btnFooterPrivacy = document.getElementById("btn-footer-privacy");
     const btnFooterHow = document.getElementById("btn-footer-how");
     const btnFooterTerms = document.getElementById("btn-footer-terms");
-    const btnFooterHelp = document.getElementById("btn-footer-help");
     const footerCopyright = document.getElementById("footer-copyright");
 
     if (btnFooterPrivacy) btnFooterPrivacy.textContent = (lang === "fa") ? "حریم خصوصی" : "Privacy";
     if (btnFooterHow) btnFooterHow.textContent = (lang === "fa") ? "روش کار ما" : "How We Work";
     if (btnFooterTerms) btnFooterTerms.textContent = (lang === "fa") ? "قوانین و شرایط" : "Terms";
-    if (btnFooterHelp) btnFooterHelp.textContent = (lang === "fa") ? "پشتیبانی" : "Help";
     if (footerCopyright) footerCopyright.textContent = (lang === "fa") ? "© ۲۰۲۶ تمامی حقوق برای URCLUB محفوظ است" : "© 2026 URCLUB • All Rights Reserved";
 
     if (typeof updateActiveInfoModalLang === "function") {
@@ -1087,7 +1085,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   const btnFooterPrivacy = document.getElementById("btn-footer-privacy");
   const btnFooterHow = document.getElementById("btn-footer-how");
   const btnFooterTerms = document.getElementById("btn-footer-terms");
-  const btnFooterHelp = document.getElementById("btn-footer-help");
 
   if (btnFooterPrivacy) {
     btnFooterPrivacy.addEventListener("click", (e) => {
@@ -1107,13 +1104,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     btnFooterTerms.addEventListener("click", (e) => {
       e.stopPropagation();
       openInfoModal("terms");
-    });
-  }
-
-  if (btnFooterHelp) {
-    btnFooterHelp.addEventListener("click", (e) => {
-      e.stopPropagation();
-      openInfoModal("help");
     });
   }
 
