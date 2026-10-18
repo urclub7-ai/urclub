@@ -110,17 +110,7 @@
       <span id="dock-lang-label">EN</span>
     </button>
 
-    <!-- 2. Order Button -->
-    <button type="button" id="btn-open-order-modal" class="dock-btn dock-btn-order" title="ثبت سفارش اختصاصی">
-      <svg class="dock-svg-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="8" cy="21" r="1"/>
-        <circle cx="19" cy="21" r="1"/>
-        <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
-      </svg>
-      <span id="dock-order-label">سفارش</span>
-    </button>
-
-    <!-- 3. Background Video Sound Mute/Unmute Button -->
+    <!-- 2. Background Video Sound Mute/Unmute Button -->
     <button type="button" id="btn-toggle-sound" class="dock-btn dock-btn-sound" title="قطع و وصل صدای ویدیو">
       <span id="sound-icon" class="dock-sound-icon-wrap">
         <svg class="dock-svg-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -132,69 +122,6 @@
       <span id="sound-label">صدا</span>
     </button>
   </nav>
-
-  <!-- Order Access Code Verification Modal (Persian) -->
-  <div id="modal-order-gate" class="order-modal-backdrop" style="display: none;">
-    <div class="order-modal-card">
-      <button type="button" id="btn-close-order-modal" class="order-modal-close" title="بستن">&times;</button>
-      
-      <div class="order-modal-header">
-        <div class="order-modal-icon-badge">
-          <i class="fa-solid fa-key"></i>
-        </div>
-        <h2 class="order-modal-title" id="order-modal-title">ورود به بخش ثبت سفارش</h2>
-        <p class="order-modal-desc" id="order-modal-desc">
-          برای دسترسی به فرم و ثبت مشخصات پروژه کد خود را وارد کنید
-        </p>
-      </div>
-
-      <form id="order-code-form" class="order-code-form" autocomplete="off">
-        <div class="order-input-wrapper">
-          <input 
-            type="text" 
-            id="order-code-input" 
-            class="order-code-input" 
-            placeholder="" 
-            maxlength="14" 
-            required 
-            spellcheck="false"
-          />
-        </div>
-
-        <div id="order-code-error" class="order-code-error" style="display: none;"></div>
-
-        <button type="submit" id="btn-verify-order-code" class="btn-verify-order">
-          <span class="btn-verify-text" id="btn-verify-text"><i class="fa-solid fa-arrow-left"></i> تایید و ورود به فرم</span>
-          <span class="btn-verify-spinner" style="display: none;"><i class="fa-solid fa-spinner fa-spin"></i> در حال بررسی کد...</span>
-        </button>
-      </form>
-
-      <div class="order-modal-footer">
-        <button type="button" id="btn-no-code" class="btn-no-code-link">
-          کد ندارم
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Admin WhatsApp Contact Modal (کد ندارم) -->
-  <div id="modal-admin-contact" class="admin-contact-backdrop" style="display: none;">
-    <div class="admin-contact-card">
-      <button type="button" id="btn-close-admin-contact" class="admin-contact-close" title="بستن">&times;</button>
-      
-      <div class="admin-contact-avatar-wrap">
-        <img id="admin-contact-avatar" class="admin-contact-avatar" src="assets/logo.png" alt="Admin Profile" />
-        <span class="admin-contact-status-dot"></span>
-      </div>
-
-      <p class="admin-contact-text" id="admin-contact-text">برای دریافت کد سفارش خود را ثبت کنید.</p>
-
-      <a id="admin-contact-wa-link" href="https://wa.me/491624212685?text=%D8%B3%D9%84%D8%A7%D9%85%D8%8C%20%D8%A8%D8%B1%D8%A7%DB%8C%20%D8%AF%D8%B1%DB%8C%D8%A7%D9%81%D8%AA%20%DA%A9%D8%AF%20%D8%B3%D9%81%D8%A7%D8%B1%D8%B4%20%D8%AE%D9%88%D8%AF%20%D8%B1%D8%A7%20%D8%AB%D8%A8%D8%AA%20%DA%A9%D9%86%D9%85." target="_blank" class="admin-contact-wa-btn">
-        <i class="fa-brands fa-whatsapp"></i>
-        <span dir="ltr">+49 162 4212685</span>
-      </a>
-    </div>
-  </div>
 
   <!-- Center Profile Container -->
   <main class="profile-container">

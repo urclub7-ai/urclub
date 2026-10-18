@@ -25,8 +25,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const btnToggleLang = document.getElementById("btn-toggle-lang");
   const dockLangLabel = document.getElementById("dock-lang-label");
-  const btnOpenOrder = document.getElementById("btn-open-order-modal");
-  const dockOrderLabel = document.getElementById("dock-order-label");
   const btnToggleSound = document.getElementById("btn-toggle-sound");
   const soundIcon = document.getElementById("sound-icon");
   const soundLabel = document.getElementById("sound-label");
@@ -80,7 +78,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const displayName = isFa ? (faData.name || profile.name || "LEVI") : (profile.name || "LEVI");
     const displaySubtitle = isFa ? (faData.subtitle || profile.subtitle || "") : (profile.subtitle || "");
     const displayEnter = isFa ? (faData.enterText || "[ برای ورود به وبسایت کلیک کنید ]") : "[ click anywhere to enter ]";
-    const orderBtnText = isFa ? (faData.orderBtnText || "سفارش") : "Order";
     const rawPresenceStatus = (profile.presence && profile.presence.status) ? profile.presence.status.trim() : "";
     const rawFaStatus = (faData && faData.presenceStatus) ? faData.presenceStatus.trim() : "";
     const displayStatus = isFa
@@ -95,8 +92,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     const enterTextElem = document.getElementById("enter-text");
     if (enterTextElem) enterTextElem.textContent = displayEnter;
-    const orderBtnSpan = document.querySelector("#btn-open-order-modal span");
-    if (orderBtnSpan) orderBtnSpan.textContent = orderBtnText;
 
     const profileViews = profile.views || profile.baseViews || "10";
     renderViews(profileViews);
@@ -329,9 +324,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Dock
     if (dockLangLabel) dockLangLabel.textContent = (lang === "fa" ? "EN" : "FA");
     const faData = currentActiveProfile?.persian || {};
-    if (dockOrderLabel) {
-      dockOrderLabel.textContent = (lang === "fa" ? (faData.orderBtnText || "سفارش") : "Order");
-    }
     updateSoundUI();
 
     // Enter prompt
@@ -362,30 +354,6 @@ document.addEventListener("DOMContentLoaded", async () => {
           presenceStatus.textContent = pStatus || fStatus || "online";
         }
       }
-    }
-
-    // Order gate modal texts
-    const orderModalTitle = document.getElementById("order-modal-title");
-    const orderModalDesc = document.getElementById("order-modal-desc");
-    const btnVerifyText = document.getElementById("btn-verify-text");
-    const btnNoCode = document.getElementById("btn-no-code");
-    const adminContactText = document.getElementById("admin-contact-text");
-    const adminContactWaLink = document.getElementById("admin-contact-wa-link");
-
-    if (lang === "fa") {
-      if (orderModalTitle) orderModalTitle.textContent = "ورود به بخش ثبت سفارش";
-      if (orderModalDesc) orderModalDesc.textContent = "برای دسترسی به فرم و ثبت مشخصات پروژه کد خود را وارد کنید";
-      if (btnVerifyText) btnVerifyText.innerHTML = '<i class="fa-solid fa-arrow-left"></i> تایید و ورود به فرم';
-      if (btnNoCode) btnNoCode.textContent = "کد ندارم";
-      if (adminContactText) adminContactText.textContent = "برای دریافت کد سفارش خود را ثبت کنید.";
-      if (adminContactWaLink) adminContactWaLink.href = "https://wa.me/491624212685?text=%D8%B3%D9%84%D8%A7%D9%85%D8%8C%20%D8%A8%D8%B1%D8%A7%DB%8C%20%D8%AF%D8%B1%DB%8C%D8%A7%D9%81%D8%AA%20%DA%A9%D8%AF%20%D8%B3%D9%81%D8%A7%D8%B1%D8%B4%20%D8%AE%D9%88%D8%AF%20%D8%B1%D8%A7%20%D8%AB%D8%A8%D8%AA%20%DA%A9%D9%86%D9%85.";
-    } else {
-      if (orderModalTitle) orderModalTitle.textContent = "Enter Order Code";
-      if (orderModalDesc) orderModalDesc.textContent = "Enter your code to access the project submission form";
-      if (btnVerifyText) btnVerifyText.innerHTML = '<i class="fa-solid fa-arrow-right"></i> Verify & Proceed';
-      if (btnNoCode) btnNoCode.textContent = "I don't have a code";
-      if (adminContactText) adminContactText.textContent = "To receive an access code, register your order with admin.";
-      if (adminContactWaLink) adminContactWaLink.href = "https://wa.me/491624212685?text=Hello%2C%20I%20would%20like%20to%20register%20my%20order%20to%20receive%20an%20order%20form%20code.";
     }
   }
 
@@ -601,149 +569,5 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     }, 250);
   });
-
-  // ==========================================================================
-  // FLOATING ORDER GATE MODAL HANDLERS
-  // ==========================================================================
-  const modalOrderGate = document.getElementById("modal-order-gate");
-  const btnCloseOrder = document.getElementById("btn-close-order-modal");
-  const orderCodeForm = document.getElementById("order-code-form");
-  const orderCodeInput = document.getElementById("order-code-input");
-  const orderCodeError = document.getElementById("order-code-error");
-  const btnVerify = document.getElementById("btn-verify-order-code");
-  const btnVerifyText = btnVerify ? btnVerify.querySelector(".btn-verify-text") : null;
-  const btnVerifySpinner = btnVerify ? btnVerify.querySelector(".btn-verify-spinner") : null;
-
-  function openOrderModal() {
-    if (!modalOrderGate) return;
-    modalOrderGate.style.display = "flex";
-    if (orderCodeError) orderCodeError.style.display = "none";
-    if (orderCodeInput) {
-      orderCodeInput.value = "";
-      setTimeout(() => orderCodeInput.focus(), 150);
-    }
-  }
-
-  function closeOrderModal() {
-    if (!modalOrderGate) return;
-    modalOrderGate.style.display = "none";
-  }
-
-  if (btnOpenOrder) {
-    btnOpenOrder.addEventListener("click", (e) => {
-      e.stopPropagation();
-      openOrderModal();
-    });
-  }
-
-  if (btnCloseOrder) {
-    btnCloseOrder.addEventListener("click", (e) => {
-      e.stopPropagation();
-      closeOrderModal();
-    });
-  }
-
-  const btnNoCode = document.getElementById("btn-no-code");
-  const modalAdminContact = document.getElementById("modal-admin-contact");
-  const btnCloseAdminContact = document.getElementById("btn-close-admin-contact");
-  const adminContactAvatar = document.getElementById("admin-contact-avatar");
-
-  function openAdminContactModal() {
-    closeOrderModal();
-    if (!modalAdminContact) return;
-    if (adminContactAvatar && profileAvatar) {
-      adminContactAvatar.src = profileAvatar.src || "assets/logo.png";
-    }
-    modalAdminContact.style.display = "flex";
-  }
-
-  function closeAdminContactModal() {
-    if (!modalAdminContact) return;
-    modalAdminContact.style.display = "none";
-  }
-
-  if (btnNoCode) {
-    btnNoCode.addEventListener("click", (e) => {
-      e.stopPropagation();
-      openAdminContactModal();
-    });
-  }
-
-  if (btnCloseAdminContact) {
-    btnCloseAdminContact.addEventListener("click", (e) => {
-      e.stopPropagation();
-      closeAdminContactModal();
-    });
-  }
-
-  if (modalAdminContact) {
-    modalAdminContact.addEventListener("click", (e) => {
-      if (e.target === modalAdminContact) {
-        closeAdminContactModal();
-      }
-    });
-  }
-
-  // Format code input while typing (uppercase and auto-hyphen if 8 chars)
-  if (orderCodeInput) {
-    orderCodeInput.addEventListener("input", (e) => {
-      let val = e.target.value.toUpperCase().replace(/[^A-Z0-9-]/g, "");
-      e.target.value = val;
-      if (orderCodeError) orderCodeError.style.display = "none";
-    });
-  }
-
-  // Verify Code Form Submit
-  if (orderCodeForm) {
-    orderCodeForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const rawCode = orderCodeInput ? orderCodeInput.value.trim() : "";
-      if (!rawCode) return;
-
-      // Loading UI
-      if (btnVerify) btnVerify.disabled = true;
-      if (btnVerifyText) btnVerifyText.style.display = "none";
-      if (btnVerifySpinner) btnVerifySpinner.style.display = "inline-flex";
-      if (orderCodeError) orderCodeError.style.display = "none";
-
-      try {
-        if (typeof OrderCodeStore !== "undefined") {
-          const result = await OrderCodeStore.verifyCodeAsync(rawCode);
-          if (result.valid) {
-            const formattedCode = result.codeObj.code;
-            try {
-              sessionStorage.setItem("urclub_order_code", formattedCode);
-            } catch (err) {}
-            // Redirect to form with code
-            window.location.href = `form.html?code=${encodeURIComponent(formattedCode)}`;
-            return;
-          } else {
-            let errorMsg = "کد وارد شده معتبر نمی‌باشد. لطفاً مجدداً بررسی فرمایید.";
-            if (result.reason === "alreadyUsed") {
-              errorMsg = "این کد قبلاً استفاده شده و سفارش آن ثبت گردیده است. جهت ثبت سفارش جدید، کد دیگری از واتساپ دریافت فرمایید.";
-            } else if (result.reason === "revoked") {
-              errorMsg = "این کد توسط مدیریت غیرفعال شده است. لطفاً با پشتیبانی در تماس باشید.";
-            }
-            if (orderCodeError) {
-              orderCodeError.textContent = errorMsg;
-              orderCodeError.style.display = "block";
-            }
-          }
-        } else {
-          // Fallback redirect if offline
-          window.location.href = `form.html?code=${encodeURIComponent(rawCode)}`;
-        }
-      } catch (err) {
-        console.error("Code verification error:", err);
-        if (orderCodeError) {
-          orderCodeError.textContent = "خطا در برقراری ارتباط با سرور. لطفاً مجدداً تلاش کنید.";
-          orderCodeError.style.display = "block";
-        }
-      } finally {
-        if (btnVerify) btnVerify.disabled = false;
-        if (btnVerifyText) btnVerifyText.style.display = "inline-flex";
-        if (btnVerifySpinner) btnVerifySpinner.style.display = "none";
-      }
-    });
-  }
 });
+
