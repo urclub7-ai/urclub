@@ -18,19 +18,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   const viewsCount = document.getElementById("views-count");
   const viewsPill = document.querySelector(".views-pill");
 
-  // Initial Language Selection & Floating Dock Elements
-  const langSelectionOverlay = document.getElementById("lang-selection-overlay");
-  const btnChooseEn = document.getElementById("btn-choose-en");
-  const btnChooseFa = document.getElementById("btn-choose-fa");
-
-  const btnToggleLang = document.getElementById("btn-toggle-lang");
-  const dockLangLabel = document.getElementById("dock-lang-label");
+  // Floating Dock Elements
   const btnToggleSound = document.getElementById("btn-toggle-sound");
   const soundIcon = document.getElementById("sound-icon");
   const soundLabel = document.getElementById("sound-label");
 
   const enterText = document.getElementById("enter-text");
-  let currentLang = document.documentElement.lang === "fa" ? "fa" : "en";
+  let currentLang = "en";
 
   const DEFAULT_AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23a855f7'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E";
 
@@ -72,17 +66,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     currentActiveProfile = profile;
     document.title = (userSlug === "main") ? "urclub" : (profile.name ? `${profile.name} • urclub` : "urclub");
 
-    const isFa = (document.documentElement.lang === "fa");
-    const faData = profile.persian || {};
-
-    const displayName = isFa ? (faData.name || profile.name || "LEVI") : (profile.name || "LEVI");
-    const displaySubtitle = isFa ? (faData.subtitle || profile.subtitle || "") : (profile.subtitle || "");
-    const displayEnter = isFa ? (faData.enterText || "[ برای ورود به وبسایت کلیک کنید ]") : "[ click anywhere to enter ]";
+    const displayName = profile.name || "LEVI";
+    const displaySubtitle = profile.subtitle || "";
+    const displayEnter = "[ click to enter the site ]";
     const rawPresenceStatus = (profile.presence && profile.presence.status) ? profile.presence.status.trim() : "";
-    const rawFaStatus = (faData && faData.presenceStatus) ? faData.presenceStatus.trim() : "";
-    const displayStatus = isFa
-      ? (rawFaStatus || rawPresenceStatus || "آنلاین")
-      : (rawPresenceStatus || rawFaStatus || "online");
+    const displayStatus = rawPresenceStatus || "online";
 
     // 1. Text & Titles
     if (nameText) nameText.textContent = displayName;
@@ -315,111 +303,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // Language Engine
-  function applyLanguage(lang) {
-    currentLang = lang;
-    document.documentElement.lang = lang;
-    document.documentElement.dir = (lang === "fa" ? "rtl" : "ltr");
-
-    // Dock
-    if (dockLangLabel) dockLangLabel.textContent = (lang === "fa" ? "EN" : "FA");
-    const faData = currentActiveProfile?.persian || {};
-    updateSoundUI();
-
-    // Enter prompt
-    if (enterText) {
-      enterText.textContent = (lang === "fa"
-        ? (faData.enterText || "[ برای ورود به وبسایت کلیک کنید ]")
-        : "[ click anywhere to enter ]");
-    }
-
-    // Profile Texts
-    if (currentActiveProfile) {
-      if (nameText) nameText.textContent = (lang === "fa" ? (faData.name || currentActiveProfile.name || "LEVI") : (currentActiveProfile.name || "LEVI"));
-      if (profileSubtitle) {
-        const sub = (lang === "fa" ? (faData.subtitle || currentActiveProfile.subtitle || "") : (currentActiveProfile.subtitle || ""));
-        profileSubtitle.textContent = sub;
-        profileSubtitle.style.display = sub ? "block" : "none";
-      }
-      if (presenceHandle) {
-        presenceHandle.style.display = "none";
-        presenceHandle.textContent = "";
-      }
-      if (presenceStatus) {
-        const pStatus = (currentActiveProfile?.presence?.status || "").trim();
-        const fStatus = (faData?.presenceStatus || "").trim();
-        if (lang === "fa") {
-          presenceStatus.textContent = fStatus || pStatus || "آنلاین";
-        } else {
-          presenceStatus.textContent = pStatus || fStatus || "online";
-        }
-      }
-    }
-  }
-
-  let isLanguageTransitioning = false;
-
-  if (btnToggleLang) {
-    btnToggleLang.addEventListener("click", (e) => {
-      e.stopPropagation();
-      if (isLanguageTransitioning) return;
-      const nextLang = (currentLang === "fa" ? "en" : "fa");
-
-      if (!isPreview && enterOverlay) {
-        isLanguageTransitioning = true;
-        isUnlocked = false;
-        if (bgVideo) {
-          bgVideo.muted = true;
-          bgVideo.pause();
-          try {
-            bgVideo.currentTime = 0;
-          } catch (e) {}
-        }
-
-        // 1. Immediately drop the pitch-black curtain without changing any content
-        enterOverlay.style.transition = "opacity 0.25s ease";
-        if (enterText) enterText.style.visibility = "hidden";
-        enterOverlay.classList.remove("hidden");
-
-        // 2. ONLY AFTER screen is 100% black (260ms), apply language behind the curtain!
-        setTimeout(() => {
-          applyLanguage(nextLang);
-          if (enterText) {
-            enterText.style.visibility = "visible";
-          }
-          enterOverlay.style.transition = ""; // Restore standard 0.8s unlock fade
-          isLanguageTransitioning = false;
-        }, 260);
-      } else {
-        applyLanguage(nextLang);
-      }
-    });
-  }
-
-  // Initial Language Selection Modal Events
-  if (btnChooseEn) {
-    btnChooseEn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      applyLanguage("en");
-      if (langSelectionOverlay) langSelectionOverlay.classList.add("hidden");
-    });
-  }
-
-  if (btnChooseFa) {
-    btnChooseFa.addEventListener("click", (e) => {
-      e.stopPropagation();
-      applyLanguage("fa");
-      if (langSelectionOverlay) langSelectionOverlay.classList.add("hidden");
-    });
-  }
-
   // Handle Preview Mode vs Full Page Click/Tap to Enter
   let isUnlocked = false;
   function unlockBio() {
-    if (isUnlocked || isLanguageTransitioning) return;
-    if (langSelectionOverlay && !langSelectionOverlay.classList.contains("hidden") && langSelectionOverlay.style.display !== "none") {
-      return;
-    }
+    if (isUnlocked) return;
     isUnlocked = true;
 
     if (enterOverlay) {

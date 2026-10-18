@@ -47,45 +47,10 @@
 </head>
 <body>
 
-  <!-- Initial Language Selection Modal (Before Enter Screen) -->
-  <div id="lang-selection-overlay" class="lang-selection-overlay">
-    <div class="lang-selection-card">
-      <div class="lang-selection-logo-wrap">
-        <img src="assets/logo.png" alt="URCLUB" class="lang-selection-logo" />
-      </div>
-
-      <h2 class="lang-selection-title">Select Language / انتخاب زبان</h2>
-      <p class="lang-selection-subtitle">
-        Please select your language to enter the website<br>
-        لطفاً زبان مورد نظر خود را برای ورود به سایت انتخاب نمایید
-      </p>
-
-      <div class="lang-selection-options">
-        <button type="button" class="lang-opt-btn" id="btn-choose-en">
-          <div class="lang-opt-flag">🇬🇧</div>
-          <div class="lang-opt-text">
-            <strong>English</strong>
-            <span>Enter in English</span>
-          </div>
-          <i class="fa-solid fa-arrow-right"></i>
-        </button>
-
-        <button type="button" class="lang-opt-btn" id="btn-choose-fa">
-          <div class="lang-opt-flag">🇮🇷</div>
-          <div class="lang-opt-text">
-            <strong>فارسی</strong>
-            <span>ورود به زبان فارسی</span>
-          </div>
-          <i class="fa-solid fa-arrow-left"></i>
-        </button>
-      </div>
-    </div>
-  </div>
-
   <!-- Click/Tap to Enter Screen -->
   <div id="enter-overlay" class="enter-overlay">
     <div class="enter-content">
-      <p class="enter-text" id="enter-text">[ click anywhere to enter ]</p>
+      <p class="enter-text" id="enter-text">[ click to enter the site ]</p>
     </div>
   </div>
 
@@ -98,20 +63,10 @@
     <div class="bg-vignette"></div>
   </div>
 
-  <!-- Top Floating Action Dock (Language, Order, Sound) -->
+  <!-- Top Floating Action Dock (Sound Control) -->
   <nav class="site-floating-dock" id="site-floating-dock">
-    <!-- 1. Language Switcher -->
-    <button type="button" id="btn-toggle-lang" class="dock-btn dock-btn-lang" title="Switch Language / تغییر زبان">
-      <svg class="dock-svg-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="10"/>
-        <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/>
-        <path d="M2 12h20"/>
-      </svg>
-      <span id="dock-lang-label">FA</span>
-    </button>
-
-    <!-- 2. Background Video Sound Mute/Unmute Button -->
-    <button type="button" id="btn-toggle-sound" class="dock-btn dock-btn-sound" title="Sound Control / قطع و وصل صدا">
+    <!-- Background Video Sound Mute/Unmute Button -->
+    <button type="button" id="btn-toggle-sound" class="dock-btn dock-btn-sound" title="Sound Control">
       <span id="sound-icon" class="dock-sound-icon-wrap">
         <svg class="dock-svg-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
