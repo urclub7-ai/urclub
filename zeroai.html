@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Zero AI — On-Device Intelligence for iPhone | UR CLUB STUDIO</title>
+  <meta name="description" content="Zero AI on-device neural intelligence agent for iOS. Direct OTA enterprise installation, zero cloud LLM latency, 100% private and hardware-locked security.">
+  <meta name="theme-color" content="#090A0F">
+  
+  <link rel="icon" type="image/png" href="/zeroai/icon-57.png">
+  <link rel="apple-touch-icon" href="/zeroai/icon-512.png">
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: #090A0F;
+      color: #E2E8F0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      selection-background-color: rgba(0, 242, 254, 0.3);
+    }
+    ::selection {
+      background: rgba(0, 242, 254, 0.3);
+      color: #FFFFFF;
+    }
+    .ambient-glow-top {
+      position: fixed;
+      top: -120px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(0,242,254,0.16) 0%, rgba(142,45,226,0.12) 50%, transparent 80%);
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .ambient-glow-bottom {
+      position: fixed;
+      bottom: -100px;
+      right: -100px;
+      width: 450px;
+      height: 450px;
+      background: radial-gradient(circle, rgba(0,242,254,0.1) 0%, transparent 70%);
+      filter: blur(100px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(circle at 1px 1px, rgba(0, 242, 254, 0.04) 1px, transparent 0);
+      background-size: 32px 32px;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .container {
+      position: relative;
+      z-index: 10;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 12px 18px;
+      margin-bottom: 32px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    .brand-link {
+      color: #94A3B8;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+    .brand-link:hover {
+      color: #00F2FE;
+    }
+    .ota-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-family: monospace;
+      color: #00F2FE;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .dot-pulse {
+      width: 8px;
+      height: 8px;
+      background: #00F2FE;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #00F2FE;
+    }
+    .hero {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+    }
+    .pill-header {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 9999px;
+      background: linear-gradient(90deg, rgba(0,242,254,0.1), rgba(142,45,226,0.15), rgba(0,242,254,0.1));
+      border: 1px solid rgba(0,242,254,0.3);
+      font-size: 11px;
+      font-family: monospace;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      color: #00F2FE;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      box-shadow: 0 0 20px rgba(0,242,254,0.15);
+    }
+    .logo-box {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      margin: 10px 0 24px;
+      border-radius: 28px;
+      background: linear-gradient(180deg, #141724 0%, #0A0C14 100%);
+      border: 1px solid rgba(0, 242, 254, 0.4);
+      padding: 16px;
+      box-shadow: 0 0 40px rgba(0, 242, 254, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo-box svg {
+      width: 100%;
+      height: 100%;
+    }
+    h1 {
+      font-size: 32px;
+      font-weight: 900;
+      line-height: 1.2;
+      background: linear-gradient(90deg, #FFFFFF 0%, #F1F5F9 50%, #94A3B8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      max-width: 650px;
+    }
+    @media (min-width: 640px) {
+      h1 { font-size: 44px; }
+    }
+    .cyan-accent {
+      color: #00F2FE;
+      -webkit-text-fill-color: #00F2FE;
+    }
+    .subtitle {
+      margin-top: 14px;
+      font-size: 15px;
+      color: #94A3B8;
+      max-width: 560px;
+      line-height: 1.6;
+    }
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin: 24px 0 32px;
+      max-width: 650px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      backdrop-filter: blur(8px);
+    }
+    .badge-cyan {
+      background: rgba(0, 242, 254, 0.1);
+      border: 1px solid rgba(0, 242, 254, 0.3);
+      color: #00F2FE;
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.1);
+    }
+    .badge-violet {
+      background: rgba(142, 45, 226, 0.15);
+      border: 1px solid rgba(142, 45, 226, 0.4);
+      color: #c888ff;
+      box-shadow: 0 0 15px rgba(142, 45, 226, 0.15);
+    }
+    .badge-dark {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #E2E8F0;
+    }
+    .cta-container {
+      width: 100%;
+      max-width: 440px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 40px;
+    }
+    .btn-install {
+      position: relative;
+      text-decoration: none;
+      border-radius: 18px;
+      padding: 2px;
+      background: linear-gradient(90deg, #00F2FE, #8E2DE2, #00F2FE);
+      background-size: 200% auto;
+      animation: gradientShift 4s linear infinite;
+      box-shadow: 0 0 35px rgba(0, 242, 254, 0.35);
+      transition: transform 0.2s;
+      display: block;
+    }
+    .btn-install:hover {
+      transform: scale(1.02);
+    }
+    .btn-install:active {
+      transform: scale(0.98);
+    }
+    .btn-install-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 16px 24px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, #0F1424 0%, #090A0F 100%);
+    }
+    .btn-install-emoji {
+      font-size: 24px;
+    }
+    .btn-text-main {
+      font-size: 17px;
+      font-weight: 700;
+      color: #FFFFFF;
+      letter-spacing: 0.02em;
+    }
+    .btn-text-sub {
+      font-size: 11px;
+      color: rgba(0, 242, 254, 0.85);
+      font-family: monospace;
+    }
+    .btn-secondary-row {
+      display: flex;
+      gap: 8px;
+    }
+    .btn-ipa {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #CBD5E1;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .btn-ipa:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(0, 242, 254, 0.4);
+      color: #FFFFFF;
+    }
+    .btn-copy {
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #94A3B8;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-copy:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #00F2FE;
+    }
+    .guide-card {
+      width: 100%;
+      max-width: 540px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 24px;
+      backdrop-filter: blur(20px);
+      margin-bottom: 40px;
+      text-align: left;
+    }
+    .guide-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 14px;
+      margin-bottom: 16px;
+    }
+    .guide-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+    .guide-sub {
+      font-size: 12px;
+      color: #94A3B8;
+      margin-top: 2px;
+    }
+    .step-item {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 10px;
+    }
+    .step-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #FFFFFF;
+    }
+    .step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: rgba(0, 242, 254, 0.15);
+      color: #00F2FE;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: monospace;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .step-desc {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #94A3B8;
+      padding-left: 40px;
+      line-height: 1.5;
+    }
+    .step-desc code {
+      display: inline-block;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 3px 6px;
+      border-radius: 6px;
+      font-family: monospace;
+      color: #00F2FE;
+      margin-top: 4px;
+    }
+    footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #64748B;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    footer a {
+      color: #94A3B8;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    footer a:hover {
+      color: #00F2FE;
+    }
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-glow-top"></div>
+  <div class="ambient-glow-bottom"></div>
+  <div class="grid-bg"></div>
+
+  <div class="container">
+    <header>
+      <a href="/" class="brand-link">
+        <span>&larr;</span>
+        <span>UR CLUB Studio</span>
+      </a>
+      <div class="ota-badge">
+        <div class="dot-pulse"></div>
+        <span>OTA Gateway Online</span>
+      </div>
+    </header>
+
+    <main class="hero">
+      <div class="pill-header">
+        UR CLUB STUDIO PRESENTS
+      </div>
+
+      <div class="logo-box">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="neonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#00F2FE"/>
+              <stop offset="100%" stop-color="#8E2DE2"/>
+            </linearGradient>
+          </defs>
+          <circle cx="50" cy="50" r="42" stroke="url(#neonGradient)" stroke-width="2.5" stroke-dasharray="8 6 16 6"/>
+          <polygon points="50,15 80,32 80,68 50,85 20,68 20,32" stroke="#8E2DE2" stroke-width="1.5" stroke-opacity="0.7"/>
+          <path d="M32 30 H68 L32 70 H68" stroke="url(#neonGradient)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="32" cy="30" r="3.5" fill="#FFFFFF"/>
+          <circle cx="68" cy="30" r="3.5" fill="#00F2FE"/>
+          <circle cx="32" cy="70" r="3.5" fill="#8E2DE2"/>
+          <circle cx="68" cy="70" r="3.5" fill="#FFFFFF"/>
+        </svg>
+      </div>
+
+      <h1>Zero AI <span class="cyan-accent">—</span> On-Device Intelligence for iPhone</h1>
+      <p class="subtitle">
+        Autonomous neural intelligence engine compiled specifically for Apple Silicon. Zero server latency, zero cloud LLM dependence, running 100% natively on your hardware.
+      </p>
+
+      <div class="badges">
+        <div class="badge badge-cyan">⚡ Pure Offline Execution</div>
+        <div class="badge badge-violet">🔒 100% Private / No Cloud LLM</div>
+        <div class="badge badge-dark">📱 Hardware-Locked Security</div>
+      </div>
+
+      <div class="cta-container">
+        <!-- Direct Apple OTA Install -->
+        <a class="btn-install" href="itms-services://?action=download-manifest&url=https://urclub.vercel.app/zeroai/manifest.plist">
+          <div class="btn-install-inner">
+            <span class="btn-install-emoji">📲</span>
+            <div>
+              <div class="btn-text-main">Install Direct on iPhone</div>
+              <div class="btn-text-sub">Apple Wireless OTA • Build 1.0.0</div>
+            </div>
+          </div>
+        </a>
+
+        <!-- Fallback IPA & Copy Link -->
+        <div class="btn-secondary-row">
+          <a class="btn-ipa" href="/zeroai/ZeroAI.ipa" download="ZeroAI.ipa">
+            <span>📥</span>
+            <span>Download Raw IPA File</span>
+          </a>
+          <button class="btn-copy" id="copyBtn" onclick="copyManifest()" title="Copy OTA Link">
+            📋
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick 3-Step Setup Guide -->
+      <div class="guide-card">
+        <div class="guide-header">
+          <div>
+            <div class="guide-title">3-Step Quick iPhone Setup</div>
+            <div class="guide-sub">Apple Enterprise &amp; Ad-Hoc Onboarding Procedure</div>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-head">
+            <div class="step-num">01</div>
+            <div>Tap "Install Direct" in Safari and confirm prompt</div>
+          </div>
+          <div class="step-desc">
+            Open this page in Safari and tap the glowing button above. When iOS displays <em>"urclub.vercel.app would like to install 'Zero AI'"</em>, tap <strong>Install</strong>.
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-head">
+            <div class="step-num" style="color: #c888ff; background: rgba(142,45,226,0.2);">02</div>
+            <div>Trust the Profile in iOS Settings</div>
+          </div>
+          <div class="step-desc">
+            Go to:
+            <br>
+            <code>Settings &gt; General &gt; VPN &amp; Device Management</code>
+            <br>
+            Select <strong>UR CLUB STUDIO</strong> and tap <strong>Trust</strong>.
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-head">
+            <div class="step-num" style="color: #FFFFFF; background: rgba(255,255,255,0.15);">03</div>
+            <div>Launch Zero AI &amp; Enter License Key</div>
+          </div>
+          <div class="step-desc">
+            Open Zero AI from your home screen and enter your active device License Key to unlock full offline neural computing.
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div>&copy; 2026 UR CLUB STUDIO. All rights reserved.</div>
+      <div>
+        <a href="/privacy">Privacy Policy</a> &bull;
+        <a href="/terms">Terms</a> &bull;
+        <a href="https://t.me/urclub" target="_blank" style="color: #00F2FE;">Get License &nearr;</a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    function copyManifest() {
+      const url = "itms-services://?action=download-manifest&url=https://urclub.vercel.app/zeroai/manifest.plist";
+      navigator.clipboard.writeText(url).then(function() {
+        const btn = document.getElementById("copyBtn");
+        btn.textContent = "✅";
+        setTimeout(() => { btn.textContent = "📋"; }, 2500);
+      });
+    }
+  </script>
+</body>
+</html>

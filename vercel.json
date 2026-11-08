@@ -3,6 +3,26 @@
   "cleanUrls": true,
   "rewrites": [
     { "source": "/admin", "destination": "/admin.html" },
-    { "source": "/fa", "destination": "/" }
+    { "source": "/fa", "destination": "/" },
+    { "source": "/zeroai", "destination": "/zeroai/index.html" },
+    { "source": "/zeroai/", "destination": "/zeroai/index.html" }
+  ],
+  "headers": [
+    {
+      "source": "/zeroai/manifest.plist",
+      "headers": [
+        { "key": "Content-Type", "value": "text/xml; charset=utf-8" },
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" }
+      ]
+    },
+    {
+      "source": "/zeroai/ZeroAI.ipa",
+      "headers": [
+        { "key": "Content-Type", "value": "application/octet-stream" },
+        { "key": "Content-Disposition", "value": "attachment; filename=\"ZeroAI.ipa\"" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" }
+      ]
+    }
   ]
 }
